@@ -1,0 +1,21 @@
+#note {
+    list-style: none;
+
+    li {
+        a {
+            text-decoration: none;
+            font-weight: 700;
+            color: rgb(2, 17, 70);
+            transition: 0.5s;
+
+            &:hover {
+                color: white;
+            }
+        }
+
+        i {
+            margin-right: 15px;
+            animation: autoTranform 0.5s infinite;
+        }
+    }
+}

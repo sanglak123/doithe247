@@ -1,0 +1,21 @@
+#prices {
+    position: relative;
+
+    .price_content {
+        .table_change_cards{
+            .card_item{
+                .card_hearder{
+                    button{
+                        border-radius: 0px;
+                    }
+                }
+            }
+        }
+    }
+
+    .btn_update_prices {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+    }
+}

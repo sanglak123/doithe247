@@ -1,0 +1,101 @@
+#footer {
+    background-color: rgb(41, 41, 41);
+
+    .footer_main {
+        padding: 20px 0;
+
+        .footer_main_content {
+            .footer_main_items {
+                padding: 10px;
+
+                .logo {
+                    h1 {
+                        line-height: 48px;
+                    }
+
+                    p {
+                        color: white;
+                    }
+                }
+
+                .hearder_hag {
+                    h1 {
+                        color: white;
+                        font-family: montserrat_Bold;
+                        font-size: 30px;
+
+                        &:hover {
+                            &::after {
+                                width: 100%;
+                                background: white
+                            }
+                        }
+
+                        &::after {
+                            content: "";
+                            display: block;
+                            width: 0%;
+                            height: 3px;
+                            background: white;
+                            transition: 0.5s;
+                        }
+                    }
+                }
+
+
+                ul {
+                    list-style: none;
+
+                    li {
+                        margin: 10px 0;
+
+                        &:hover {
+                            a {
+                                color: rgb(110, 110, 110) !important;
+
+                                i {
+                                    margin-right: 20px;
+                                    color: rgb(110, 110, 110) !important;
+                                    border-color: rgb(110, 110, 110) ;
+                                }
+                            }
+                        }
+
+                        a {
+                            text-decoration: none;
+                            color: white;
+                            transition: 0.5s;
+
+                            i {
+                                font-size: 1rem;
+                                width: 30px;
+                                height: 30px;
+                                color: white;
+                                border: 1px solid white;
+                                border-radius: 50%;
+                                text-align: center;
+                                line-height: 30px;
+                                margin-right: 10px;
+                                transition: 0.5s;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .footer_bot {
+        background-color: rgb(26, 26, 26);
+        padding: 12px;
+
+        p {
+            font-weight: 400;
+            font-style: italic;
+            font-size: 12px;
+            letter-spacing: 1px;
+            color: rgb(194, 194, 194);
+            text-align: center;
+        }
+    }
+}

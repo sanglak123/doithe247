@@ -1,0 +1,40 @@
+#home_page {
+    .home_page_content {
+        .buycard {
+            .buycard_content {
+                .buycard_note {
+                    padding: 10px;
+                    background-color: rgb(148, 148, 148);
+                }
+
+                .list_cards {
+                    .card {
+                        border: none;
+                        text-align: center;
+                        transform: scale(0.95);
+                        transition: 0.5s;
+                        &:hover{
+                            transform: scale(1);
+                        }
+
+                        .card-img-top {
+                            border: 1px solid rgb(97, 97, 97);
+                            border-radius: 7px;
+                        }
+
+                        .card-body {
+                            .card-title {
+                                a {
+                                    font-size: 1rem;
+                                    text-decoration: none;
+                                    color: rgb(4, 80, 42);
+                                }
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+    }
+}

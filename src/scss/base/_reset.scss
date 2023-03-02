@@ -1,0 +1,229 @@
+html,
+body {
+    font-family: roboto;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.logo {
+    text-align: center;
+    transform: scale(0.95);
+    transition: 0.5s;
+
+    &:hover {
+        transform: scale(1);
+    }
+
+    h1 {
+        font-family: montserrat_Black;
+        padding: 0;
+        margin-bottom: -10px;
+        font-size: 30px;
+        line-height: 30px;
+        text-transform: uppercase;
+        background: linear-gradient(to right, #30CFD0 0%, #330867 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    span {
+        font-weight: 700;
+        font-size: 14px;
+        font-style: italic;
+        letter-spacing: 1px;
+        font-weight: 200;
+        color: rgb(82, 82, 82);
+
+    }
+
+    p {
+        margin-top: 25px;
+        color: rgb(65, 65, 65);
+        font-size: 16px;
+        font-weight: 400;
+    }
+}
+
+.hearder_hag {
+    margin: 15px;
+
+    h1 {
+        font-size: 2rem;
+        font-weight: bold;
+        font-family: montserrat_Bold;
+        color: $cl_green_100;
+        transform: 0.5s;
+
+        &:hover {
+            color: $cl_green_300;
+        }
+    }
+}
+
+.layout_wrapter {
+    background-color: rgba(0, 0, 0, 0.541);
+    padding: 15px;
+    border-radius: 7px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    margin: 15px 0;
+}
+
+.bgr_white {
+    padding: 20px;
+    background-color: rgb(255, 255, 255) !important;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    border-radius: 7px;
+}
+
+//Avatar
+.avatar {
+    width: 150px;
+    height: 150px;
+    text-align: center;
+    border: 5px solid $cl_green_100;
+    border-radius: 100%;
+    margin: 25px auto;
+    position: relative;
+    background-color: white;
+    overflow: hidden;
+
+    img {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    p {
+        text-align: center;
+        margin-top: 15px;
+    }
+}
+
+//Color text
+.txt_white {
+    color: white !important;
+}
+
+.txt_black {
+    color: rgb(0, 0, 0) !important;
+}
+
+.txt_dark_100 {
+    color: $cl_dark_100 !important;
+}
+
+.txt_center {
+    text-align: center !important;
+}
+
+.txt_bold {
+    font-weight: bold !important;
+}
+
+.txt_right {
+    text-align: right;
+}
+
+.txt_left {
+    text-align: left;
+}
+
+// //btn to top
+// .scroll-to-top {
+//     position: fixed;
+//     width: 100%;
+//     background-color: $cl_black !important;
+//     top: 0;
+//     left: 50%;
+//     transform: translateX(-50%);
+//     z-index: 999;
+
+//     a {
+//         color: white !important;
+//     }
+// }
+
+// #btn_scroll {
+//     position: fixed;
+//     bottom: 0;
+//     transform: translate(200%, -400%);
+//     right: 0;
+//     opacity: 0;
+//     width: 55px;
+//     height: 55px;
+
+//     transition: 0.5s;
+//     z-index: 999;
+// }
+
+// //Button
+// .btnShow {
+//     opacity: 1 !important;
+//     transform: translate(-30%, -400%) !important;
+
+// }
+
+.hide {
+    display: none !important;
+}
+
+// //Text align
+// .txt_center {
+//     text-align: center !important;
+// }
+
+// //Text color
+// .txt_black {
+//     color: $cl_dark200 !important;
+// }
+
+// .txt_white {
+//     color: white !important;
+// }
+
+// .txt_red {
+//     color: $cl_red !important;
+// }
+
+// .txt_green {
+//     color: $cl_green !important;
+// }
+
+// .txt_dark {
+//     color: rgb(87, 86, 86) !important;
+// }
+
+// //Border
+// .border_top {
+//     border-top: 1px solid rgb(107, 107, 107);
+// }
+
+// .border_right {
+//     border-right: 1px solid rgb(107, 107, 107);
+// }
+
+// .border_left {
+//     border-left: 1px solid rgb(107, 107, 107);
+// }
+
+// .border_bottom {
+//     border-bottom: 1px solid rgb(107, 107, 107);
+// }
+
+// //Bgr
+// .bgr_black {
+//     background-color: $cl_black !important;
+// }
+
+// .bgr_dark100 {
+//     background-color: $cl_dark100 !important;
+// }
+
+// .bgr_dark200 {
+//     background-color: $cl_dark200 !important;
+// }
+
+// .bgr_green {
+//     background-color: $cl_green !important;
+// }

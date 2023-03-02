@@ -1,0 +1,49 @@
+#profile {
+    position: relative;
+
+    .profile_content {
+        display: flex;
+        justify-content: flex-start;
+        align-items: flex-start;
+
+        .profile_avatr {
+            width: 30%;
+            margin-top: 15px;
+            text-align: center;
+            padding: 20px;
+
+            p {
+                font-size: 1.2rem;
+                font-weight: 500;
+                padding: 0;
+                margin: 15px 0;
+                text-align: center;
+            }
+        }
+
+        .Profile_setting {
+            width: 70%;
+            margin-top: 15px;
+            padding: 20px;
+
+            .profile_content {
+                .profile_item {                  
+                    p {                     
+                        font-weight: bold;
+                    }
+                    input{
+                        color: black;                     
+                    }
+
+
+                }
+            }
+        }
+    }
+
+    .profile_btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+    }
+}

@@ -1,0 +1,36 @@
+//abstracts
+@import "./abstracts/variables";
+@import "./abstracts/animations";
+@import "./abstracts/mixin";
+
+//base
+@import "./base/reset";
+
+
+//layout
+@import "./layouts/hearder";
+@import "./layouts/tablePrice";
+@import "./layouts/note";
+@import "./layouts/footer";
+@import "./layouts/button";
+@import "./layouts/errorLogin";
+@import "./layouts/cardHot";
+@import "./layouts/news";
+
+//components
+@import "./components/tableChangeCard";
+
+//Dashboard
+@import "./components/dashboard/profile";
+@import "./components//dashboard/system";
+@import "./components//dashboard/prices";
+@import "./components/dashboard/cards";
+@import "./components/dashboard/banks";
+
+//pages
+@import "./pages/login";
+@import "./pages/dashboard";
+@import "./pages/userBuyCards";
+@import "./pages/homePage";
+
+//themes

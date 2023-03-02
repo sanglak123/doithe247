@@ -1,0 +1,21 @@
+.btn_send_card {
+    width: 200px;
+    padding: 7px 0;
+    font-size: 1.3rem;
+    transition: 0.5s;
+    font-weight: 400;
+
+    &:hover {
+        background-color: rgb(1, 66, 26);
+    }
+}
+
+.btn_authen {
+    font-weight: 400!important;
+    &::after {
+        display: none!important;
+    }
+    &:hover{
+        color: white!important;
+    }
+}

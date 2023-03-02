@@ -1,0 +1,68 @@
+#BuyCardsUser {
+    .buy_card_container {
+        .buy_card {
+            padding: 20px;
+            width: 60%;
+            margin: 15px auto;
+            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+
+            .phone_card {
+                .card_item_hearder {
+                    ul {
+                        list-style: none;
+
+                        li {
+                            width: 150px;
+                            display: inline-block;
+                            height: 80px;
+                            background-color: white;
+                            overflow: hidden;
+                            margin: 5px;
+                            border-radius: 7px;
+                            padding: 5px;
+                            position: relative;
+
+                            img {
+                                width: 80%;
+                                margin: 0 auto;
+                                border-radius: 7px;
+                                position: absolute;
+                                top: 50%;
+                                left: 50%;
+                                transform: translate(-50%, -50%);
+                            }
+
+                            &.li_active {
+                                border: 5px solid red;
+                            }
+                        }
+
+                    }
+                }
+
+                .price_render {
+                    ul {
+                        list-style: none;
+
+                        li {
+                            display: inline-block;
+
+                            button {
+                                width: 150px;
+                                height: 60px;
+                                margin: 5px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        .user_store {
+            width: 37%;
+            margin: 15px auto;
+            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+        }
+    }
+
+}
