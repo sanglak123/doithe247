@@ -1,7 +1,9 @@
 import { formatDate, formatMoney2 } from '@/config/formatMoney';
+import PaginationHag from '@/layout/pagination';
 import { AdminSelector } from '@/redux/selector/AdminSelector';
 import { UserSelector } from '@/redux/selector/UserSelector';
-import { HandlePaymentSuccess } from '@/redux/slice/admin';
+import { HandlePaymentSuccess, RefreshListRefillSuccess } from '@/redux/slice/admin';
+import { RefreshRefillSuccess } from '@/redux/slice/user';
 import { PaymentAdminApi } from 'data/api/admin/payments';
 import { CreateAxiosInstance } from 'data/api/axiosClient/createAxiosInstance';
 import React, { useEffect, useState } from 'react';
@@ -15,15 +17,14 @@ function DashboardRefill(props) {
     const dispatch = useDispatch();
     const axiosJwt = CreateAxiosInstance(dispatch, accessToken);
     //Data
-    const Payments = useSelector(AdminSelector.Data.Payments);
-    const ListPaymentPending = Payments?.filter((item) => item.status === "Pending");
-    const ListPaymentHistory = Payments?.filter((item) => item.status !== "Pending");
+    const Refills = useSelector(AdminSelector.Data.Refills);
+    const RefillPending = useSelector(AdminSelector.Data.RefillPending);
+    const RefillHistorys = useSelector(AdminSelector.Data.RefillHistory);
 
-    const Users = useSelector(AdminSelector.Data.Users)
+    const Users = useSelector(AdminSelector.Data.Users);
 
-    const [PaymentPendings, setPaymentPendings] = useState([]);
+    const [RefillPendingRender, setRefillPendingRender] = useState([]);
 
-    console.log(Payments)
     //Data Render
     const limit = 10;
 
@@ -31,55 +32,32 @@ function DashboardRefill(props) {
     const [pagePending, setPagePending] = useState(1);
     useEffect(() => {
         const offsetPending = (pagePending - 1) * limit;
-        const list = ListPaymentPending.slice(offsetPending, (offsetPending + limit))
+        const list = RefillPending.slice(offsetPending, (offsetPending + limit));
+        setRefillPendingRender(list);
 
-        setPaymentPendings(list)
-    }, [Payments, pagePending]);
+    }, [RefillPending, pagePending]);
 
-    const handlePrevPending = () => {
-        if (pagePending > 1) {
-            setPagePending((pre) => pre - 1)
-        }
-    };
-    const handleNextPending = () => {
-        if (ListPaymentPending.length > pagePending * limit) {
-            setPagePending(prev => prev + 1)
-        }
-    };
 
     //Filter History
     const [userName, setUserName] = useState("All");
+
     //History
     const [PaymentHistorys, setPaymentHistorys] = useState([]);
     const [pageHistory, setPageHistory] = useState(1);
     useEffect(() => {
+        const offsetHistory = (pageHistory - 1) * limit;
         if (userName === "All") {
-            const listHisstory = Payments?.filter((item) => item.status !== "Pending");
-            const offsetHistory = (pageHistory - 1) * limit;
-            const list = listHisstory.slice(offsetHistory, (offsetHistory + limit));
-
+            const list = RefillHistorys.slice(offsetHistory, (offsetHistory + limit));
             setPaymentHistorys(list);
         } else {
-            const listHisstory = Payments?.filter((item) => item.status !== "Pending" && item.User?.userName === userName);
-            const offsetHistory = (pageHistory - 1) * limit;
+            const listHisstory = RefillHistorys?.filter((item) => item.User?.userName === userName);
             const list = listHisstory.slice(offsetHistory, (offsetHistory + limit));
-
             setPaymentHistorys(list);
         }
 
-    }, [Payments, pageHistory, userName]);
+    }, [RefillHistorys, pageHistory, userName]);
 
-    const handlePrevHistory = () => {
-        if (pageHistory > 1) {
-            setPageHistory((pre) => pre - 1)
-        }
-    };
-    const handleNextHistory = () => {
-        if (ListPaymentHistory.length > pageHistory * limit) {
-            setPageHistory(pre => pre + 1)
-        }
 
-    };
 
     //Modal Image
     const [payment, setPayment] = useState(null);
@@ -90,11 +68,11 @@ function DashboardRefill(props) {
 
     //Handle Payments
     const handleAccessPayment = async (payment) => {
-        await PaymentAdminApi.HandlePayment(accessToken, axiosJwt, dispatch, HandlePaymentSuccess, payment?.id, "Success")
+        await PaymentAdminApi.HandlePayment(accessToken, axiosJwt, dispatch, RefreshListRefillSuccess, payment?.id, "Success")
     };
 
     const handleCanclePayment = async (payment) => {
-        await PaymentAdminApi.HandlePayment(accessToken, axiosJwt, dispatch, HandlePaymentSuccess, payment?.id, "Error")
+        await PaymentAdminApi.HandlePayment(accessToken, axiosJwt, dispatch, RefreshListRefillSuccess, payment?.id, "Error")
     };
 
     const handleDeletePayments = async (payment) => {
@@ -106,10 +84,10 @@ function DashboardRefill(props) {
             <div className='bgr_white mt-2 refill_content'>
 
                 {
-                    PaymentPendings.length > 0 ?
+                    RefillPendingRender.length > 0 ?
                         <div className='refill_item'>
                             <div className='hearder_hag'>
-                                <h1>Payments Pending</h1>
+                                <h1>Refills Pending</h1>
                             </div>
                             <div className='table_refill'>
                                 <Table striped bordered hover size="sm">
@@ -129,7 +107,7 @@ function DashboardRefill(props) {
                                     </thead>
                                     <tbody>
                                         {
-                                            PaymentPendings?.map((item, index) => {
+                                            RefillPendingRender?.map((item, index) => {
                                                 return (
                                                     <tr key={index} className="txt_center">
                                                         <td>{index + 1}</td>
@@ -164,18 +142,21 @@ function DashboardRefill(props) {
                                     payment={payment}
                                 />
                             </div>
-                            <div className='pagination'>
-                                <ButtonGroup>
-                                    <Button onClick={handlePrevPending}>Prev</Button>
-                                    <Button disabled variant='primary'>Trang: {pagePending}</Button>
-                                    <Button onClick={handleNextPending}>Next</Button>
-                                </ButtonGroup>
-                            </div>
+                            {
+                                Math.floor(RefillPending.length) / limit > 1 &&
+                                <PaginationHag
+                                    page={pagePending}
+                                    setPage={setPagePending}
+                                    length={RefillPending.length}
+                                    limit={limit}
+                                />
+                            }
+
                         </div>
                         :
                         <div className='refill_item'>
                             <div className='hearder_hag'>
-                                <h1>Payments Pending</h1>
+                                <h1>Refills Pending</h1>
                             </div>
 
                             <p className='text-danger'>
@@ -186,7 +167,7 @@ function DashboardRefill(props) {
 
                 <div className='refill_item'>
                     <div className='hearder_hag'>
-                        <h1>Payments History</h1>
+                        <h1>Refills History</h1>
                     </div>
                     <div className='table_refill'>
                         <div className='filter'>
@@ -256,13 +237,12 @@ function DashboardRefill(props) {
                             payment={payment}
                         />
                     </div>
-                    <div className='pagination'>
-                        <ButtonGroup>
-                            <Button onClick={handlePrevHistory}>Prev</Button>
-                            <Button disabled variant='primary'>Trang: {pageHistory}</Button>
-                            <Button onClick={handleNextHistory}>Next</Button>
-                        </ButtonGroup>
-                    </div>
+                    <PaginationHag
+                        page={pageHistory}
+                        setPage={setPageHistory}
+                        length={PaymentHistorys.length}
+                        limit={limit}
+                    />
                 </div>
 
             </div>

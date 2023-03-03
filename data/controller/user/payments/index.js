@@ -108,7 +108,8 @@ export const UserControllerPayments = {
                         const bankUser = await BankOfUsers.findOne({
                             where: {
                                 id: idBankUser
-                            }
+                            },
+                            include: [{ model: Banks }]
                         });
                         if (bankUser) {
                             const [payment, created] = await Payments.findOrCreate({
@@ -129,21 +130,27 @@ export const UserControllerPayments = {
                                 });
                                 await payment.save().then(async () => {
                                     user.surplus = surplus;
-                                    await user.save().then((newUser) => {
-                                        newUser.pass = null;
-                                        newUser.pass2 = null;
-                                        return res.status(201).json({
-                                            mess: "Tạo lệnh thành công!",
-                                            Payment: payment,
-                                            BankOfUser: bankUser,
-                                            User: newUser
-                                        });
-                                    })
+                                    await user.save();
+                                    user.pass = null;
+                                    user.pass2 = null;
 
+                                    const withdraws = await Payments.findAll({
+                                        where: {
+                                            [Op.and]: [
+                                                { idUser: user.id },
+                                                { command: "withdraw" }
+                                            ]
+                                        },
+                                        include: [
+                                            { model: BankOfUsers, include: [{ model: Banks }] },
+                                            { model: Users }
+                                        ]
+                                    });
+                                    return res.status(201).json({ mess: "Gửi lệnh thành công!", Withdraws: withdraws, User: user });
                                 })
                             }
                         } else {
-                            return res.status(404).json({ error: "Ngân hàng khách hàng không tồn tại!" })
+                            return res.status(404).json({ error: "Ngân hàng khách hàng không tồn tại!" });
                         }
                     } else {
                         return res.status(400).json({ error: "Số dư không đủ!" });
@@ -178,7 +185,7 @@ export const UserControllerPayments = {
                             { model: BankOfUsers, include: [{ model: Banks }] },
                             { model: ReceiveBanks, include: [{ model: Banks }] }
                         ],
-                        order:[
+                        order: [
                             ["id", "desc"]
                         ]
                     });
@@ -267,6 +274,7 @@ export const UserControllerPayments = {
                                 number: number
                             });
                             await bank.save().then((newBank) => {
+
                                 return res.status(201).json({ mess: "Thêm mới thành công!", Bank: newBank, TypeBank: typeBank })
                             })
                         }
@@ -298,7 +306,12 @@ export const UserControllerPayments = {
                 });
                 if (bank) {
                     await bank.destroy();
-                    return res.status(200).json({ mess: "Xóa ngân hàng thành công!", Bank: bank })
+                    const list = await BankOfUsers.findAll({
+                        where: {
+                            idUser: idUser
+                        }
+                    })
+                    return res.status(200).json({ mess: "Xóa ngân hàng thành công!", BankOfUsers: list })
                 } else {
                     return res.status(404).json({ error: "Ngân hàng không tồn tại!" })
                 }
@@ -321,8 +334,13 @@ export const UserControllerPayments = {
                     bank.number = number;
                     bank.owner = owner;
                     bank.branch = branch;
-                    await bank.save().then((newBank) => {
-                        return res.status(200).json({ mess: "Cập nhật thành công!", Bank: newBank })
+                    await bank.save().then(async () => {
+                        const list = await BankOfUsers.findAll({
+                            where: {
+                                idUser: idUser
+                            }
+                        })
+                        return res.status(200).json({ mess: "Cập nhật thành công!", BankOfUsers: list })
                     })
                 } else {
                     return res.status(404).json({ error: "Ngân hàng không tòn tại!" })

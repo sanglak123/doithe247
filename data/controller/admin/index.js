@@ -1,4 +1,4 @@
-const { Prices, Cards, Values, Users, RefreshTokens, Imgs, Products, Banks, BankOfUsers, TypeCards } = require("../../db/models");
+const { Prices, Cards, Values, Users, RefreshTokens, Imgs, Products, Banks, BankOfUsers, TypeCards, Payments, ReceiveBanks } = require("../../db/models");
 const axios = require("axios");
 const { Op, FLOAT } = require("sequelize");
 const dotenv = require("dotenv");
@@ -24,7 +24,10 @@ const ControllAdmin = {
                 if (admin) {
                     if (bycrys.compareSync(pass2, admin.pass2)) {
                         if (key === process.env.KEY_ADMIN) {
-                            return res.status(200).json({ mess: "Đăng nhập thành công!", LoginAdmin: true });
+                            return res.status(200).json({
+                                mess: "Đăng nhập thành công!",
+                                LoginAdmin: true
+                            });
                         } else {
                             return res.status(400).json({ error: "KEY_ADMIN wrong!" });
                         }
@@ -54,7 +57,7 @@ const ControllAdmin = {
                         const salt2 = bycrys.genSaltSync(17);
                         const newPass = bycrys.hashSync(pass, salt);
                         const newPass2 = bycrys.hashSync(pass2, salt2);
-                        const wallet_number = "Hga " + new Date().getTime();                       
+                        const wallet_number = "Hga " + new Date().getTime();
                         await Users.create({
                             userName: userName,
                             displayName: displayName,

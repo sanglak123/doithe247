@@ -1,13 +1,13 @@
 import React from 'react';
 import { Pagination } from 'react-bootstrap';
 
-function PaginationHag({ page, setPage, length, limit }) {   
+function PaginationHag({ page, setPage, length, limit }) {
     const lastPage = Math.floor(length / limit) + 1
     const handleFirst = () => {
         setPage(1)
     }
     const handleNext = () => {
-        if (page * limit < length)
+        if (page < lastPage)
             setPage(pre => pre + 1)
     }
     const handlePrev = () => {
@@ -18,6 +18,7 @@ function PaginationHag({ page, setPage, length, limit }) {
         if (page < lastPage)
             setPage(lastPage)
     };
+
     const handleRenderPage = () => {
         if (page < 10) {
             return `0${page}`

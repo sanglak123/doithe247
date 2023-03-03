@@ -1,9 +1,10 @@
-import { formatMoney, formatMoney2 } from '@/config/formatMoney';
+import TableWithdraw from '@/components/withdraw/TableWithdraw';
+import { formatMoney } from '@/config/formatMoney';
 import ErrorLogin from '@/layout/errorLogin/ErrorLogin';
+import PaginationHag from '@/layout/pagination';
 import { DataSelector } from '@/redux/selector/DataSelector';
 import { UserSelector } from '@/redux/selector/UserSelector';
-import { RefreshUserSuccess } from '@/redux/slice/user';
-import { CreateWithdrawSuccess } from '@/redux/slice/user/payment';
+import { RefreshUserSuccess, UpdateWithdrawSuccess } from '@/redux/slice/user';
 import { CreateAxiosInstance } from 'data/api/axiosClient/createAxiosInstance';
 import { UserPaymentsApi } from 'data/api/users/payments';
 import React, { useEffect, useState } from 'react';
@@ -18,37 +19,22 @@ function UserWithdraw(props) {
     const axiosJwt = CreateAxiosInstance(dispatch, AccessToken);
     const User = useSelector(UserSelector.Auth.User);
     //Data  
-    const Withdraws = useSelector(UserSelector.Payments.Withdraws);
+    const WithdrawPending = useSelector(UserSelector.Payments.WithdrawPending);
+    const WithdrawHistory = useSelector(UserSelector.Payments.WithdrawHistory);
+    console.log(WithdrawHistory)
+
     const BankUser = useSelector(UserSelector.Payments.BankOfUsers);
     const BankPublic = useSelector(DataSelector.ReceiveBanks);
 
     const [idBankUser, setIdBankUser] = useState("");
     const [amount, setAmount] = useState("");
 
-    const [WithdrawsPending, setWithdrawsPending] = useState([]);
-    const [HistoryWithdrawRender, setHistoryWithdrawRender] = useState([]);
 
-    const limit = 10;
-    const [pageHistory, setPageHistory] = useState(1);
-    useEffect(() => {
-        const offset = (page - 1) * limit;
-        const list = Withdraws?.filter((item) => item.status !== "Pending");
-        const historyRender = list.slice(offset, (limit + offset))
-        setHistoryWithdrawRender(historyRender);
-    }, [Withdraws, pageHistory]);
-
-    const [page, setPage] = useState(1);
-    useEffect(() => {
-        const offset = (page - 1) * limit;
-        const pending = Withdraws?.filter((item) => item.status === "Pending");
-        const listPendingRender = pending.slice(offset, (offset + limit))
-        setWithdrawsPending(listPendingRender);
-    }, [Withdraws, page]);
 
     const handleCreateWithdraw = async () => {
         const surplus = Number(User?.surplus) - Number(amount);
         if (surplus > 0) {
-            await UserPaymentsApi.Money.CreateWithdraw(AccessToken, axiosJwt, User?.id, amount, idBankUser, dispatch, CreateWithdrawSuccess, RefreshUserSuccess);
+            await UserPaymentsApi.Money.CreateWithdraw(AccessToken, axiosJwt, User?.id, amount, idBankUser, dispatch, UpdateWithdrawSuccess, RefreshUserSuccess);
         } else {
             toast.error("Số dư không đủ!");
         };
@@ -162,159 +148,40 @@ function UserWithdraw(props) {
                                         </div>
                                     </Col>
                                 </Row>
-                                <div className='table_history'>
+                                <div className='table_pending'>
                                     <div className='hearder_hag'>
                                         <h1>Lệnh Nạp Đang Xử Lý</h1>
                                     </div>
                                     {
-                                        WithdrawsPending.length > 0 ?
+                                        WithdrawPending.length > 0 ?
                                             <div className='table_withdraw'>
-                                                <Table striped bordered hover size="sm">
-                                                    <thead>
-                                                        <tr className='txt_center' >
-                                                            <th>Sign</th>
-                                                            <th>Số tiền</th>
-                                                            <th>Giao dịch</th>
-                                                            <th>Ngân hàng</th>
-                                                            <th>Trạng thái</th>
-                                                            <th>Ngày tạo</th>
-                                                            <th>Actions</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        {
-                                                            WithdrawsPending?.map((item, index) => {
-                                                                return (
-                                                                    <tr className='txt_center' key={index}>
-                                                                        <td>{item.sign}</td>
-                                                                        <td>{formatMoney2(item.amount)}</td>
-                                                                        <td>Rút tiền</td>
-                                                                        <td>{item.BankOfUser?.Bank?.name} - {item.BankOfUser?.number}</td>
-                                                                        <td>{item.status}</td>
-                                                                        <td>{item.createdAt}</td>
-                                                                        <td>
-                                                                            <ButtonGroup>
-                                                                                {
-                                                                                    item.status === "Pending" ?
-                                                                                        <Button variant='danger'>Hủy</Button>
-                                                                                        :
-                                                                                        <Button variant='danger'>Xóa</Button>
-                                                                                }
-
-                                                                            </ButtonGroup>
-                                                                        </td>
-                                                                    </tr>
-                                                                )
-                                                            })
-                                                        }
-                                                    </tbody>
-                                                </Table>
-                                                <div className='page_number txt_right'>
-                                                    <ButtonGroup>
-                                                        <Button onClick={() => setPage(1)}>
-                                                            <span class="material-symbols-outlined">
-                                                                refresh
-                                                            </span>
-                                                        </Button>
-                                                        <Button onClick={() => {
-                                                            if (page > 1) {
-                                                                setPage(pre => pre - 1)
-                                                            }
-                                                        }}><i className="fa fa-angle-left"></i></Button>
-                                                        <Button disabled>Trang: {page}</Button>
-                                                        <Button onClick={() => {
-                                                            if (limit * page < Withdraws.length) {
-                                                                setPage(pre => pre + 1)
-                                                            }
-                                                        }}><i className="fa fa-angle-right"></i></Button>
-                                                        <Button onClick={() => {
-                                                            if (page < Math.floor(WithdrawsPending.length / limit) + 1) {
-                                                                setPage(Math.floor(WithdrawsPending.length / limit) + 1)
-                                                            }
-                                                        }}><i className="fa fa-angle-double-right"></i></Button>
-                                                    </ButtonGroup>
-                                                </div>
+                                                <TableWithdraw
+                                                    Array={WithdrawPending}
+                                                />
                                             </div>
                                             :
                                             <div className='table_withdraw'>
                                                 <p className='text-danger'>Chưa có dữ liệu</p>
                                             </div>
                                     }
-
                                 </div>
+
                                 <div className='table_history'>
                                     <div className='hearder_hag'>
                                         <h1>Lịch Sữ Rút Tiền</h1>
                                     </div>
                                     {
-                                        HistoryWithdrawRender.length > 0 ?
+                                        WithdrawHistory.length > 0 ?
                                             <div className='table_withdraw'>
-                                                <Table striped bordered hover size="sm">
-                                                    <thead>
-                                                        <tr className='txt_center' >
-                                                            <th>Sign</th>
-                                                            <th>Số tiền</th>
-                                                            <th>Giao dịch</th>
-                                                            <th>Ngân hàng</th>
-                                                            <th>Trạng thái</th>
-                                                            <th>Ngày tạo</th>
-                                                            <th>Actions</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        {
-                                                            HistoryWithdrawRender?.map((item, index) => {
-                                                                return (
-                                                                    <tr className='txt_center' key={index}>
-                                                                        <td>{item.sign}</td>
-                                                                        <td>{formatMoney2(item.amount)}</td>
-                                                                        <td>Rút tiền</td>
-                                                                        <td>{item.BankOfUser?.Bank?.name} - {item.BankOfUser?.number}</td>
-                                                                        <td>{item.status}</td>
-                                                                        <td>{item.createdAt}</td>
-                                                                        <td>
-                                                                            <ButtonGroup>
-                                                                                {
-                                                                                    item.status === "Pending" ?
-                                                                                        <Button variant='danger'>Hủy</Button>
-                                                                                        :
-                                                                                        <Button variant='danger'>Xóa</Button>
-                                                                                }
-
-                                                                            </ButtonGroup>
-                                                                        </td>
-                                                                    </tr>
-                                                                )
-                                                            })
-                                                        }
-                                                    </tbody>
-                                                </Table>
-                                                <div className='page_number txt_right'>
-                                                    <ButtonGroup>
-                                                        <Button onClick={() => setPageHistory(1)}><i className="fa fa-angle-double-left"></i></Button>
-                                                        <Button onClick={() => {
-                                                            if (page > 1) {
-                                                                setPageHistory(pre => pre - 1)
-                                                            }
-                                                        }}><i className="fa fa-angle-left"></i></Button>
-                                                        <Button disabled>Trang: {page}</Button>
-                                                        <Button onClick={() => {
-                                                            if (limit * page < Withdraws.length) {
-                                                                setPageHistory(pre => pre + 1)
-                                                            }
-                                                        }}><i className="fa fa-angle-right"></i></Button>
-                                                        <Button onClick={() => {
-                                                            setPageHistory((Math.floor(HistoryWithdrawRender.length / limit) + 1))
-                                                        }}><i className="fa fa-angle-double-right"></i></Button>
-                                                    </ButtonGroup>
-                                                </div>
+                                                <TableWithdraw
+                                                    Array={WithdrawHistory}
+                                                />
                                             </div>
                                             :
                                             <div className='table_withdraw'>
                                                 <p className='text-danger'>Chưa có dữ liệu</p>
                                             </div>
                                     }
-
                                 </div>
 
 

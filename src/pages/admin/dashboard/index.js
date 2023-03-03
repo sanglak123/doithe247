@@ -8,7 +8,7 @@ import DashboardSystems from '@/components/dashboard/Systems';
 import DashboardUsers from '@/components/dashboard/Users';
 import DashboardWithdraw from '@/components/dashboard/Withdraw';
 import { UserSelector } from '@/redux/selector/UserSelector';
-import { LoadingDataAdminSuccess, LogoutAdminSuccess } from '@/redux/slice/admin';
+import { LoadingDataAdminSuccess, LogoutAdminSuccess, SignOutAdminSuccess } from '@/redux/slice/admin';
 import { LogoutUserSuccess } from '@/redux/slice/user';
 import { DataAdminApi } from 'data/api/admin/data';
 import { CreateAxiosInstance } from 'data/api/axiosClient/createAxiosInstance';
@@ -19,18 +19,30 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import DashboardRefill from '@/components/dashboard/Refill';
 import DashboardEvents from '@/components/dashboard/Events';
-
+import { Badge, Button, ListGroup } from 'react-bootstrap';
+import { AdminSelector } from '@/redux/selector/AdminSelector';
+import { AuthApi } from 'data/api/auth';
 
 function Dashboard(props) {
     const dispatch = useDispatch();
     const router = useRouter();
-
     const User = useSelector(UserSelector.Auth.User);
     const AccessToken = useSelector(UserSelector.Auth.AccessToken);
-    const [views, setViews] = useState("Systems");
     const axiosJwt = CreateAxiosInstance(dispatch, AccessToken);
+    //GetData
+    useEffect(() => {
+        const handleGetDataAdmin = async () => {
+            await DataAdminApi.LoadingDataAdmin(dispatch, LoadingDataAdminSuccess, axiosJwt, AccessToken)
+        };
+        if (User.admin && AccessToken) {
+            handleGetDataAdmin();
+        }
+    }, [User, AccessToken]);
+    //Data
+    const Refills = useSelector(AdminSelector.Data.Refills);
+    const RefillPending = Refills?.filter(item => item.status === "Pending");
 
-
+    const [views, setViews] = useState("Systems");
 
     const handleRenderViewsDashboard = () => {
         switch (views) {
@@ -59,7 +71,7 @@ function Dashboard(props) {
                 axiosJwt={axiosJwt}
                 accessToken={AccessToken}
             />
-            case "Refill": return <DashboardRefill
+            case "Refills": return <DashboardRefill
                 axiosJwt={axiosJwt}
                 accessToken={AccessToken}
             />
@@ -77,19 +89,11 @@ function Dashboard(props) {
         }
     };
 
-    useEffect(() => {
-        const LoadingDataAdmin = async () => {
-            await DataAdminApi.LoadingData(dispatch, LoadingDataAdminSuccess, axiosJwt, AccessToken)
-        };
-        LoadingDataAdmin();
-    }, []);
+    const handleLogout = async () => {
+        await AuthApi.Logout(dispatch, SignOutAdminSuccess, router);
+        dispatch(LogoutUserSuccess());
+    }
 
-    const handleAdminLogout = async () => {
-        await ApiUsers.Authen.Logout(dispatch, LogoutUserSuccess, router, AccessToken);
-        dispatch(LogoutAdminSuccess());
-    };
-
-    console.log(User)
     return (
         User?.admin && AccessToken ?
             <div id='Dashboard'>
@@ -105,56 +109,131 @@ function Dashboard(props) {
                         </div>
 
                         <div className='menu_content'>
+                            <ListGroup as="ol" numbered>
+                                <ListGroup.Item as="li" className={views === "Systems" ? "menu_active menu_item d-flex justify-content-between align-items-start" : "menu_item d-flex justify-content-between align-items-start"} onClick={() => setViews("Systems")}>
+                                    <div className="ms-2 me-auto">
+                                        <div className="fw-bold">Systems</div>
+                                    </div>
+                                    <div className='menu_icon'>
+                                        <span className="material-symbols-outlined">
+                                            dns
+                                        </span>
+                                    </div>
+                                </ListGroup.Item>
 
-                            <div className={views === "Systems" ? "menu_active menu_item" : "menu_item"} onClick={() => setViews("Systems")}>
-                                <p>System</p>
-                                <i className="fa fa-server"></i>
-                            </div>
-                            <div className={views === "Events" ? "menu_active menu_item" : "menu_item"} onClick={() => setViews("Events")}>
-                                <p>Events</p>
-                                <i className="fa fa-user-friends"></i>
-                            </div>
-                            <div className={views === "Users" ? "menu_active menu_item" : "menu_item"} onClick={() => setViews("Users")}>
-                                <p>Users</p>
-                                <i className="fa fa-user-friends"></i>
-                            </div>
-                            <div className={views === "Cards" ? "menu_active menu_item" : "menu_item"} onClick={() => setViews("Cards")}>
-                                <p>Cards</p>
-                                <i className="fa fa-money-check-alt"></i>
-                            </div>
-                            <div className={views === "Prices" ? "menu_active menu_item" : "menu_item"} onClick={() => setViews("Prices")}>
-                                <p>Prices</p>
-                                <i className="fa fa-money-check-alt"></i>
-                            </div>
-                            <div className={views === "ChangeCards" ? "menu_active menu_item" : "menu_item"} onClick={() => setViews("ChangeCards")}>
-                                <p>Change Cards</p>
-                                <i className="fa fa-exchange-alt"></i>
-                            </div>
-                            <div className={views === "BuyCards" ? "menu_active menu_item" : "menu_item"} onClick={() => setViews("BuyCards")}>
-                                <p>Buy Cards</p>
-                                <i className="fa fa-audio-description"></i>
-                            </div>
-                            <div className={views === "Banks" ? "menu_active menu_item" : "menu_item"} onClick={() => setViews("Banks")}>
-                                <p>Banks</p>
-                                <i className="fa fa-university"></i>
-                            </div>
-                            <div className={views === "Withdraws" ? "menu_active menu_item" : "menu_item"} onClick={() => setViews("Withdraws")}>
-                                <p>Withdraw</p>
-                                <i className="fa fa-hand-holding-usd"></i>
-                            </div>
-                            <div className={views === "Refill" ? "menu_active menu_item" : "menu_item"} onClick={() => setViews("Refill")}>
-                                <p>Refill</p>
-                                <i className="fa fa-dollar-sign"></i>
-                            </div>
-                            <div className={views === "Profile" ? "menu_active menu_item" : "menu_item"} onClick={() => setViews("Profile")}>
-                                <p>Profile</p>
-                                <i className="fa fa-user-cog"></i>
-                            </div>
-                            <div className='menu_item' onClick={() => handleAdminLogout()}>
-                                <p>Sign out</p>
-                                <i className="fa fa-sign-out-alt"></i>
-                            </div>
+                                <ListGroup.Item as="li" className={views === "Users" ? "menu_active menu_item d-flex justify-content-between align-items-start" : "menu_item d-flex justify-content-between align-items-start"} onClick={() => setViews("Users")}>
+                                    <div className="ms-2 me-auto">
+                                        <div className="fw-bold">Users</div>
+                                    </div>
+                                    <div className='menu_icon'>
+                                        <span className="material-symbols-outlined">
+                                            group
+                                        </span>
+                                    </div>
+                                </ListGroup.Item>
+                                <ListGroup.Item as="li" className={views === "Events" ? "menu_active menu_item d-flex justify-content-between align-items-start" : "menu_item d-flex justify-content-between align-items-start"} onClick={() => setViews("Events")}>
+                                    <div className="ms-2 me-auto">
+                                        <div className="fw-bold">Events</div>
+                                    </div>
+                                    <div className='menu_icon'>
+                                        <span className="material-symbols-outlined">
+                                            event
+                                        </span>
+                                    </div>
+                                </ListGroup.Item>
 
+                                <ListGroup.Item as="li" className={views === "Prices" ? "menu_active menu_item d-flex justify-content-between align-items-start" : "menu_item d-flex justify-content-between align-items-start"} onClick={() => setViews("Prices")}>
+                                    <div className="ms-2 me-auto">
+                                        <div className="fw-bold">Prices</div>
+                                    </div>
+                                    <div className='menu_icon'>
+                                        <span className="material-symbols-outlined">
+                                            price_check
+                                        </span>
+                                    </div>
+                                </ListGroup.Item>
+
+                                <ListGroup.Item as="li" className={views === "Refills" ? "menu_active menu_item d-flex justify-content-between align-items-start" : "menu_item d-flex justify-content-between align-items-start"} onClick={() => setViews("Refills")}>
+                                    <div className="ms-2 me-auto">
+                                        <div className="fw-bold">Refills</div>
+                                    </div>
+                                    <div className='menu_icon'>
+                                        {
+                                            RefillPending?.length > 0 ?
+                                                <Badge bg="danger" pill>
+                                                    {RefillPending?.length}
+                                                </Badge>
+                                                :
+                                                <span className="material-symbols-outlined">
+                                                    local_atm
+                                                </span>
+                                        }
+
+                                    </div>
+                                </ListGroup.Item>
+
+                                <ListGroup.Item as="li" className={views === "Withdraws" ? "menu_active menu_item d-flex justify-content-between align-items-start" : "menu_item d-flex justify-content-between align-items-start"} onClick={() => setViews("Withdraws")}>
+                                    <div className="ms-2 me-auto">
+                                        <div className="fw-bold">Withdraws</div>
+                                    </div>
+                                    <div className='menu_icon'>
+                                        {
+                                            RefillPending?.length > 0 ?
+                                                <Badge bg="danger" pill>
+                                                    {RefillPending?.length}
+                                                </Badge>
+                                                :
+                                                <span className="material-symbols-outlined">
+                                                    local_atm
+                                                </span>
+                                        }
+
+                                    </div>
+                                </ListGroup.Item>
+
+                                <ListGroup.Item as="li" className={views === "ChangeCards" ? "menu_active menu_item d-flex justify-content-between align-items-start" : "menu_item d-flex justify-content-between align-items-start"} onClick={() => setViews("ChangeCards")}>
+                                    <div className="ms-2 me-auto">
+                                        <div className="fw-bold">ChangeCards</div>
+                                    </div>
+                                    <div className='menu_icon'>
+                                        <span className="material-symbols-outlined">
+                                            price_check
+                                        </span>
+                                    </div>
+                                </ListGroup.Item>
+                                <ListGroup.Item as="li" className={views === "BuyCards" ? "menu_active menu_item d-flex justify-content-between align-items-start" : "menu_item d-flex justify-content-between align-items-start"} onClick={() => setViews("BuyCards")}>
+                                    <div className="ms-2 me-auto">
+                                        <div className="fw-bold">BuyCards</div>
+                                    </div>
+                                    <div className='menu_icon'>
+                                        <span className="material-symbols-outlined">
+                                            price_check
+                                        </span>
+                                    </div>
+                                </ListGroup.Item>
+
+                                <ListGroup.Item as="li" className={views === "Profile" ? "menu_active menu_item d-flex justify-content-between align-items-start" : "menu_item d-flex justify-content-between align-items-start"} onClick={() => setViews("Profile")}>
+                                    <div className="ms-2 me-auto">
+                                        <div className="fw-bold">Profile</div>
+                                    </div>
+                                    <div className='menu_icon'>
+                                        <span className="material-symbols-outlined">
+                                            price_check
+                                        </span>
+                                    </div>
+                                </ListGroup.Item>
+
+                                <ListGroup.Item as="li" className={"menu_item d-flex justify-content-between align-items-start"} onClick={() => handleLogout()}>
+                                    <div className="ms-2 me-auto">
+                                        <div className="fw-bold">Sign Out</div>
+                                    </div>
+                                    <div className='menu_icon'>
+                                        <span className="material-symbols-outlined">
+                                            price_check
+                                        </span>
+                                    </div>
+                                </ListGroup.Item>
+                            </ListGroup>
                         </div>
                     </div>
 
@@ -166,7 +245,8 @@ function Dashboard(props) {
                                     <span>Dashboard</span> - <span>{views}</span>
                                 </div>
                                 <div className='hearder_right'>
-                                    <Link href={"/"}>Back to home</Link>
+                                    <Link className='btn btn-primary me-3' href={"/"}>Back to home</Link>
+                                    <Button>RefreshData</Button>
                                 </div>
                             </div>
 

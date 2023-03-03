@@ -2,7 +2,10 @@ import UserChangeCard from '@/components/changeCard/ChangeCard';
 import TablePrices from '@/components/tablePrices';
 import CardsHot from '@/layout/cardHot';
 import { DataSelector } from '@/redux/selector/DataSelector';
+import { UserSelector } from '@/redux/selector/UserSelector';
 import { LoadingDataPublicSuccess } from '@/redux/slice/dataPublic';
+import { LoadingDataUserSuccess } from '@/redux/slice/user';
+import { CreateAxiosInstance } from 'data/api/axiosClient/createAxiosInstance';
 import { UserDataApi } from 'data/api/users/data';
 import Link from 'next/link';
 import React, { useEffect } from 'react';
@@ -10,7 +13,11 @@ import { Card, Col, Container, Row } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 
 function ChangeCard(props) {
+  const User = useSelector(UserSelector.Auth.User);
+  const accessToken = useSelector(UserSelector.Auth.AccessToken);
   const dispatch = useDispatch();
+
+  const axiosJwt = CreateAxiosInstance(dispatch, accessToken);
 
   //LoadingDataPublic
   useEffect(() => {
@@ -21,6 +28,15 @@ function ChangeCard(props) {
   }, []);
 
   //Data  
+  useEffect(() => {
+    const GetDataUser = async () => {
+      await UserDataApi.LoadingDataUser(dispatch, axiosJwt, accessToken, User?.id, LoadingDataUserSuccess)
+    }
+    if (User, accessToken) {
+      GetDataUser();
+    }
+
+  }, [User, accessToken])
   const Cards = useSelector(DataSelector.Cards);
 
   return (

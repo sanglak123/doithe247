@@ -1,19 +1,21 @@
 import { toast } from "react-toastify";
 
-export const PaymentAdminApi = {
-    HandlePayment: async (accessToken, axiosJwt, dispatch, RefreshRefillSuccess, idPayment, status) => {
+export const EventsAdminApi = {
+    Create: async (accessToken, axiosJwt, dispatch, UpdateEventSuccess, name, discount, timeStart, timeEnd) => {
         await axiosJwt({
-            method: "PUT",
-            url: `/admin/payments/${idPayment}`,
+            method: "POST",
+            url: "/admin/events",
             data: {
-                status: status
+                name: name,
+                discount: discount,
+                timeStart: timeStart,
+                timeEnd: timeEnd,
             },
             headers: {
                 token: "Bearner " + accessToken
             }
         }).then((res) => {
-            toast.success(res.data.mess)
-            dispatch(RefreshRefillSuccess(res.data.Refills));
+            dispatch(UpdateEventSuccess(res.data.Events))
         }).catch((err) => {
             if (err.response) {
                 toast.error(err.response.data.error);

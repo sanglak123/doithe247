@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux';
 //Action
 import { LoginSuccess } from "@/redux/slice/user"
 
+
 function UserLogin(props) {
     const dispatch = useDispatch();
     const router = useRouter();
@@ -22,7 +23,7 @@ function UserLogin(props) {
 
     const handleRegister = async () => {
         if (userName !== "" && pass !== "") {
-            await UserAuthController.Register(userName, pass, phone, email)
+            await AuthApi.Register(userName, pass, phone, email)
             setRegister(false);
         }
     };

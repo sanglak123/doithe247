@@ -32,17 +32,13 @@ const DataPublicSlice = createSlice({
             state.Cards[index] = actions.payload
         },
         //Cards
-        EditCardSuccess: (state, actions) => {
-            const index = state.Cards.findIndex(item => item.id === actions.payload.Card.id);
-
-            if (actions.payload.Img) {
-                const newCard = { ...actions.payload.Card, Img: actions.payload.Img }
-                state.Cards[index] = newCard;
-            } else {
-                state.Cards[index].telco = actions.payload.Card.telco;
-                state.Cards[index].change = actions.payload.Card.change;
-            }
-        }
+        UpdateCardSuccess: (state, actions) => {
+            state.Cards = actions.payload;
+        },
+        //Events
+        UpdateEventSuccess: (state, actions) => {
+            state.Events = actions.payload
+        },
     }
 });
 export const {
@@ -51,7 +47,9 @@ export const {
     UpdatePriceSuccess,
     ChangeTypeCardSuccess,
     //Cards
-    EditCardSuccess
+    UpdateCardSuccess,
+    //Events
+    UpdateEventSuccess,
 
 } = DataPublicSlice.actions;
 

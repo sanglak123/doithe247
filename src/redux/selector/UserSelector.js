@@ -8,8 +8,13 @@ export const UserSelector = {
     Store: (state) => state.UserSlice.Store,
     Payments: {
         BankOfUsers: (state) => state.UserSlice.BankOfUsers,
-        Refills: (state) => state.UserSlice.Refills,
-        Withdraws: (state) => state.UserSlice.Withdraws,
         Products: (state) => state.UserSlice.Products,
+
+
+        RefillPending: (state) => state.UserSlice.RefillPending,
+        RefillHistory: (state) => state.UserSlice.RefillHistory,
+       
+        WithdrawPending: (state) => state.UserSlice.WithdrawPending,
+        WithdrawHistory: (state) => state.UserSlice.WithdrawHistory,
     },
 }

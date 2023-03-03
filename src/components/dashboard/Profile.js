@@ -1,13 +1,13 @@
 import { formatMoney } from '@/config/formatMoney';
 import { UserSelector } from '@/redux/selector/UserSelector';
-import { EditProfileSuccess } from '@/redux/slice/user';
+import { RefreshUserSuccess } from '@/redux/slice/user';
 import { ApiAdmins } from 'data/api/admins';
 import React, { useState } from 'react';
 import { Button, Col, Form, InputGroup, Row } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 
 function DashboardProfile(props) {
-    const Admin = useSelector(UserSelector.Auth.User);
+    const User = useSelector(UserSelector.Auth.User);
     const dispatch = useDispatch();
 
     //Edit  
@@ -31,7 +31,7 @@ function DashboardProfile(props) {
 
     //Edit
     const handleEditProfile = async () => {
-        await ApiAdmins.Authen.EditProfile(Admin?.id, displayName, fullName, phone, adress, photo, email, dispatch, EditProfileSuccess);
+        await ApiAdmins.Authen.EditProfile(User?.id, displayName, fullName, phone, adress, photo, email, dispatch, RefreshUserSuccess);
         setEdit(false);
     }
     return (
@@ -40,7 +40,7 @@ function DashboardProfile(props) {
 
                 <div className='profile_avatr'>
                     <div className='hearder_hag'>
-                        <h1>Profile <span className='text-danger'>{Admin?.userName.toUpperCase()}</span></h1>
+                        <h1>Profile <span className='text-danger'>{User?.userName.toUpperCase()}</span></h1>
                     </div>
                     {
                         edit ?
@@ -48,9 +48,9 @@ function DashboardProfile(props) {
                                 <div className='avatar'>
                                     {
                                         preview !== "" ?
-                                            <img src={preview} alt={`preview_${Admin?.userName}`} className='img-fluid' />
+                                            <img src={preview} alt={`preview_${User?.userName}`} className='img-fluid' />
                                             :
-                                            <img src={Admin?.Img?.path} alt={Admin?.userName} className='img-fluid' />
+                                            <img src={User?.Img?.path} alt={User?.userName} className='img-fluid' />
                                     }
 
                                 </div>
@@ -65,11 +65,11 @@ function DashboardProfile(props) {
 
                             :
                             <div className='avatar'>
-                                <img src={Admin?.Img?.path} alt={Admin?.userName} className='img-fluid' />
+                                <img src={User?.Img?.path} alt={User?.userName} className='img-fluid' />
                             </div>
                     }
-                    <p>Account : <span className='text-danger txt_bold'>{Admin?.admin === true ? "Admin" : "Client"}</span></p>
-                    <p>User : <span className='text-danger txt_bold'>{Admin?.userName}</span></p>
+                    <p>Account : <span className='text-danger txt_bold'>{User?.admin === true ? "Admin" : "Client"}</span></p>
+                    <p>User : <span className='text-danger txt_bold'>{User?.userName}</span></p>
                 </div>
                 <div className='Profile_setting'>
                     <div className='hearder_hag'>
@@ -84,7 +84,7 @@ function DashboardProfile(props) {
                                         <Form.Control
                                             type="text"
                                             placeholder="Your displayname"
-                                            value={Admin?.wallet_number}
+                                            value={User?.wallet_number}
                                             disabled
                                         />
                                     </Form.Group>
@@ -95,7 +95,7 @@ function DashboardProfile(props) {
                                         <Form.Control
                                             type="text"
                                             placeholder="Your displayname"
-                                            value={formatMoney(Admin?.surplus)}
+                                            value={formatMoney(User?.surplus)}
                                             disabled
                                         />
                                     </Form.Group>
@@ -116,11 +116,9 @@ function DashboardProfile(props) {
                                                 <Form.Control
                                                     type="text"
                                                     placeholder="Your displayname"
-                                                    value={Admin?.displayName ? Admin?.displayName : "Null"}
+                                                    value={User?.displayName ? User?.displayName : "Null"}
                                                     readOnly
                                                 />
-
-
                                         }
 
                                     </Form.Group>
@@ -142,7 +140,7 @@ function DashboardProfile(props) {
                                                 <Form.Control
                                                     type="text"
                                                     placeholder="Your full name"
-                                                    value={Admin?.fullName ? Admin?.fullName : "Null"}
+                                                    value={User?.fullName ? User?.fullName : "Null"}
                                                     readOnly
                                                 />
 
@@ -166,7 +164,7 @@ function DashboardProfile(props) {
                                                 <Form.Control
                                                     type="text"
                                                     placeholder="Your email"
-                                                    value={Admin?.email ? Admin?.email : "Null"}
+                                                    value={User?.email ? User?.email : "Null"}
                                                     readOnly
                                                 />
 
@@ -190,7 +188,7 @@ function DashboardProfile(props) {
                                                 <Form.Control
                                                     type="text"
                                                     placeholder="Your email"
-                                                    value={Admin?.phone ? Admin?.phone : "Null"}
+                                                    value={User?.phone ? User?.phone : "Null"}
                                                     readOnly
                                                 />
 
@@ -214,7 +212,7 @@ function DashboardProfile(props) {
                                                 <Form.Control
                                                     type="text"
                                                     placeholder="Your adress"
-                                                    value={Admin?.adress ? Admin?.adress : "Null"}
+                                                    value={User?.adress ? User?.adress : "Null"}
                                                     readOnly
                                                 />
 

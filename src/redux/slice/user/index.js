@@ -8,9 +8,13 @@ const UserSlice = createSlice({
         Online: false,
         Store: [],
         BankOfUsers: [],
-        Refills: [],
-        Withdraws: [],
-        Products: [],        
+
+        RefillPending: [],
+        RefillHistory: [],
+        WithdrawPending: [],
+        WithdrawHistory: [],
+
+        Products: [],
     },
     reducers: {
         //Refresh
@@ -25,10 +29,6 @@ const UserSlice = createSlice({
             state.User = actions.payload.User;
             state.accessToken = actions.payload.accessToken;
             state.Online = actions.payload.Online;
-            state.BankOfUsers = actions.payload.BankOfUsers;
-            state.Refills = actions.payload.Refills;
-            state.Withdraws = actions.payload.Withdraws;
-            state.Products = actions.payload.Products
         },
         LogoutUserSuccess: (state) => {
             state.User = [];
@@ -42,6 +42,17 @@ const UserSlice = createSlice({
         // Profile
         EditProfileSuccess: (state, actions) => {
             state.User.User = actions.payload
+        },
+        //Data User
+        LoadingDataUserSuccess: (state, actions) => {
+            state.BankOfUsers = actions.payload.BankOfUsers;
+            state.Products = actions.payload.Products;
+
+            state.RefillPending = actions.payload.Payments.filter(item => item.command === "refill" && item.status === "Pending");
+            state.RefillHistory = actions.payload.Payments.filter(item => item.command === "refill" && item.status !== "Pending");
+
+            state.WithdrawPending = actions.payload.Payments.filter(item => item.command === "withdraw" && item.status === "Pending");
+            state.WithdrawHistory = actions.payload.Payments.filter(item => item.command === "withdraw" && item.status !== "Pending");
         },
         //Store
         ChooseCardSuccess: (state, actions) => {
@@ -96,6 +107,21 @@ const UserSlice = createSlice({
         DeleteRefillSuccess: (state, actions) => {
             const index = state.Refills.findIndex(item => item.id === actions.payload.id);
             state.Refills.slice(index, 1)
+        },
+        //Withdraw
+        UpdateWithdrawSuccess: (state, actions) => {
+            state.Withdraws(actions.payload)
+        },
+        //BankOfUser
+        AddBankOfUserSuccess: (state, actions) => {
+            const newBank = {
+                ...actions.payload.Bank,
+                Bank: actions.payload.TypeBank
+            }
+            state.BankOfUsers.push(newBank)
+        },
+        RefreshBankOfUserSuccess: (state, actions) => {
+            state.BankOfUsers = actions.payload
         }
     }
 });
@@ -107,7 +133,8 @@ export const {
     LogoutUserSuccess,
     EditProfileSuccess,
     RefreshUserSuccess,
-    //Store
+    //DataUser
+    LoadingDataUserSuccess,
     //Store
     ChooseCardSuccess,
     AddCardSuccess,
@@ -118,7 +145,12 @@ export const {
     //Refill
     CreateRefillSuccess,
     RefreshRefillSuccess,
-    DeleteRefillSuccess
+    DeleteRefillSuccess,
+    //Withdraws
+    UpdateWithdrawSuccess,
+    //BankOfUser
+    AddBankOfUserSuccess,
+    RefreshBankOfUserSuccess
 
 } = UserSlice.actions;
 

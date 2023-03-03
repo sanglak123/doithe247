@@ -1,3 +1,5 @@
+import { SignOutAdminSuccess } from "@/redux/slice/admin";
+import { LogoutUserSuccess } from "@/redux/slice/user";
 import { toast } from "react-toastify"
 import { rootApi } from "./configApi"
 
@@ -76,6 +78,7 @@ export const ApiUsers = {
             }).then((res) => {
                 toast.success("Logout success!");
                 dispatch(LogoutUserSuccess());
+                dispatch(SignOutAdminSuccess())
                 router.replace("/")
             }).catch((err) => {
                 if (err.response) {

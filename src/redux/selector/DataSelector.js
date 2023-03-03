@@ -6,4 +6,5 @@ export const DataSelector = {
     Banks: (state) => state.DataPublicSlice.Banks,
     News: (state) => state.DataPublicSlice.News,
     ReceiveBanks: (state) => state.DataPublicSlice.ReceiveBanks,
+    Events: (state) => state.DataPublicSlice.Events,
 }

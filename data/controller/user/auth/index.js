@@ -1,6 +1,6 @@
 import { Op } from "sequelize";
 
-const { RefreshTokens, Users, BankOfUsers, Banks, Payments, Products, ReceiveBanks, Imgs, Prices, Cards, Values } = require("data/db/models")
+const { RefreshTokens, Users, BankOfUsers, Banks, Payments, Products, ReceiveBanks, Imgs, Prices, Cards, Values, Events } = require("data/db/models")
 const bcryptjs = require("bcryptjs")
 const dotenv = require("dotenv").config();
 const { CreateAccessToken, CreateRefreshToken } = require("data/token")
@@ -13,7 +13,8 @@ export const UserControllerAuthen = {
             const user = await Users.findOne({
                 where: {
                     userName: userName
-                }
+                },
+                include: [{ model: Imgs }]
             });
             if (user) {
 
@@ -41,7 +42,7 @@ export const UserControllerAuthen = {
                             { model: Imgs },
                             { model: Users }
                         ]
-                    });                  
+                    });
                     const refill = await Payments.findAll({
                         where: {
                             [Op.and]: [
@@ -64,7 +65,8 @@ export const UserControllerAuthen = {
                             { model: Users },
                             { model: Prices, include: [{ model: Cards }, { model: Values }] }
                         ]
-                    })
+                    });
+                    const listEvent = await Events.findAll();
 
                     const newAccessToken = CreateAccessToken(user);
                     const newRefreshToken = CreateRefreshToken(user);
@@ -96,6 +98,7 @@ export const UserControllerAuthen = {
                             Withdraws: withdraw,
                             Refills: refill,
                             Products: products,
+                            Events: listEvent,
                             mess: "Login success!"
                         });
                     } else {
@@ -114,6 +117,7 @@ export const UserControllerAuthen = {
                             Withdraws: withdraw,
                             Refills: refill,
                             Products: products,
+                            Events: listEvent,
                             mess: "Login success!"
                         });
                     }

@@ -15,5 +15,22 @@ export const UserDataApi = {
                 toast.error(err);
             }
         })
+    },
+    LoadingDataUser: async (dispatch, axiosJwt, accessToken, idUser, LoadingDataUserSuccess) => {
+        await axiosJwt({
+            method: "GET",
+            url: `/users/${idUser}`,
+            headers: {
+                token: "Bearner " + accessToken
+            },
+        }).then((res) => {
+            dispatch(LoadingDataUserSuccess(res.data))
+        }).catch((err) => {
+            if (err.response) {
+                toast.error(err.response.data.error);
+            } else {
+                toast.error(err);
+            }
+        })
     }
 }

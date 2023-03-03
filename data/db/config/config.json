@@ -1,9 +1,9 @@
 {
   "development": {
-    "username": "hsc01435_admin",
-    "password": "sanglak123",
-    "database": "hsc01435_charging",
-    "host": "innhanh79.vn",
+    "username": "admin",
+    "password": "admin123",
+    "database": "charging",
+    "host": "localhost",
     "dialect": "mysql"
   },
   "test": {

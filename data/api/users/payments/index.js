@@ -21,7 +21,7 @@ export const UserPaymentsApi = {
                 }
             })
         },
-        Edit: async (idBank, number, owner, branch, idUser, accessToken, axiosJwt, dispatch, EditBankOfUserSuccess) => {
+        Edit: async (idBank, number, owner, branch, idUser, accessToken, axiosJwt, dispatch, RefreshBankOfUserSuccess) => {
             await axiosJwt({
                 method: "PUT",
                 url: `/users/banks/${idBank}`,
@@ -32,7 +32,7 @@ export const UserPaymentsApi = {
             }).then((res) => {
                 if (res.status === 200) {
                     toast.success(res.data.mess);
-                    dispatch(EditBankOfUserSuccess(res.data.Bank))
+                    dispatch(RefreshBankOfUserSuccess(res.data.BankOfUsers))
                 }
             }).catch((err) => {
                 if (err.response) {
@@ -42,7 +42,7 @@ export const UserPaymentsApi = {
                 }
             })
         },
-        Delete: async (idBank, idUser, dispatch, DeleteBankOfUserSuccess, accessToken, axiosJwt) => {
+        Delete: async (idBank, idUser, dispatch, RefreshBankOfUserSuccess, accessToken, axiosJwt) => {
             await axiosJwt({
                 method: "DELETE",
                 url: `/users/banks/${idBank}`,
@@ -52,7 +52,7 @@ export const UserPaymentsApi = {
                 data: { idUser }
             }).then((res) => {
                 toast.success(res.data.mess);
-                dispatch(DeleteBankOfUserSuccess(res.data.Bank));
+                dispatch(RefreshBankOfUserSuccess(res.data.BankOfUsers));
             }).catch((err) => {
                 if (err.response) {
                     toast.error(err.response.data.error);
@@ -125,24 +125,20 @@ export const UserPaymentsApi = {
                 }
             })
         },
-        CreateWithdraw: async (accessToken, axiosJwt, idUser, amount, idBankUser, dispatch, CreateWithdrawSuccess, RefreshUserSuccess) => {
+        CreateWithdraw: async (accessToken, axiosJwt, idUser, amount, idBankUser, dispatch, UpdateWithdrawSuccess, RefreshUserSuccess) => {
             const sign = "Withdraw_User_" + idUser + "_" + new Date().getTime();
             await axiosJwt({
                 method: "POST",
                 url: `/users/payments/withdraw/${idUser}}`,
                 data: {
-                    amount, sign, idBankUser, sign
+                    amount, sign, idBankUser
                 },
                 headers: {
                     token: "Bearner " + accessToken
                 }
             }).then((res) => {
                 toast.success(res.data.mess);
-                const newWithDraw = {
-                    ...res.data.Payment,
-                    BankOfUser: res.data.BankOfUser
-                }
-                dispatch(CreateWithdrawSuccess(newWithDraw));
+                dispatch(UpdateWithdrawSuccess(res.data.Withdraws));
                 dispatch(RefreshUserSuccess(res.data.User))
             }).catch((err) => {
                 if (err.response) {

@@ -6,42 +6,56 @@ const AdminDataSlice = createSlice({
         Users: [],
         ChangeCards: [],
         BuyCards: [],
-        Payments: [],
-        LoginAdmin: false
+        LoginAdmin: false,
+
+        RefillPending: [],
+        RefillHistory: [],
+        WithdrawPending: [],
+        WithdrawHistory: []
     },
     reducers: {
         // LoginAdmin
         LoginAdminSuccess: (state, actions) => {
-            state.LoginAdmin = actions.payload
+            state.LoginAdmin = actions.payload;
         },
         //Admin logout
-        LogoutAdminSuccess: (state) => {
+        SignOutAdminSuccess: (state) => {
             state.LoginAdmin = false;
             state.Data = [];
             state.Users = [];
             state.BuyCards = [];
             state.ChangeCards = [];
         },
-        //Data Admin
+        //LoadingDataAdmin
         LoadingDataAdminSuccess: (state, actions) => {
             state.Users = actions.payload.Users;
+
             state.ChangeCards = actions.payload.ChangeCards;
             state.BuyCards = actions.payload.BuyCards;
-            state.Payments = actions.payload.Payments;
+
+            state.Refills = actions.payload.Refills;
+            state.Withdraws = actions.payload.Withdraws;
+            //Payments                 
+            state.RefillPending = actions.payload.Payments.filter(item => item.command === "refill" && item.status === "Pending");
+            state.RefillHistory = actions.payload.Payments.filter(item => item.command === "refill" && item.status !== "Pending");
+
+            state.WithdrawPending = actions.payload.Payments.filter(item => item.command === "withdraw" && item.status === "Pending");
+            state.WithdrawHistory = actions.payload.Payments.filter(item => item.command === "withdraw" && item.status !== "Pending");
         },
         //Payments
-        HandlePaymentSuccess: (state, actions)=>{
-            const index = state.Payments.findIndex(item => item.id === actions.payload.id);
-            state.Payments[index] = actions.payload;
+        RefreshListRefillSuccess: (state, actions) => {
+            state.WithdrawPending = actions.payload.Payments.filter(item => item.command === "withdraw" && item.status === "Pending");
+            state.WithdrawHistory = actions.payload.Payments.filter(item => item.command === "withdraw" && item.status !== "Pending");
         }
     }
 });
 export const {
-    LoadingDataAdminSuccess,
     LoginAdminSuccess,
-    LogoutAdminSuccess,
+    SignOutAdminSuccess,
+    //LoadData
+    LoadingDataAdminSuccess,
     //Payments
-    HandlePaymentSuccess
+    RefreshListRefillSuccess
 
 } = AdminDataSlice.actions;
 

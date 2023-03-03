@@ -7,23 +7,7 @@ export const UserControllerDatas = {
 
             const d = new Date();
             //Events
-            const listEvents = await Events.findAll({
-                where: {
-                    [Op.and]: [
-                        {
-                            timeStart: {
-                                [Op.lte]: d.getTime()
-
-                            }
-                        },
-                        {
-                            timeEnd: {
-                                [Op.gte]: d.getTime()
-                            }
-                        }
-                    ]
-                }
-            });
+            const listEvents = await Events.findAll();
             const listReceiveBank = await ReceiveBanks.findAll({
                 include: [{ model: Banks }]
             });
@@ -94,23 +78,9 @@ export const UserControllerDatas = {
                     ["id", "desc"]
                 ]
             });
-            const listWithdraw = await Payments.findAll({
+            const listPayments = await Payments.findAll({
                 where: {
-                    command: "withdraw"
-                },
-                order: [
-                    ["id", "desc"]
-                ],
-                include: [
-                    { model: Users },
-                    { model: BankOfUsers, include: [{ model: Banks }] },
-                    { model: ReceiveBanks, include: [{ model: Banks }] },
-                ]
-            });
-
-            const listRefill = await Payments.findAll({
-                where: {
-                    command: "refill"
+                    idUser: id
                 },
                 order: [
                     ["id", "desc"]
@@ -125,8 +95,7 @@ export const UserControllerDatas = {
             return res.status(200).json({
                 BankOfUsers: listBankOfUser,
                 Products: listProducts,
-                Withdraws: listWithdraw,
-                Refills: listRefill
+                Payments: listPayments
             })
         } catch (error) {
             return res.status(500).json(error);

@@ -4,6 +4,14 @@ export const AdminSelector = {
         Users: (state) => state.AdminDataSlice.Users,
         ChangeCards: (state) => state.AdminDataSlice.Users,
         BuyCards: (state) => state.AdminDataSlice.Users,
-        Payments: (state) => state.AdminDataSlice.Payments,
+
+        Refills: (state) => state.AdminDataSlice.Refills,
+        Withdraws: (state) => state.AdminDataSlice.Withdraws,
+
+        RefillPending: (state) => state.AdminDataSlice.RefillPending,
+        RefillHistory: (state) => state.AdminDataSlice.RefillHistory,
+
+        WithdrawPending: (state) => state.AdminDataSlice.WithdrawPending,
+        WithdrawHistory: (state) => state.AdminDataSlice.WithdrawHistory,
     }
 }

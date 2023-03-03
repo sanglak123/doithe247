@@ -1,15 +1,15 @@
 import { toast } from "react-toastify";
 
 export const DataAdminApi = {
-    LoadingData: async (dispatch, LoadingDataAdmin, axiosJwt, accessToken) => {
+    LoadingDataAdmin: async (dispatch, LoadingDataAdminSuccess, axiosJwt, accessToken) => {
         await axiosJwt({
             method: "GET",
-            url: "/data/admin",           
+            url: "/data/admin",
             headers: {
                 token: "Bearner " + accessToken
             }
         }).then((res) => {
-            dispatch(LoadingDataAdmin(res.data))
+            dispatch(LoadingDataAdminSuccess(res.data))
         }).catch((err) => {
             if (err.response) {
                 toast.error(err.response.data.error);

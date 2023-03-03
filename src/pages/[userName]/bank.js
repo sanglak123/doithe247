@@ -1,7 +1,7 @@
 import ErrorLogin from '@/layout/errorLogin/ErrorLogin';
 import { DataSelector } from '@/redux/selector/DataSelector';
 import { UserSelector } from '@/redux/selector/UserSelector';
-import { AddBankOfUserSuccess, DeleteBankOfUserSuccess, EditBankOfUserSuccess } from '@/redux/slice/UserSlice';
+import { RefreshBankOfUserSuccess, AddBankOfUserSuccess } from '@/redux/slice/user';
 import { CreateAxiosInstance } from 'data/api/axiosClient/createAxiosInstance';
 import { UserPaymentsApi } from 'data/api/users/payments';
 import React, { useState } from 'react';
@@ -12,8 +12,8 @@ function UserPayments(props) {
     const dispatch = useDispatch();
     //Data  
     const Banks = useSelector(DataSelector.Banks);
-    const User = useSelector(UserSelector.User);
-    const AccessToken = useSelector(UserSelector.AccessToken);
+    const User = useSelector(UserSelector.Auth.User);
+    const AccessToken = useSelector(UserSelector.Auth.AccessToken);
     const axiosJwt = CreateAxiosInstance(dispatch, AccessToken);
 
     const [idBank, setIdBank] = useState("");
@@ -21,11 +21,11 @@ function UserPayments(props) {
     const [owner, setOwner] = useState("");
     const [branch, setBranch] = useState("");
 
-    const BankOfUsers = useSelector(UserSelector.BankOfUsers);
+    const BankOfUsers = useSelector(UserSelector.Payments.BankOfUsers);
 
     //Add
     const handleAddBankOfUser = async () => {
-        await UserPaymentsApi.BankOfUser.Add(idBank, number, owner, branch, User?.id, dispatch, AddBankOfUserSuccess, AccessToken, axiosJwt);      
+        await UserPaymentsApi.BankOfUser.Add(idBank, number, owner, branch, User?.id, dispatch, AddBankOfUserSuccess, AccessToken, axiosJwt);
         setBranch("");
         setNumber("");
         setOwner("");
@@ -35,13 +35,13 @@ function UserPayments(props) {
     const [edit, setEdit] = useState("");
 
     const handleEditBankOfUser = async (bank) => {
-        await UserPaymentsApi.BankOfUser.Edit(bank.id, number, owner, branch, User.id, AccessToken, axiosJwt, dispatch, EditBankOfUserSuccess);
+        await UserPaymentsApi.BankOfUser.Edit(bank.id, number, owner, branch, User.id, AccessToken, axiosJwt, dispatch, RefreshBankOfUserSuccess);
         setEdit("");
     };
 
     //Add
     const handleDeleteBankOfUser = async (bank) => {
-        await UserPaymentsApi.BankOfUser.Delete(bank.id, User?.id, dispatch, DeleteBankOfUserSuccess, AccessToken, axiosJwt);
+        await UserPaymentsApi.BankOfUser.Delete(bank.id, User?.id, dispatch, RefreshBankOfUserSuccess, AccessToken, axiosJwt);
     };
     return (
         AccessToken ?

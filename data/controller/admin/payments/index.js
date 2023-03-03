@@ -1,4 +1,4 @@
-import { BankOfUsers, Banks, Payments, ReceiveBanks, Users } from "data/db/models";
+import { BankOfUsers, Banks, Imgs, Payments, ReceiveBanks, Users } from "data/db/models";
 
 export const PaymentAdminController = {
     HandlePayment: async (req, res) => {
@@ -22,14 +22,25 @@ export const PaymentAdminController = {
                     }
                 });
                 if (user) {
-                    payment.status = status;                   
+                    payment.status = status;
                     await payment.save().then(async (newPayment) => {
+                        const listRefills = await Payments.findAll({
+                            where: {
+                                command: "refill"
+                            },
+                            include: [
+                                { model: Users },
+                                { model: Imgs },
+                                { model: BankOfUsers, include: [{ model: Banks }] },
+                                { model: ReceiveBanks, include: [{ model: Banks }] },
+                            ]
+                        });
                         if (status === "Success") {
                             user.surplus = Number(payment.amount) + Number(user.surplus);
                             await user.save()
-                            return res.status(200).json({ mess: "Xác nhận thành công!", Payment: newPayment })
+                            return res.status(200).json({ mess: "Xác nhận thành công!", Refills: listRefills })
                         } else if (status === "Error") {
-                            return res.status(200).json({ mess: "Hủy lệnh thành công!", Payment: newPayment })
+                            return res.status(200).json({ mess: "Hủy lệnh thành công!", Refills: listRefills })
                         }
                     })
                 } else {

@@ -15,7 +15,7 @@ const AuthenAdminApi = {
             }
         }).then((res) => {
             toast.update(toastId, { render: res.data.mess, type: "success", isLoading: false });
-            dispatch(LoginAdminSuccess(res.data.LoginAdmin));
+            dispatch(LoginAdminSuccess(res.data));
             router.replace("/admin/dashboard");
             setTimeout(() => {
                 toast.dismiss(toastId)
