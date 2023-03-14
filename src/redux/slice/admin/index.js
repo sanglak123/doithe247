@@ -10,13 +10,14 @@ const AdminDataSlice = createSlice({
 
         RefillPending: [],
         RefillHistory: [],
+
         WithdrawPending: [],
         WithdrawHistory: []
     },
     reducers: {
         // LoginAdmin
         LoginAdminSuccess: (state, actions) => {
-            state.LoginAdmin = actions.payload;
+            state.LoginAdmin = actions.payload.LoginAdmin;
         },
         //Admin logout
         SignOutAdminSuccess: (state) => {
@@ -32,9 +33,6 @@ const AdminDataSlice = createSlice({
 
             state.ChangeCards = actions.payload.ChangeCards;
             state.BuyCards = actions.payload.BuyCards;
-
-            state.Refills = actions.payload.Refills;
-            state.Withdraws = actions.payload.Withdraws;
             //Payments                 
             state.RefillPending = actions.payload.Payments.filter(item => item.command === "refill" && item.status === "Pending");
             state.RefillHistory = actions.payload.Payments.filter(item => item.command === "refill" && item.status !== "Pending");
@@ -44,9 +42,13 @@ const AdminDataSlice = createSlice({
         },
         //Payments
         RefreshListRefillSuccess: (state, actions) => {
-            state.WithdrawPending = actions.payload.Payments.filter(item => item.command === "withdraw" && item.status === "Pending");
-            state.WithdrawHistory = actions.payload.Payments.filter(item => item.command === "withdraw" && item.status !== "Pending");
-        }
+            state.RefillPending = actions.payload.filter(item => item.status === "Pending");
+            state.RefillHistory = actions.payload.filter(item => item.status !== "Pending");
+        },
+        RefreshListWithdrawSuccess: (state, actions) => {
+            state.WithdrawPending = actions.payload.filter(item => item.status === "Pending");
+            state.WithdrawHistory = actions.payload.filter(item => item.status !== "Pending");
+        },
     }
 });
 export const {
@@ -55,7 +57,8 @@ export const {
     //LoadData
     LoadingDataAdminSuccess,
     //Payments
-    RefreshListRefillSuccess
+    RefreshListRefillSuccess,
+    RefreshListWithdrawSuccess
 
 } = AdminDataSlice.actions;
 

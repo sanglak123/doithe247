@@ -1,8 +1,7 @@
 import nextConnect from "next-connect";
 import multer from "multer";
-import { ControllAdmin } from "data/controller/admin";
-import { AdminControllerCards } from "data/controller/admin/cards";
 import { CheckAdmin } from "data/middleware";
+import { AdminControllerCards } from "data/controller/admin/cards";
 
 const d = new Date();
 const upload = multer({
@@ -33,11 +32,11 @@ apiRoute.get((req, res) => {
 });
 apiRoute.post(CheckAdmin, AdminControllerCards.OnOffChangeCard);
 
-apiRoute.delete(CheckAdmin, ControllAdmin.Cards.Delete);
+apiRoute.delete(CheckAdmin, AdminControllerCards.Delete);
 
 apiRoute.use(upload.single("photo"));
 
-apiRoute.put(CheckAdmin, ControllAdmin.Cards.Edit);
+apiRoute.put(CheckAdmin, AdminControllerCards.Edit);
 
 export default apiRoute;
 

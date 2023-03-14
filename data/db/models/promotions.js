@@ -18,7 +18,8 @@ module.exports = (sequelize, DataTypes) => {
   Promotions.init({
     idEvent: DataTypes.INTEGER,
     idUser: DataTypes.INTEGER,
-    key: DataTypes.STRING
+    key: DataTypes.STRING,
+    status:DataTypes.BOOLEAN
   }, {
     sequelize,
     modelName: 'Promotions',

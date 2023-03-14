@@ -12,13 +12,15 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       this.hasMany(models.Promotions, { foreignKey: "idEvent" });
+      this.belongsTo(models.Imgs, { foreignKey: "img" });
     }
   }
   Events.init({
     name: DataTypes.STRING,
     discount: DataTypes.INTEGER,
-    timeStart: DataTypes.DATE,
-    timeEnd: DataTypes.DATE,
+    timeStart: DataTypes.STRING,
+    timeEnd: DataTypes.STRING,
+    img: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Events',

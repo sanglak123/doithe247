@@ -1,4 +1,5 @@
 import { UserControllerPayments } from "data/controller/user/payments";
+import { CheckLogin } from "data/middleware";
 import multer from "multer";
 import nextConnect from "next-connect";
 
@@ -26,14 +27,11 @@ const apiRoute = nextConnect({
     },
 });
 
-apiRoute.get((req, res) => {
-    const { id } = req.query;
-    return res.status(200).json({ mess: "Create Refill!" + id })
-});
+apiRoute.get(CheckLogin, UserControllerPayments.Refills.GetAllByIdUser);
 
 apiRoute.use(upload.single("photo"));
 
-apiRoute.post(UserControllerPayments.Money.CreateRefill);
+apiRoute.post(UserControllerPayments.Refills.Create);
 
 export default apiRoute;
 

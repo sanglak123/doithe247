@@ -33,17 +33,33 @@
                     width: 100%;
                     cursor: pointer;
 
-                    i {
+                    span,
+                    .icon {
                         font-size: 1rem;
                         width: 35px;
                         height: 35px;
                         line-height: 35px;
                         text-align: center;
                         border-radius: 100%;
-                        color: $cl_green_300;
+                        color: $green_300;
 
-                        border: 1px solid $cl_green_300;
+                        border: 1px solid $green_300;
                         transition: 0.5s;
+                        position: relative;
+
+                        .icon_count {
+                            position: absolute;
+                            width: 20px;
+                            height: 20px;
+                            top: -10px;
+                            right: -7px;
+                            border-radius: 100%;
+                            background-color: red;
+                            color: white;
+                            font-size: 0.7rem;
+                            text-align: center;
+                            line-height: 20px;
+                        }
                     }
 
                     p {
@@ -52,10 +68,11 @@
                     }
 
                     &:hover {
-                        background-color: $cl_green_100;
+                        background-color: $green_100;
                         color: white;
 
-                        i {
+                        span,
+                        .icon {
                             transform: translateX(-20px);
                             color: white;
                             border-color: white;
@@ -64,10 +81,11 @@
                 }
 
                 .menu_active {
-                    background-color: $cl_green_300;
+                    background-color: $green_300;
                     color: white;
 
-                    i {
+                    span,
+                    .icon {
                         color: white;
                         border-color: white;
                     }
@@ -85,9 +103,7 @@
 
                 .views_hearder_item {
                     display: flex;
-                    justify-content: space-between;
-
-                    .hearder_left {}
+                    justify-content: space-between;                
 
                     .hearder_right {
                         a {
@@ -97,7 +113,7 @@
 
                         &:hover {
                             a {
-                                color: $cl_dark_100;
+                                color: $dark_100;
                             }
                         }
                     }

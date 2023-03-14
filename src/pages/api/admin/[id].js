@@ -1,4 +1,4 @@
-import { ControllAdmin } from "data/controller/admin";
+import { ControllAdmin } from "data/controller/admin/auth";
 import multer from "multer";
 import nextConnect from "next-connect";
 

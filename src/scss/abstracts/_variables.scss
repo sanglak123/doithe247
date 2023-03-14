@@ -1,36 +1,35 @@
 //color
-$cl_dark_100: #212529;
+$green_100: rgb(1, 41, 15);
+$green_200: rgb(1, 59, 22);
+$green_300: rgb(1, 77, 29);
+$green_400: rgb(2, 104, 39);
 
-$cl_green_100: rgb(2, 85, 31);
-$cl_green_300: rgb(1, 54, 20);
+$dark_100: rgb(25, 28, 39);
+$dark_200: rgb(25, 28, 39);
+$dark_300: #292e40;
+$dark_400: #25293a;
+$dark_500: #454e70b0;
+$dark_600: #68708db0;
+
+$light_300: rgb(201, 201, 201);
 
 //Font
 @font-face {
-    font-family: montserrat_Black;
-    src: url("/font/Montserrat-Black.ttf");
+    font-family: opensans_light;
+    src: url("/font/OpenSans-Light.ttf");
 }
 
 @font-face {
-    font-family: montserrat_Think;
-    src: url("/font/Montserrat-Thin.ttf");
+    font-family: opensans_medium;
+    src: url("/font/OpenSans-Medium.ttf");
 }
 
 @font-face {
-    font-family: montserrat_Bold;
-    src: url("/font/Montserrat-Bold.ttf");
+    font-family: opensans_bold;
+    src: url("/font/OpenSans-Bold.ttf");
 }
 
 @font-face {
-    font-family: roboto;
-    src: url("/font/Roboto-Regular.ttf");
-}
-
-@font-face {
-    font-family: robotoBold;
-    src: url("/font/Roboto-Bold.ttf");
-}
-
-@font-face {
-    font-family: robotoBlack;
-    src: url("/font/Roboto-Black.ttf");
+    font-family: anton_black;
+    src: url("/font/Anton-Regular.ttf");
 }

@@ -14,6 +14,8 @@ const UserSlice = createSlice({
         WithdrawPending: [],
         WithdrawHistory: [],
 
+        Promotions: [],
+
         Products: [],
     },
     reducers: {
@@ -45,8 +47,11 @@ const UserSlice = createSlice({
         },
         //Data User
         LoadingDataUserSuccess: (state, actions) => {
+            state.User = actions.payload.User
             state.BankOfUsers = actions.payload.BankOfUsers;
             state.Products = actions.payload.Products;
+
+            state.Promotions = actions.payload.Promotions;
 
             state.RefillPending = actions.payload.Payments.filter(item => item.command === "refill" && item.status === "Pending");
             state.RefillHistory = actions.payload.Payments.filter(item => item.command === "refill" && item.status !== "Pending");
@@ -56,21 +61,21 @@ const UserSlice = createSlice({
         },
         //Store
         ChooseCardSuccess: (state, actions) => {
-            const index = state.Store.findIndex(el => el.telco === actions.payload.telco && el.value === actions.payload.value);
+            const index = state.Store.findIndex(item => item.id === actions.payload.id);
             if (index >= 0) {
-                return;
+                state.Store[index].count += 1;
             } else {
                 state.Store = [...state.Store, actions.payload]
             }
         },
         AddCardSuccess: (state, actions) => {
-            const index = state.Store.findIndex(item => item.telco === actions.payload.telco && item.value === actions.payload.value);
+            const index = state.Store.findIndex(item => item.id === actions.payload.id);
             if (index >= 0) {
                 state.Store[index].count += 1;
             }
         },
         SubtractionCardSuccess: (state, actions) => {
-            const index = state.Store.findIndex(el => el.telco === actions.payload.telco && el.value === actions.payload.value);
+            const index = state.Store.findIndex(item => item.id === actions.payload.id);
             if (index >= 0) {
                 if (state.Store[index].count > 1) {
                     state.Store[index].count -= 1;
@@ -80,7 +85,7 @@ const UserSlice = createSlice({
             }
         },
         DeleteCardSuccess: (state, actions) => {
-            const index = state.Store.findIndex(item => item.telco === actions.payload.telco && item.value === actions.payload.value);
+            const index = state.Store.findIndex(item => item.id === actions.payload.id);
             if (index >= 0) {
                 state.Store.splice(index, 1); //Xóa 1 item có thứ tự từ index trở đi
             }
@@ -92,6 +97,11 @@ const UserSlice = createSlice({
             state.Store = [];
         },
         //Refill
+        UpdateRefillSuccess: (state, actions) => {
+            state.RefillPending = actions.payload.Refills.filter(item => item.status === "Pending");
+            state.RefillHistory = actions.payload.Refills.filter(item => item.status !== "Pending");
+            state.User = actions.payload.User;
+        },
         CreateRefillSuccess: (state, actions) => {
             const newPayment = {
                 ...actions.payload.Payment,
@@ -101,16 +111,11 @@ const UserSlice = createSlice({
             };
             state.Refills.push(newPayment)
         },
-        RefreshRefillSuccess: (state, actions) => {
-            state.Refills = actions.payload;
-        },
-        DeleteRefillSuccess: (state, actions) => {
-            const index = state.Refills.findIndex(item => item.id === actions.payload.id);
-            state.Refills.slice(index, 1)
-        },
+
         //Withdraw
         UpdateWithdrawSuccess: (state, actions) => {
-            state.Withdraws(actions.payload)
+            state.WithdrawPending = actions.payload.filter(item => item.status === "Pending");
+            state.WithdrawHistory = actions.payload.filter(item => item.status !== "Pending");
         },
         //BankOfUser
         AddBankOfUserSuccess: (state, actions) => {
@@ -143,9 +148,8 @@ export const {
     ClearAllStoreSuccess,
     BuyCardSuccess,
     //Refill
+    UpdateRefillSuccess,
     CreateRefillSuccess,
-    RefreshRefillSuccess,
-    DeleteRefillSuccess,
     //Withdraws
     UpdateWithdrawSuccess,
     //BankOfUser

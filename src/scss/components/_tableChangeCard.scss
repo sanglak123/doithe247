@@ -1,13 +1,31 @@
-.table_prices{
-    .price_content{
-        .prices_hearder{
-            button{
+.table_prices {
+    .price_content {
+        .prices_hearder {
+            button {
                 border-radius: 0;
             }
         }
-        .prices_table{
+
+        .prices_table {          
             @media only screen and (max-width: 1200px) {
-              overflow: scroll;
+                overflow: scroll;
+
+                &::-webkit-scrollbar-track {
+                    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+                    border-radius: 2px;
+                    background-color: #F5F5F5;
+                }
+
+                &::-webkit-scrollbar {
+                    height: 5px;
+                    background-color: #F5F5F5;
+                }
+
+                &::-webkit-scrollbar-thumb {
+                    border-radius: 2px;
+                    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+                    background-color: $dark_200;
+                }
             }
         }
     }

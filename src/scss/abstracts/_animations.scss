@@ -27,3 +27,13 @@
         transform: translateX(-100%);
     }
 }
+
+@keyframes ComponentsFade {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}

@@ -1,3 +1,4 @@
+import { CreateAxiosInstance } from "data/api/axiosClient/createAxiosInstance";
 import { rootApi } from "data/api/configApi"
 import { toast } from "react-toastify";
 
@@ -22,7 +23,7 @@ export const AdminApiCards = {
     Delete: async (idCard) => {
         await rootApi({
             method: "DELETE",
-            url: `/admin/cards/${idCard}`
+            url: `/admin/cards/delete/${idCard}`
         }).then((res) => {
             toast.success(res.data.mess);
         }).catch((err) => {
@@ -33,33 +34,31 @@ export const AdminApiCards = {
             }
         })
     },
-    Edit: async (idCard, telco, photo, change, dispatch, EditCardSuccess, accessToken, axiosJwt) => {
+    Edit: async (idCard, telco, photo, change, dispatch, accessToken) => {
+        const axiosJwt = CreateAxiosInstance(dispatch, accessToken);
         const formData = new FormData();
         formData.append("photo", photo);
         formData.append("telco", telco);
         formData.append("change", change);
         await axiosJwt({
             method: "PUT",
-            url: `/admin/cards/${idCard}`,
+            url: `/admin/cards/edit/${idCard}`,
             headers: {
                 token: "Bearner " + accessToken
             },
             data: formData
         }).then((res) => {
-            console.log(res.data.Card);
-            dispatch(EditCardSuccess(res.data))
             toast.success(res.data.mess);
         }).catch((err) => {
             if (err.response) {
                 toast.error(err.response.data.error);
-                console.log(err.response.data.error)
             } else {
                 toast.error(err);
-                console.log(err)
             }
         })
     },
-    ChangeType: async (idCard, accessToken, dispatch, ChangeTypeCardSuccess, axiosJwt) => {
+    ChangeType: async (accessToken, dispatch, idCard, ChangeTypeCardSuccess) => {
+        const axiosJwt = CreateAxiosInstance(dispatch, accessToken)
         await axiosJwt({
             method: "POST",
             url: `/admin/cards/${idCard}`,
@@ -67,7 +66,6 @@ export const AdminApiCards = {
                 token: "Bearner " + accessToken
             }
         }).then((res) => {
-            toast.success(res.data.mess);
             dispatch(ChangeTypeCardSuccess(res.data.Card))
         }).catch((err) => {
             if (err.response) {
@@ -76,5 +74,5 @@ export const AdminApiCards = {
                 toast.error(err);
             }
         })
-    },
+    }
 }

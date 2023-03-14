@@ -1,7 +1,5 @@
 import { DataSelector } from '@/redux/selector/DataSelector';
-import { LoadingDataSuccess } from '@/redux/slice/dataPublic';
 import { ApiAdmins } from 'data/api/admins';
-import { ApiUsers } from 'data/api/users';
 import React, { useState } from 'react';
 import { Button, ButtonGroup, Form, InputGroup, Table } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
@@ -20,7 +18,6 @@ function Banks(props) {
     const [sign, setSign] = useState("");
     const handleAddBank = async () => {
         await ApiAdmins.Banks.Add(name, sign)
-        await ApiUsers.Data.LoadingData(dispatch, LoadingDataSuccess)
         setName("");
         setSign("");
         setAddBanks(false)
@@ -32,12 +29,12 @@ function Banks(props) {
         setEdit(false);
         setName("");
         setSign("");
-        await ApiUsers.Data.LoadingData(dispatch, LoadingDataSuccess)
+
     };
     //Delete
     const handleDeleteBank = async (bank) => {
         await ApiAdmins.Banks.Delete(bank.id)
-        await ApiUsers.Data.LoadingData(dispatch, LoadingDataSuccess)
+
     }
     return (
         <div id='banks'>

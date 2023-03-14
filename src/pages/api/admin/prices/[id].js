@@ -1,4 +1,4 @@
-import { ControllAdmin } from "data/controller/admin";
+import { ControllAdmin } from "data/controller/admin/auth";
 import nextConnect from "next-connect";
 
 const apiRoute = nextConnect({

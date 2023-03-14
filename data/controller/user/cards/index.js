@@ -1,4 +1,4 @@
-import { Cards, Prices, Products, Users, Values } from "data/db/models";
+import { Cards, Imgs, Prices, Products, TypeCards, Users, Values } from "data/db/models";
 import CryptoJS from "crypto-js";
 import uuid from "uuid";
 import dotenv from "dotenv";
@@ -253,6 +253,19 @@ export const UserControllerCards = {
                     return res.status(500).json(err);
                 })
             }
+        } catch (error) {
+            return res.status(500).json(error);
+        }
+    },
+    GetAll: async (req, res) => {
+        try {
+            const list = await Cards.findAll({
+                include: [
+                    { model: Imgs },
+                    { model: TypeCards }
+                ]
+            });
+            return res.status(200).json({ Cards: list });
         } catch (error) {
             return res.status(500).json(error);
         }

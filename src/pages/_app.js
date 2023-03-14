@@ -4,24 +4,27 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+import 'animate.css';
+
 import { persistor, Store } from '@/redux/store';
 
 import { Provider } from 'react-redux';
 
 import { PersistGate } from 'redux-persist/integration/react';
-import Hearder from '@/layout/hearder/Hearder';
-import Footer from '@/layout/footer/Footer';
+
+import { SockeContext, socket } from '@/config/socketInit';
 
 
 function MyApp({ Component, pageProps }) {
 
   return (
     <Provider store={Store}>
-
-      <PersistGate loading={null} persistor={persistor}>      
-          <Hearder />
+      <PersistGate loading={null} persistor={persistor}>
+        <SockeContext.Provider value={socket}>
           <Component {...pageProps} />
-          <Footer />       
+        </SockeContext.Provider>
+
+
         <ToastContainer
           position="top-right"
           autoClose={3000}

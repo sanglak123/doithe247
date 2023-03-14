@@ -1,5 +1,4 @@
-import { BankOfUsers, Banks, Cards, Events, Imgs, Payments, Prices, Products, ReceiveBanks, TypeCards, Users, Values } from "data/db/models";
-import { Op } from "sequelize";
+import { BankOfUsers, Banks, Cards, Events, Imgs, Payments, Prices, Products, ReceiveBanks, TypeCards, Users, Values, Promotions } from "data/db/models";
 
 export const UserControllerDatas = {
     LoadingData: async (req, res) => {
@@ -61,42 +60,114 @@ export const UserControllerDatas = {
     LoadDingDataUser: async (req, res) => {
         const { id } = req.query;
         try {
-
-            const listBankOfUser = await BankOfUsers.findAll({
+            const user = await Users.findOne({
                 where: {
-                    idUser: id
+                    id: id
                 },
-                include: [{ model: Banks }, { model: Users }]
+                include: [{ model: Imgs }]
             });
+            if (user) {
+                const listBankOfUser = await BankOfUsers.findAll({
+                    where: {
+                        idUser: id
+                    },
+                    include: [{ model: Banks }, { model: Users }]
+                });
 
-            const listProducts = await Products.findAll({
-                where: {
-                    idUser: id
-                },
-                include: [{ model: Prices, include: [{ model: Cards }, { model: Values }] }, { model: Users }],
-                order: [
-                    ["id", "desc"]
-                ]
-            });
-            const listPayments = await Payments.findAll({
-                where: {
-                    idUser: id
-                },
-                order: [
-                    ["id", "desc"]
-                ],
-                include: [
-                    { model: Users },
-                    { model: BankOfUsers, include: [{ model: Banks }] },
-                    { model: ReceiveBanks, include: [{ model: Banks }] },
-                ]
-            });
+                const listProducts = await Products.findAll({
+                    where: {
+                        idUser: id
+                    },
+                    include: [{ model: Prices, include: [{ model: Cards }, { model: Values }] }, { model: Users }],
+                    order: [
+                        ["id", "desc"]
+                    ]
+                });
+                const listPayments = await Payments.findAll({
+                    where: {
+                        idUser: id
+                    },
+                    order: [
+                        ["id", "desc"]
+                    ],
+                    include: [
+                        { model: Users },
+                        { model: BankOfUsers, include: [{ model: Banks }] },
+                        { model: ReceiveBanks, include: [{ model: Banks }] },
+                    ]
+                });
 
-            return res.status(200).json({
-                BankOfUsers: listBankOfUser,
-                Products: listProducts,
-                Payments: listPayments
-            })
+                const listPromotions = await Promotions.findAll({
+                    where: {
+                        idUser: id
+                    },
+                    include: [{ model: Events }]
+                })
+                user.pass = null;
+                user.pass2 = null;
+                return res.status(200).json({
+                    BankOfUsers: listBankOfUser,
+                    Products: listProducts,
+                    Payments: listPayments,
+                    Promotions: listPromotions,
+                    User: user
+                })
+            } else {
+                return res.status(404).json({ error: "User không tồn tại!" })
+            }
+
+
+        } catch (error) {
+            return res.status(500).json(error);
+        }
+    },
+    GetDataByType: async (req, res) => {
+        const { type, idUser } = req.query;
+        try {
+            const user = await Users.findOne({
+                where: {
+                    id: idUser
+                },
+                include: [{ model: Imgs }]
+            });
+            if (user) {
+                switch (type) {
+                    case "Prices": {
+                        const listPrice = await Prices.findAll({
+                            include: [
+                                { model: Cards },
+                                { model: Values }
+                            ]
+                        });
+                        return res.status(200).json({ Prices: listPrice })
+                    }
+                    case "Refills": {
+                        const listRefills = await Payments.findAll({
+                            where: {
+                                [Op.and]: [
+                                    { idUser: idUser },
+                                    { command: "refill" }
+                                ]
+
+                            },
+                            include: [
+                                { model: Users },
+                                { model: BankOfUsers, include: [{ model: Banks }] },
+                                { model: ReceiveBanks, include: [{ model: Banks }] }
+                            ],
+                            order: [
+                                ["id", "desc"]
+                            ]
+                        });
+                        return res.status(200).json({ Refills: listRefills, User: user })
+                    }
+                    default:
+                        break;
+                }
+            } else {
+                return res.status(404).json({ error: "User không tồn tại!" })
+            }
+
         } catch (error) {
             return res.status(500).json(error);
         }

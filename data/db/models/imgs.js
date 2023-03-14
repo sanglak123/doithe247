@@ -16,6 +16,8 @@ module.exports = (sequelize, DataTypes) => {
       this.hasOne(models.Cards, { foreignKey: "img" });
 
       this.hasOne(models.Payments, { foreignKey: "img" });
+
+      this.hasOne(models.Events, { foreignKey: "img" });
     }
   }
   Imgs.init({

@@ -33,7 +33,9 @@ module.exports = (sequelize, DataTypes) => {
     avatar: DataTypes.INTEGER,
     surplus: DataTypes.STRING,
     admin: DataTypes.BOOLEAN,
-    wallet_number: DataTypes.STRING
+    wallet_number: DataTypes.STRING,
+    partner_key: DataTypes.STRING,
+    api_key: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'Users',

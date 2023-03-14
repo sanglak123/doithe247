@@ -1,16 +1,18 @@
 import { formatMoney } from '@/config/formatMoney';
-import TableCardsRender from '@/layout/tablePrice/TableCardsRender';
 import { DataSelector } from '@/redux/selector/DataSelector';
-import { LoadingDataSuccess, UpdatePriceSuccess } from '@/redux/slice/dataPublic';
-import { ApiAdmins } from 'data/api/admins';
-import { ApiUsers } from 'data/api/users';
+import { UserSelector } from '@/redux/selector/UserSelector';
+import { UpdatePriceSuccess } from '@/redux/slice/dataPublic';
+import { AdminPriceApi } from 'data/api/admin/prices';
+import { rootApi } from 'data/api/configApi';
 import React, { useState } from 'react';
 import { Button, Col, Form, InputGroup, Row } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
+import TableCardsRender from './suport/TableCardsRender';
 
 function Prices({ axiosJwt, accessToken }) {
+    const User = useSelector(UserSelector.Auth.User);
     const dispatch = useDispatch();
     //Data   
     const Cards = useSelector(DataSelector.Cards);
@@ -20,7 +22,8 @@ function Prices({ axiosJwt, accessToken }) {
     const [cardRender, setCardRender] = useState("VIETTEL");
 
     const handleUpdatePrice = async () => {
-        await ApiAdmins.Prices.Update(dispatch, UpdatePriceSuccess, axiosJwt, accessToken);      
+        await AdminPriceApi.Update(dispatch, UpdatePriceSuccess, accessToken);
+        sendHandleUpdate();
     };
 
     //Add
@@ -32,7 +35,23 @@ function Prices({ axiosJwt, accessToken }) {
     const handleAddPrice = async () => {
         const card = Cards.find((item) => item.telco === cardRender);
         await ApiAdmins.Prices.Add(card.id, idValue, feesChange, feesBuy, axiosJwt, accessToken);
-        await ApiUsers.Data.LoadingData(dispatch, LoadingDataSuccess);
+
+    };
+
+    const sendHandleUpdate = async () => {
+        await rootApi({
+            method: "POST",
+            url: "/socketAction",
+            data: {
+                user: User?.userName,
+                handle: "Events",
+                action: "Update Prices All User",
+            }
+        }).then((res) => {
+            console.log(res.data)
+        }).catch((err) => {
+            console.log(err)
+        })
     };
 
     return (

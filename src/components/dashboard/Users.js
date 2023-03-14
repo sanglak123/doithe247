@@ -3,7 +3,7 @@ import { AdminSelector } from '@/redux/selector/AdminSelector';
 import React, { useEffect, useState } from 'react';
 import { Button, ButtonGroup, Table } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
-import ModalViewsUser from '../modal/ViewsUser';
+import ModalViewsUser from '../pages/modal/ViewsUser';
 
 function DashboardUsers(props) {
     const Users = useSelector(AdminSelector.Data.Users); 

@@ -23,5 +23,22 @@ export const EventsAdminApi = {
                 toast.error(err);
             }
         })
+    },
+    Delete: async (accessToken, axiosJwt, dispatch, UpdateEventSuccess, idEvent) => {
+        await axiosJwt({
+            method: "DELETE",
+            url: `/admin/events/${idEvent}`,
+            headers: {
+                token: "Bearner " + accessToken
+            }
+        }).then((res) => {
+            dispatch(UpdateEventSuccess(res.data.Events))
+        }).catch((err) => {
+            if (err.response) {
+                toast.error(err.response.data.error);
+            } else {
+                toast.error(err);
+            }
+        })
     }
 }

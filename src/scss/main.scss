@@ -8,10 +8,9 @@
 
 
 //layout
-@import "./layouts/hearder";
+
 @import "./layouts/tablePrice";
 @import "./layouts/note";
-@import "./layouts/footer";
 @import "./layouts/button";
 @import "./layouts/errorLogin";
 @import "./layouts/cardHot";
@@ -28,9 +27,15 @@
 @import "./components/dashboard/banks";
 
 //pages
-@import "./pages/login";
+//Admin
+@import "./pages/admin/login";
+@import "./pages/main";
+//User
 @import "./pages/dashboard";
+@import "./pages/ConnectApi";
 @import "./pages/userBuyCards";
-@import "./pages/homePage";
+
+
+
 
 //themes

@@ -1,23 +1,23 @@
 import { formatDate, formatMoney2 } from '@/config/formatMoney';
+import { handleEvents, SockeContext } from '@/config/socketInit';
 import PaginationHag from '@/layout/pagination';
 import { AdminSelector } from '@/redux/selector/AdminSelector';
 import { UserSelector } from '@/redux/selector/UserSelector';
-import { HandlePaymentSuccess, RefreshListRefillSuccess } from '@/redux/slice/admin';
-import { RefreshRefillSuccess } from '@/redux/slice/user';
-import { PaymentAdminApi } from 'data/api/admin/payments';
+import { RefreshListRefillSuccess } from '@/redux/slice/admin';
+import { AdminPaymentApi, PaymentAdminApi } from 'data/api/admin/payments';
 import { CreateAxiosInstance } from 'data/api/axiosClient/createAxiosInstance';
-import React, { useEffect, useState } from 'react';
-import { Button, ButtonGroup, Form, Table } from 'react-bootstrap';
+import React, { useContext, useEffect, useState } from 'react';
+import { Button, ButtonGroup, Form, InputGroup, Table } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import ModalImage from '../modal/ModalImage';
+import ModalImage from '../pages/modal/ModalImage';
 
-function DashboardRefill(props) {
+function AdminListRefills(props) {
     //User   
+    const User = useSelector(UserSelector.Auth.User);
     const accessToken = useSelector(UserSelector.Auth.AccessToken);
     const dispatch = useDispatch();
     const axiosJwt = CreateAxiosInstance(dispatch, accessToken);
-    //Data
-    const Refills = useSelector(AdminSelector.Data.Refills);
+    //Data   
     const RefillPending = useSelector(AdminSelector.Data.RefillPending);
     const RefillHistorys = useSelector(AdminSelector.Data.RefillHistory);
 
@@ -34,12 +34,11 @@ function DashboardRefill(props) {
         const offsetPending = (pagePending - 1) * limit;
         const list = RefillPending.slice(offsetPending, (offsetPending + limit));
         setRefillPendingRender(list);
-
     }, [RefillPending, pagePending]);
-
 
     //Filter History
     const [userName, setUserName] = useState("All");
+    const [sign, setSign] = useState("");
 
     //History
     const [PaymentHistorys, setPaymentHistorys] = useState([]);
@@ -54,7 +53,6 @@ function DashboardRefill(props) {
             const list = listHisstory.slice(offsetHistory, (offsetHistory + limit));
             setPaymentHistorys(list);
         }
-
     }, [RefillHistorys, pageHistory, userName]);
 
 
@@ -65,19 +63,51 @@ function DashboardRefill(props) {
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+    //Socket    
+    const socket = useContext(SockeContext)
+    useEffect(() => {
+        if (accessToken) {
+            handleEvents(socket, User, dispatch, accessToken);
+        } else {
+            socket.emit("socket_off", socket.id)
+        }
 
-    //Handle Payments
+    }, [accessToken, socket, User]);
+
     const handleAccessPayment = async (payment) => {
-        await PaymentAdminApi.HandlePayment(accessToken, axiosJwt, dispatch, RefreshListRefillSuccess, payment?.id, "Success")
+        if (accessToken) {
+            await AdminPaymentApi.HandlePayment(accessToken, dispatch, RefreshListRefillSuccess, payment.id, "Success")
+            await AdminPaymentApi.Refills.GetAll(accessToken, dispatch, RefreshListRefillSuccess);
+            socket.emit("_events", {
+                from: User?.userName,
+                to: payment.User.userName,
+                action: "Success_Refills"
+            })
+        }
+
     };
 
     const handleCanclePayment = async (payment) => {
-        await PaymentAdminApi.HandlePayment(accessToken, axiosJwt, dispatch, RefreshListRefillSuccess, payment?.id, "Error")
+        await PaymentAdminApi.HandlePayment(accessToken, axiosJwt, dispatch, RefreshListRefillSuccess, payment?.id, "Error");
+        await PaymentAdminApi.Refills.GetAll(accessToken, axiosJwt, dispatch, RefreshListRefillSuccess);
     };
 
     const handleDeletePayments = async (payment) => {
         alert(payment.id)
     };
+
+    //find by sign
+    useEffect(() => {
+        const offsetHistory = (pageHistory - 1) * limit;
+        if (sign !== "") {
+            const list = RefillHistorys.filter(item => item.sign?.toLowerCase().indexOf(sign) > -1);
+            const listrender = list.slice(offsetHistory, offsetHistory + limit)
+            setPaymentHistorys(listrender)
+        } else {
+            const listrender = RefillHistorys.slice(offsetHistory, offsetHistory + limit);
+            setPaymentHistorys(listrender);
+        }
+    }, [RefillHistorys, sign]);
 
     return (
         <div id='dashboard_Refill'>
@@ -87,7 +117,7 @@ function DashboardRefill(props) {
                     RefillPendingRender.length > 0 ?
                         <div className='refill_item'>
                             <div className='hearder_hag'>
-                                <h1>Refills Pending</h1>
+                                <h1>Lệnh Đang Chờ</h1>
                             </div>
                             <div className='table_refill'>
                                 <Table striped bordered hover size="sm">
@@ -111,7 +141,7 @@ function DashboardRefill(props) {
                                                 return (
                                                     <tr key={index} className="txt_center">
                                                         <td>{index + 1}</td>
-                                                        <td>{item.sign}</td>
+                                                        <td>{item.sign?.split("_")[4]}</td>
                                                         <td>{item.User?.userName}</td>
                                                         <td>{formatMoney2(item.amount)}</td>
                                                         <td>{`${item.BankOfUser?.Bank?.sign} - ${item.BankOfUser?.number}`} </td>
@@ -156,7 +186,7 @@ function DashboardRefill(props) {
                         :
                         <div className='refill_item'>
                             <div className='hearder_hag'>
-                                <h1>Refills Pending</h1>
+                                <h1>Lệnh Đang Chờ</h1>
                             </div>
 
                             <p className='text-danger'>
@@ -167,12 +197,12 @@ function DashboardRefill(props) {
 
                 <div className='refill_item'>
                     <div className='hearder_hag'>
-                        <h1>Refills History</h1>
+                        <h1>Lích Sữ Nạp</h1>
                     </div>
                     <div className='table_refill'>
-                        <div className='filter'>
-                            <Form.Group className="mb-3 w-50" controlId="formBasicEmail">
-                                <Form.Label>Find by user</Form.Label>
+                        <div className='filter d-flex'>
+                            <Form.Group className="mb-3 w-50 me-2" controlId="formBasicEmail">
+                                <Form.Label>Lọc theo tên</Form.Label>
                                 <Form.Select defaultValue={"All"} onChange={(e) => setUserName(e.target.value)}>
                                     <option value={"All"}>All</option>
                                     {
@@ -183,6 +213,16 @@ function DashboardRefill(props) {
                                         })
                                     }
                                 </Form.Select>
+                            </Form.Group>
+                            <Form.Group className="mb-3 w-50 ms-2" controlId="formBasicEmail">
+                                <Form.Label>Lọc theo MGD</Form.Label>
+                                <InputGroup className="mb-3">
+                                    <Form.Control
+                                        placeholder="Mã giao dịch"
+                                        value={sign}
+                                        onChange={(e) => setSign(e.target.value)}
+                                    />
+                                </InputGroup>
                             </Form.Group>
 
                         </div>
@@ -207,7 +247,7 @@ function DashboardRefill(props) {
                                         return (
                                             <tr key={index} className="txt_center">
                                                 <td>{index + 1}</td>
-                                                <td>{item.sign}</td>
+                                                <td>{item.sign?.split("_")[4]}</td>
                                                 <td>{item.User?.userName}</td>
                                                 <td>{formatMoney2(item.amount)}</td>
                                                 <td>{`${item.BankOfUser?.Bank?.sign} - ${item.BankOfUser?.number}`} </td>
@@ -251,4 +291,4 @@ function DashboardRefill(props) {
     );
 }
 
-export default DashboardRefill;
+export default AdminListRefills;

@@ -1,5 +1,6 @@
 import { Cards, Imgs, Prices, Products, TypeCards } from "data/db/models";
-import fs from "fs";
+const fs = require("fs");
+const path = require("path")
 
 export const AdminControllerCards = {
     Add: async (req, res) => {
@@ -51,7 +52,6 @@ export const AdminControllerCards = {
         const { id } = req.query;
         const { telco, change } = req.body;
         try {
-
             const card = await Cards.findOne({
                 where: {
                     id: id
@@ -68,7 +68,7 @@ export const AdminControllerCards = {
                     });
                     if (oldImg) {
                         //Có ảnh củ = > xóa ảnh => thêm mới ảnh = > save
-                        const unLoad = path.join(__dirname, "../../../../../../public/img/logo/");
+                        const unLoad = path.join(__dirname, "../../../../../../../public/img/logo/");
                         fs.unlink(unLoad + oldImg.fileName, async (err) => {
                             if (err) {
                                 return res.status(500).json(err);
@@ -129,12 +129,12 @@ export const AdminControllerCards = {
                     },
                     include: [{ model: TypeCards }, { model: Imgs }]
                 });
-                return res.status(200).json({ mess: "Update success!", Card: result })
+                return res.status(200).json({ Card: result })
             } else {
                 return res.status(404).json({ error: "Card not found!" })
             }
         } catch (error) {
 
         }
-    }
+    }   
 }

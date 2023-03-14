@@ -1,7 +1,7 @@
 import nextConnect from "next-connect";
 
 import { CheckLogin } from "data/middleware";
-import { ControllAdmin } from "data/controller/admin";
+import { ControllAdmin } from "data/controller/admin/auth";
 
 
 const apiRoute = nextConnect({

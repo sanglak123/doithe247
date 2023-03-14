@@ -22,7 +22,18 @@ const CreateRefreshToken = (user) => {
         { expiresIn: "23h" })
 };
 
+const CreatePartnerID = (user) => {
+    return jwt.sign({
+        id: user.id,
+        email: user.email,
+        privateKey: "HAG"
+    },
+        process.env.KEY_PARTNER_ID
+    )
+}
+
 module.exports = {
     CreateAccessToken,
-    CreateRefreshToken
+    CreateRefreshToken,
+    CreatePartnerID
 }

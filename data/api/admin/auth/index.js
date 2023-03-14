@@ -1,35 +1,34 @@
+import { CreateAxiosInstance } from "data/api/axiosClient/createAxiosInstance";
 import { rootApi } from "data/api/configApi";
 import { toast } from "react-toastify"
 
-const AuthenAdminApi = {
-    Login: async (idUser, axiosJwt, accessToken, pass2, key, router, dispatch, LoginAdminSuccess) => {
-        const toastId =toast.loading("Please wait...")
-        await axiosJwt({
+const AdminAutheApi = {
+    Login: async (userName, pass, pass2, keyAdmin, dispatch, LoginSuccess, router) => {
+        const idToast = toast.loading("Please wait...")
+        await rootApi({
             method: "POST",
-            url: `/admin/auth/login/${idUser}`,
+            url: "/admin/auth/login",
             data: {
-                pass2: pass2, key: key
-            },
-            headers: {
-                token: "Bearner " + accessToken
+                userName, pass, pass2, keyAdmin
             }
         }).then((res) => {
-            toast.update(toastId, { render: res.data.mess, type: "success", isLoading: false });
-            dispatch(LoginAdminSuccess(res.data));
-            router.replace("/admin/dashboard");
+            toast.update(idToast, { render: res.data.mess, type: "success", isLoading: false });
+            dispatch(LoginSuccess(res.data));
+            router.replace("/admin/dashboard")
             setTimeout(() => {
-                toast.dismiss(toastId)
+                toast.dismiss(idToast)
             }, 2000);
+
         }).catch((err) => {
             if (err.response) {
-                toast.update(toastId, { render: err.response.data.error, type: "error", isLoading: false });
+                toast.update(idToast, { render: err.response.data.error, type: "error", isLoading: false });
                 setTimeout(() => {
-                    toast.dismiss(toastId);
+                    toast.dismiss(idToast)
                 }, 2000);
             } else {
-                toast.update(toastId, { render: err, type: "error", isLoading: false });
+                toast.update(idToast, { render: err, type: "error", isLoading: false });
                 setTimeout(() => {
-                    toast.dismiss(toastId);
+                    toast.dismiss(idToast)
                 }, 2000);
             }
         })
@@ -61,7 +60,33 @@ const AuthenAdminApi = {
                 }, 2000);
             }
         })
+    },
+    EditProfile: async (accessToken, dispatch, idUser, displayName, fullName, phone, adress, photo, email, RefreshUserSuccess) => {
+        const axiosJwt = CreateAxiosInstance(dispatch, accessToken);
+        const formData = new FormData();
+        formData.append("displayName", displayName);
+        formData.append("fullName", fullName);
+        formData.append("phone", phone);
+        formData.append("adress", adress);
+        formData.append("photo", photo);
+        formData.append("email", email);
+
+        await axiosJwt({
+            method: "PUT",
+            url: "",
+            data: formData
+        }).then((res) => {
+            toast.success(res.data.mess);
+            dispatch(RefreshUserSuccess(res.data.User))
+        }).catch((err) => {
+            if (err.response) {
+                toast.error(err.response.data.error)
+            } else {
+                toast.error(err)
+            }
+        })
+
     }
 };
 
-export default AuthenAdminApi;
+export default AdminAutheApi;

@@ -1,12 +1,16 @@
 #cards_hot {
     .card_hot_content {
         padding: 20px 50px;
-        .card_hot_items {          
+
+        .card_hot_items {
             padding: 20px;
-            text-align: center;         
+            text-align: center;
 
             .item_img {
                 width: 150px;
+                height: 100px;
+                background-color: white;
+                padding: 0.8rem;
                 margin: 0 auto;
                 border: 1px solid rgb(168, 168, 168);
                 border-radius: 7px;
@@ -26,7 +30,7 @@
             .item_fees {
                 p {
                     font-size: 0.9rem;
-                    margin: 0;                  
+                    margin: 0;
                 }
             }
         }

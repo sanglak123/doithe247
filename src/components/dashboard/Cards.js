@@ -1,14 +1,13 @@
+import PaginationHag from '@/layout/pagination';
 import { DataSelector } from '@/redux/selector/DataSelector';
-import { UserSelector } from '@/redux/selector/UserSelector';
-import { ChangeTypeCardSuccess, EditCardSuccess, LoadingDataSuccess } from '@/redux/slice/dataPublic';
+import { ChangeTypeCardSuccess, EditCardSuccess, UpdateCardSuccess } from '@/redux/slice/dataPublic';
 import { AdminApiCards } from 'data/api/admin/cards';
-import { ApiAdmins } from 'data/api/admins';
-import { ApiUsers } from 'data/api/users';
+import { DataPublicApi } from 'data/api/datapublic';
 import React, { useEffect, useState } from 'react';
 import { Button, ButtonGroup, Form, InputGroup, Table } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 
-function Cards({ axiosJwt, accessToken }) {
+function AdminCards({ accessToken }) {
     const dispatch = useDispatch();
 
 
@@ -20,41 +19,28 @@ function Cards({ axiosJwt, accessToken }) {
     const [pageCard, setPageCard] = useState(1);
     const [ListCard, setListCard] = useState([]);
 
-    const handlePrevPageCards = () => {
-        if (pageCard > 1) {
-            setPageCard(prev => prev - 1)
-        }
-    };
-    const handleNextPageCards = () => {
-        const count = Cards?.length;
-        if (pageCard < count / limit) {
-            setPageCard(prev => prev + 1)
-        }
-    };
-
     useEffect(() => {
         const offset = (pageCard - 1) * limit;
         const lits = Cards?.slice(offset, (offset + limit));
         setListCard(lits);
     }, [Cards, pageCard]);
 
-    //Edit
-    const [edit, setEdit] = useState("");
+     const [edit, setEdit] = useState("");
     const [telco, setTelco] = useState("");
     const [photo, setPhoto] = useState("");
     const [change, setChange] = useState(false);
 
     const handleEditCard = async (card) => {
-        await AdminApiCards.Edit(card.id, telco, photo, change, dispatch, EditCardSuccess, accessToken, axiosJwt)
+        await AdminApiCards.Edit(card.id, telco, photo, change, dispatch, accessToken);
+        await DataPublicApi.Cards.GetAll(dispatch, UpdateCardSuccess);
         setEdit("")
     };
     const handleChangeTypeCard = async (card) => {
-        await AdminApiCards.ChangeType(card.id, accessToken, dispatch, ChangeTypeCardSuccess, axiosJwt);
+        await AdminApiCards.ChangeType(accessToken, dispatch, card.id, ChangeTypeCardSuccess);
     }
     //Delete
     const handleDeleteCard = async (card) => {
         await ApiAdmins.Cards.Delete(card.id)
-        await ApiUsers.Data.LoadingData(dispatch, LoadingDataSuccess);
     };
 
     return (
@@ -66,7 +52,7 @@ function Cards({ axiosJwt, accessToken }) {
                 <div className='table_card'>
                     <Table bordered size="sm">
                         <thead>
-                            <tr className='txt_center'>
+                            <tr className='txt_center txt_white'>
                                 <th>#</th>
                                 <th>Telco</th>
                                 <th>Logo</th>
@@ -79,12 +65,12 @@ function Cards({ axiosJwt, accessToken }) {
                             {
                                 ListCard?.map((item, index) => {
                                     return (
-                                        <tr className='txt_center' key={index}>
+                                        <tr className='txt_center txt_white' key={index}>
                                             <td>{index + 1}</td>
                                             {
                                                 edit === `${item.telco}_${item.id}` ?
                                                     <>
-                                                        <td>
+                                                        <td className='txt_light'>
                                                             <InputGroup className="mb-3">
                                                                 <Form.Control
                                                                     placeholder="Telco"
@@ -158,11 +144,12 @@ function Cards({ axiosJwt, accessToken }) {
                             }
                         </tbody>
                     </Table>
-                    <ButtonGroup>
-                        <Button variant='success' onClick={handlePrevPageCards}>Prev</Button>
-                        <Button variant='danger' disabled>Trang : {pageCard}</Button>
-                        <Button variant='success' onClick={handleNextPageCards}>Next</Button>
-                    </ButtonGroup>
+                    <PaginationHag
+                        limit={limit}
+                        page={pageCard}
+                        setPage={setPageCard}
+                        length={Cards.length}
+                    />
                 </div>
             </div>
             <Button variant='outline-danger' className='btn_add_card txt_bold'>+</Button>
@@ -170,4 +157,4 @@ function Cards({ axiosJwt, accessToken }) {
     );
 }
 
-export default Cards;
+export default AdminCards;

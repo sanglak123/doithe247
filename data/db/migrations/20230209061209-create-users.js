@@ -49,8 +49,13 @@ module.exports = {
         defaultValue: false
       },
       wallet_number: {
-        type: Sequelize.STRING,
-        defaultValue: "HGA_"
+        type: Sequelize.STRING,       
+      },
+      partner_key: {
+        type: Sequelize.STRING,       
+      },
+      api_key: {
+        type: Sequelize.STRING,      
       },
       createdAt: {
         allowNull: false,

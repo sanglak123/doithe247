@@ -1,4 +1,5 @@
 import { toast } from "react-toastify"
+import { CreateAxiosInstance } from "./axiosClient/createAxiosInstance";
 import { rootApi } from "./configApi"
 
 export const ApiAdmins = {
@@ -61,7 +62,8 @@ export const ApiAdmins = {
         },
     },
     Prices: {
-        Update: async (dispatch, UpdatePriceSuccess, axiosJwt, accessToken) => {
+        Update: async (dispatch, UpdatePriceSuccess, accessToken) => {
+            const axiosJwt = CreateAxiosInstance(dispatch, accessToken)
             const idToast = toast.loading("Please wait update...")
             await axiosJwt({
                 method: "PUT",

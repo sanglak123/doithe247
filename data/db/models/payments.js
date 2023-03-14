@@ -28,7 +28,8 @@ module.exports = (sequelize, DataTypes) => {
     img: DataTypes.INTEGER,
     command: DataTypes.STRING,
     sign: DataTypes.STRING,
-    status: DataTypes.STRING
+    status: DataTypes.STRING,
+    message: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'Payments',

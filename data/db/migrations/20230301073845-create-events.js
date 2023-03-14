@@ -21,6 +21,13 @@ module.exports = {
       timeEnd: {
         type: Sequelize.DATE
       },
+      img: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: "Imgs",
+          key: "id"
+        }
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

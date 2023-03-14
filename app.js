@@ -1,21 +1,20 @@
-const express = require("express"); 
-const next = require("next"); 
+const express = require("express");
+const next = require("next");
 const cors = require("cors");
 const dotenv = require("dotenv").config();
-
-
-const port = process.env.PORT || 3000 
+const port = process.env.PORT || 3000
 const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev })
 const handle = app.getRequestHandler();
 
+
 app.prepare().then(() => {
-    const server = express();
+    const server = express(); 
     server.use(cors({
         origin: ["*"]
     }));
 
-    server.use(express.json());  
+    server.use(express.json());
 
 
     server.get('/a', (req, res) => {
@@ -41,4 +40,6 @@ app.prepare().then(() => {
         if (err) throw err
         console.log(`Server is running on ${process.env.DOMAIN_NAME}:${port}`);
     })
-})
+});
+
+

@@ -1,3 +1,4 @@
+import { CreateAxiosInstance } from "data/api/axiosClient/createAxiosInstance";
 import { toast } from "react-toastify";
 
 export const UserPaymentsApi = {
@@ -62,9 +63,10 @@ export const UserPaymentsApi = {
             })
         }
     },
-    Money: {
-        CreateRefill: async (accessToken, axiosJwt, idUser, amount, idbankOfUser, idBankPublic, photo, dispatch, CreateRefillSuccess) => {
-            const sign = "Refill_User_" + idUser + "_" + new Date().getTime();
+    Refills: {
+        Create: async (accessToken, dispatch, idUser, amount, idbankOfUser, idBankPublic, photo) => {
+            const axiosJwt = CreateAxiosInstance(dispatch, accessToken)
+            const sign = "Refills" + idUser + "_" + new Date().getTime();
             const formData = new FormData();
             formData.append("photo", photo);
             formData.append("amount", amount);
@@ -80,7 +82,6 @@ export const UserPaymentsApi = {
                 }
             }).then((res) => {
                 toast.success(res.data.mess);
-                dispatch(CreateRefillSuccess(res.data))
             }).catch((err) => {
                 if (err.response) {
                     toast.error(err.response.data.error);
@@ -89,17 +90,16 @@ export const UserPaymentsApi = {
                 }
             })
         },
-        Refresh: async (accessToken, axiosJwt, idUser, dispatch, RefreshRefillSuccess, RefreshUserSuccess) => {
-
+        GetAll: async (accessToken, dispatch, idUser, UpdateRefillSuccess) => {
+            const axiosJwt = CreateAxiosInstance(dispatch, accessToken)
             await axiosJwt({
                 method: "GET",
-                url: `/users/payments/${idUser}`,
+                url: `/users/payments/refill/${idUser}}`,
                 headers: {
                     token: "Bearner " + accessToken
                 }
             }).then((res) => {
-                dispatch(RefreshRefillSuccess(res.data.Payments));
-                dispatch(RefreshUserSuccess(res.data.User));
+                dispatch(UpdateRefillSuccess(res.data));
             }).catch((err) => {
                 if (err.response) {
                     toast.error(err.response.data.error);
@@ -108,15 +108,16 @@ export const UserPaymentsApi = {
                 }
             })
         },
-        Delete: async (accessToken, axiosJwt, idPayment) => {
+        Delete: async (accessToken, dispatch, idRefill) => {
+            const axiosJwt = CreateAxiosInstance(dispatch, accessToken);
             await axiosJwt({
-                method: "DELETE",
-                url: `/users/payments/${idPayment}`,
+                method: "Delete",
+                url: `/users/payments/refill/${idRefill}}`,
                 headers: {
                     token: "Bearner " + accessToken
                 }
             }).then((res) => {
-                toast.success(res.data.mess);
+                dispatch(UpdateRefillSuccess(res.data));
             }).catch((err) => {
                 if (err.response) {
                     toast.error(err.response.data.error);
@@ -124,9 +125,12 @@ export const UserPaymentsApi = {
                     toast.error(err);
                 }
             })
-        },
-        CreateWithdraw: async (accessToken, axiosJwt, idUser, amount, idBankUser, dispatch, UpdateWithdrawSuccess, RefreshUserSuccess) => {
-            const sign = "Withdraw_User_" + idUser + "_" + new Date().getTime();
+        }
+    },
+    Withdraws: {
+        Create: async (accessToken, dispatch, idUser, amount, idBankUser) => {
+            const axiosJwt = CreateAxiosInstance(dispatch, accessToken);
+            const sign = "Withdraw_" + idUser + "_" + new Date().getTime();
             await axiosJwt({
                 method: "POST",
                 url: `/users/payments/withdraw/${idUser}}`,
@@ -138,8 +142,24 @@ export const UserPaymentsApi = {
                 }
             }).then((res) => {
                 toast.success(res.data.mess);
-                dispatch(UpdateWithdrawSuccess(res.data.Withdraws));
-                dispatch(RefreshUserSuccess(res.data.User))
+            }).catch((err) => {
+                if (err.response) {
+                    toast.error(err.response.data.error);
+                } else {
+                    toast.error(err);
+                }
+            })
+        },
+        GettAll: async (accessToken, dispatch, idUser, UpdateWithdrawSuccess) => {
+            const axiosJwt = CreateAxiosInstance(dispatch, accessToken);
+            await axiosJwt({
+                method: "GET",
+                url: `/users/payments/withdraw/${idUser}}`,
+                headers: {
+                    token: "Bearner " + accessToken
+                }
+            }).then((res) => {
+                dispatch(UpdateWithdrawSuccess(res.data.Withdraws))
             }).catch((err) => {
                 if (err.response) {
                     toast.error(err.response.data.error);
@@ -148,5 +168,6 @@ export const UserPaymentsApi = {
                 }
             })
         }
-    }
+    },
+
 }

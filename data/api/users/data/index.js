@@ -1,3 +1,4 @@
+import { CreateAxiosInstance } from "data/api/axiosClient/createAxiosInstance";
 import { toast } from "react-toastify";
 import { rootApi } from "../../configApi";
 
@@ -16,7 +17,8 @@ export const UserDataApi = {
             }
         })
     },
-    LoadingDataUser: async (dispatch, axiosJwt, accessToken, idUser, LoadingDataUserSuccess) => {
+    LoadingDataUser: async (dispatch, accessToken, idUser, LoadingDataUserSuccess) => {
+        const axiosJwt = CreateAxiosInstance(dispatch, accessToken)
         await axiosJwt({
             method: "GET",
             url: `/users/${idUser}`,
@@ -32,5 +34,26 @@ export const UserDataApi = {
                 toast.error(err);
             }
         })
-    }
+    },
+    //Update
+    UpdateBuyType: async (type, dispatch, axiosJwt, accessToken, idUser, ActionSuccess) => {
+        await axiosJwt({
+            method: "GET",
+            headers: {
+                token: "Bearner " + accessToken
+            },
+            url: `/data/${type}`,
+            data: {
+                idUser: idUser
+            }
+        }).then((res) => {
+            dispatch(ActionSuccess(res.data))
+        }).catch((err) => {
+            if (err.response) {
+                toast.error(err.response.data.error);
+            } else {
+                toast.error(err);
+            }
+        })
+    }   
 }

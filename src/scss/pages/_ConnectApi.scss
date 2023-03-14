@@ -1,0 +1,71 @@
+#ConnectApi {
+    .api_content {
+        .api_items {
+            .api_item {
+                width: 230px;
+                height: 230px;
+                margin: 0 auto;
+                background-color: rgba(255, 255, 255, 0.041);
+                border-radius: 8px;
+                box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+                cursor: pointer;
+                position: relative;
+
+                .item_content {
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%) scale(0.9);
+                    transition: 0.5s;
+
+                    .api_logo {
+                        width: 100px;
+                        height: 100px;
+                        margin: 0 auto;
+                        background-color: white;
+                        border-radius: 8px;
+                        position: relative;
+
+                        span {
+                            font-size: 3.5rem;
+                            color: aqua;
+                            position: absolute;
+                            top: 50%;
+                            left: 50%;
+                            transform: translate(-50%, -50%);
+                        }
+                    }
+
+                    .api_title {
+                        font-size: 1rem;
+                        text-align: center;
+                        color: white;
+                        margin: 1rem 0;
+                        text-transform: uppercase;
+                    }
+                }
+
+                &:hover {
+                    .item_content {
+                        transform: translate(-50%, -50%) scale(1);
+                    }
+                }
+            }
+        }
+    }
+
+    #code_method {
+        width: 50px;
+        height: 50px;
+        line-height: 50px;
+        text-align: center;
+        border-radius: 8px;
+        border: 1px solid $light_300;
+        transition: 0.5s;
+
+        &:hover {
+            background-color: $light_300;
+            color: $dark_400;
+        }
+    }
+}

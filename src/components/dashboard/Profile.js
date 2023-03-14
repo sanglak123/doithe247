@@ -247,11 +247,11 @@ function DashboardProfile(props) {
                         :
                         <Button onClick={() => {
                             setEdit(true);
-                            setAdress(Admin?.adress);
-                            setDisplayName(Admin?.displayName);
-                            setFullName(Admin?.fullName)
-                            setEmail(Admin?.email);
-                            setPhone(Admin?.phone);
+                            setAdress(User?.adress);
+                            setDisplayName(User?.displayName);
+                            setFullName(User?.fullName)
+                            setEmail(User?.email);
+                            setPhone(User?.phone);
                         }} variant='success'>Edit</Button>
                 }
 

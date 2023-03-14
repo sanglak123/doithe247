@@ -13,8 +13,9 @@ export const UserSelector = {
 
         RefillPending: (state) => state.UserSlice.RefillPending,
         RefillHistory: (state) => state.UserSlice.RefillHistory,
-       
+
         WithdrawPending: (state) => state.UserSlice.WithdrawPending,
         WithdrawHistory: (state) => state.UserSlice.WithdrawHistory,
     },
+    Promotions: (state) => state.UserSlice.Promotions
 }

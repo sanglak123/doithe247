@@ -1,6 +1,4 @@
-import { Op } from "sequelize";
-
-const { RefreshTokens, Users, BankOfUsers, Banks, Payments, Products, ReceiveBanks, Imgs, Prices, Cards, Values, Events } = require("data/db/models")
+const { RefreshTokens, Users, BankOfUsers, Banks, Imgs } = require("data/db/models")
 const bcryptjs = require("bcryptjs")
 const dotenv = require("dotenv").config();
 const { CreateAccessToken, CreateRefreshToken } = require("data/token")
@@ -19,54 +17,6 @@ export const UserControllerAuthen = {
             if (user) {
 
                 if (bcryptjs.compareSync(pass, user.pass)) {
-                    const listBankUser = await BankOfUsers.findAll({
-                        where: {
-                            idUser: user.id
-                        },
-                        include: [
-                            { model: Banks },
-                            { model: Users }
-                        ]
-                    });
-
-                    const withdraw = await Payments.findAll({
-                        where: {
-                            [Op.and]: [
-                                { idUser: user.id },
-                                { command: "withdraw" }
-                            ]
-                        },
-                        include: [
-                            { model: BankOfUsers, include: [{ model: Banks }] },
-                            { model: ReceiveBanks, include: [{ model: Banks }] },
-                            { model: Imgs },
-                            { model: Users }
-                        ]
-                    });
-                    const refill = await Payments.findAll({
-                        where: {
-                            [Op.and]: [
-                                { idUser: user.id },
-                                { command: "refill" }
-                            ]
-                        },
-                        include: [
-                            { model: BankOfUsers, include: [{ model: Banks }] },
-                            { model: ReceiveBanks, include: [{ model: Banks }] },
-                            { model: Imgs },
-                            { model: Users }
-                        ]
-                    });
-                    const products = await Products.findAll({
-                        where: {
-                            idUser: user.id
-                        },
-                        include: [
-                            { model: Users },
-                            { model: Prices, include: [{ model: Cards }, { model: Values }] }
-                        ]
-                    });
-                    const listEvent = await Events.findAll();
 
                     const newAccessToken = CreateAccessToken(user);
                     const newRefreshToken = CreateRefreshToken(user);
@@ -94,11 +44,6 @@ export const UserControllerAuthen = {
                             User: user,
                             accessToken: newAccessToken,
                             Online: true,
-                            BankOfUsers: listBankUser,
-                            Withdraws: withdraw,
-                            Refills: refill,
-                            Products: products,
-                            Events: listEvent,
                             mess: "Login success!"
                         });
                     } else {
@@ -113,11 +58,6 @@ export const UserControllerAuthen = {
                             User: user,
                             accessToken: newAccessToken,
                             Online: true,
-                            BankOfUsers: listBankUser,
-                            Withdraws: withdraw,
-                            Refills: refill,
-                            Products: products,
-                            Events: listEvent,
                             mess: "Login success!"
                         });
                     }
@@ -133,7 +73,7 @@ export const UserControllerAuthen = {
         }
     },
     Register: async (req, res) => {
-        const { userName, pass, phone, email } = req.body;
+        const { userName, pass, pass2, phone, email } = req.body;
         try {
             if (userName !== "" || pass !== "") {
                 const [user, created] = await Users.findOrCreate({
@@ -145,17 +85,21 @@ export const UserControllerAuthen = {
                     return res.status(400).json({ error: "Username đã tồn tại!" })
                 } else {
                     const salt = bcryptjs.genSaltSync(10);
+                    const salt2 = bcryptjs.genSaltSync(11);
                     const newPass = bcryptjs.hashSync(pass, salt);
+                    const newPass2 = bcryptjs.hashSync(pass2, salt2);
                     const wallet_number = "Hga " + new Date().getTime();
                     const str = wallet_number.split(" ")[1];
                     user.set({
-                        phone: phone,
-                        email: email,
+                        phone: phone + "$$block$$",
+                        email: email + "$$block$$",
                         pass: newPass,
+                        pass2: newPass2,
                         wallet_number: wallet_number
                     });
                     await user.save();
                     user.pass = null;
+                    user.pass2 = null;
                     user.wallet_number = str;
                     return res.status(201).json({ mess: "Register success", user: user })
                 }
@@ -171,6 +115,24 @@ export const UserControllerAuthen = {
         try {
             res.clearCookie("refreshToken");
             return res.end();
+        } catch (error) {
+            return res.status(500).json(error);
+        }
+    },
+    RefreshUser: async (req, res) => {
+        const { id } = req.query;
+        try {
+            const user = await Users.findOne({
+                where: {
+                    id: id
+                },
+                include: [{ model: Imgs }]
+            });
+            if (user) {
+                return res.status(200).json({ User: user });
+            } else {
+                return res.status(404).json({ error: "User không tồn tại!" });
+            }
         } catch (error) {
             return res.status(500).json(error);
         }
