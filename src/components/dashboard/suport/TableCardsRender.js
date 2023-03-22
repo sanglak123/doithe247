@@ -1,4 +1,4 @@
-import { formatMoney } from '@/config/formatMoney';
+import { formatMoney2 } from '@/config/formatMoney';
 import { DataSelector } from '@/redux/selector/DataSelector';
 import React, { useEffect, useState } from 'react';
 import { Button, Form, InputGroup, Table } from 'react-bootstrap';
@@ -33,7 +33,7 @@ function TableCardsRender({ telco }) {
                         {
                             PriceRender?.map((price, index) => {
                                 return (
-                                    <th key={index} className='txt_center text_light txt_white'>{formatMoney(price.Value.name)}</th>
+                                    <th key={index} className='txt_center text_light txt_white'>{formatMoney2(price.Value.name)}</th>
                                 )
                             })
                         }

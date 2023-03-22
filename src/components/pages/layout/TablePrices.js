@@ -2,10 +2,9 @@ import { formatMoney } from '@/config/formatMoney';
 import { DataSelector } from '@/redux/selector/DataSelector';
 import React, { useEffect, useState } from 'react';
 import { Button, Table } from 'react-bootstrap';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 function TablePrices(props) {
-    const dispatch = useDispatch();
 
     //Data   
     const Cards = useSelector(DataSelector.Cards);
@@ -41,7 +40,7 @@ function TablePrices(props) {
         }
     }
     return (
-        <div className='table_prices bgr_white mt-3 animate__animated  animate__fadeInUp'>
+        <div className='table_prices bgr_dark mt-3 animate__animated  animate__fadeInUp'>
             <div className='hearder_hag'>
                 <h1>Bảng Phí Đổi Thẻ Ngày: <span className='text-danger'>{handleRenderToday()}</span></h1>
             </div>

@@ -6,86 +6,70 @@ module.exports = {
     await queryInterface.bulkInsert('Cards', [
       {
         telco: "VIETTEL",
-        idTypeCard: 1,
-        img: 1
+        idTypeCard: 1       
       },
       {
         telco: "VINAPHONE",
-        idTypeCard: 1,
-        img: 2
+        idTypeCard: 1       
       },     
       {
         telco: "MOBIFONE",
-        idTypeCard: 1,
-        img: 3
+        idTypeCard: 1       
       },
       {
         telco: "VNMOBI",
-        idTypeCard: 1,
-        img: 4
+        idTypeCard: 1       
       },
       {
         telco: "ZING",
-        idTypeCard: 2,
-        img: 5
+        idTypeCard: 2      
       },
       {
         telco: "GARENA",
-        idTypeCard: 2,
-        img: 6
+        idTypeCard: 2       
       },
       {
         telco: "GATE",
-        idTypeCard: 2,
-        img: 7
+        idTypeCard: 2       
       },
       {
         telco: "VCOIN",
-        idTypeCard: 2,
-        img: 8
+        idTypeCard: 2      
       },
       {
         telco: "APPOTA",
-        idTypeCard: 2,
-        img: 9
+        idTypeCard: 2      
       },
       {
         telco: "ANPAY",
         idTypeCard: 2
       },
       {
-        telco: "AVG",
-        img: 12,
+        telco: "AVG",      
         idTypeCard: 2
       },
       {
-        telco: "BITVN",
-        img: 13,
+        telco: "BITVN",     
         idTypeCard: 2
       },
       {
-        telco: "CAROT",
-        img: 14,
+        telco: "CAROT",      
         idTypeCard: 2
       },
       {
-        telco: "FUNCARD",
-        img: 15,
+        telco: "FUNCARD",      
         idTypeCard: 2
       },
       {
-        telco: "GMOBILE",
-        img: 16,
+        telco: "GMOBILE",     
         idTypeCard: 2
       },
       {
-        telco: "GOSU",
-        img: 17,
+        telco: "GOSU",     
         idTypeCard: 2
       },
       {
-        telco: "KASPERKY",
-        img: 18,
+        telco: "KASPERKY",    
         idTypeCard: 2
       },
       {

@@ -1,0 +1,154 @@
+#profile {
+
+    input,
+    select {
+        background-color: transparent!important;
+        border-radius: 3px !important;
+        border: 1px solid rgba(129, 129, 129, 0.322);     
+        color: $light_300;
+    }
+
+    .profile_content {
+
+        .user_number {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+
+            @media only screen and (max-width: 1004px) {
+                flex-flow: row wrap;
+            }
+
+            .number_item {
+                text-align: center;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                .number_icon {
+                    font-size: 3.5rem;
+                    padding: 1rem;
+                    color: white;
+                }
+
+                .number_intro {
+                    text-align: center;
+
+                    h6 {
+                        font-family: fantasy;
+                        font-size: 1.7rem;
+                        font-weight: bold;
+                        line-height: 1;
+                        margin: 0;
+                        color: white;
+                        letter-spacing: 10px;
+                        text-align: center;
+                    }
+
+                    span {
+                        color: rgb(92, 92, 92);
+                        font-size: 0.8rem;
+                        font-weight: 400;
+                        letter-spacing: 2px;
+
+                    }
+                }
+
+
+            }
+        }
+
+        .profile_items {
+            display: flex;
+
+            .profile_left {
+                width: 35%;
+                padding: 1rem;
+                margin: 0 auto;
+                border-left: 1px solid rgba(128, 128, 128, 0.336);
+                position: relative;
+
+                .avatar {
+
+                    .avatar_img {
+                        max-width: 150px;
+                        min-height: 150px;
+                        border-radius: 100%;
+                        overflow: hidden;
+                        background-color: white;
+                        position: relative;
+                        margin: 0 auto;
+                        border: 5px solid $green_100;
+
+                        @media only screen and (max-width: 850px) {
+                            max-width: 100px;
+                            min-height: 100px;
+                        }
+
+                        img {
+                            width: 100%;
+                            position: absolute;
+                            top: 50%;
+                            left: 50%;
+                            transform: translate(-50%, -50%);
+                        }
+                    }
+
+                }
+
+                .profile_left_btn {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+
+                    @media only screen and (max-width: 1290px) {
+                        display: block;
+                        text-align: center;
+
+                        button {
+                            width: 100% !important;
+                        }
+                    }
+
+                    button {
+                        width: 250px;
+                        border: none;
+                        border-radius: 0;
+                        padding: 0.8rem;
+                        background-color: $green_100;
+                        transition: 0.5s;
+
+                        &.btn_active,
+                        &:hover {
+                            background-color: $green_200;
+                            color: $light_300;
+                        }
+                    }
+                }
+            }
+
+            .profile_right {
+                width: 65%;
+                margin: 0 auto;
+
+                .profile_User {
+                    position: relative;
+
+                    .btn_edit_profile {
+                        position: absolute;
+                        top: 0;
+                        right: 40px;
+                        border: none;
+                        transition: 0.5s;
+
+
+                    }
+
+                    .profile_User_content {}
+                }
+            }
+        }
+
+
+    }
+}

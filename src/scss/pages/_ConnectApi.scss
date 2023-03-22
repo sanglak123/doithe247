@@ -4,8 +4,7 @@
             .api_item {
                 width: 230px;
                 height: 230px;
-                margin: 0 auto;
-                background-color: rgba(255, 255, 255, 0.041);
+                margin: 0 auto;              
                 border-radius: 8px;
                 box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
                 cursor: pointer;
@@ -52,6 +51,7 @@
                 }
             }
         }
+       
     }
 
     #code_method {

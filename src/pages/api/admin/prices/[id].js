@@ -1,4 +1,5 @@
-import { ControllAdmin } from "data/controller/admin/auth";
+
+import { AdminPricesController } from "data/controller/admin/price";
 import nextConnect from "next-connect";
 
 const apiRoute = nextConnect({
@@ -17,7 +18,7 @@ apiRoute.get((req, res) => {
     return res.status(200).json({ mess: `Edit FeesBuy ID: ${id}` })
 });
 
-apiRoute.put(ControllAdmin.Prices.EditFeesBuy)
+apiRoute.put(AdminPricesController.Edit)
 
 export default apiRoute;
 

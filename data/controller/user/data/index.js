@@ -78,7 +78,7 @@ export const UserControllerDatas = {
                     where: {
                         idUser: id
                     },
-                    include: [{ model: Prices, include: [{ model: Cards }, { model: Values }] }, { model: Users }],
+                    include: [{ model: Prices, include: [{ model: Cards }, { model: Values }] }],
                     order: [
                         ["id", "desc"]
                     ]

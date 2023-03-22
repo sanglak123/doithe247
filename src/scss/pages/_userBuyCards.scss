@@ -29,6 +29,7 @@
                             position: relative;
                             border-radius: 8px;
                             cursor: pointer;
+                            transition: 0.5s;
 
                             img {
                                 position: absolute;
@@ -38,8 +39,9 @@
                                 transform: translate(-50%, -50%);
                             }
 
-                            &.card_active {
-                                border: 3px solid $green_300;
+                            &.card_active,
+                            &:hover {
+                                border: 3px solid red;
                             }
                         }
                     }
@@ -52,13 +54,13 @@
 
                             .card_name {
                                 width: auto;
-                                min-width: 130px;                             
+                                min-width: 130px;
                                 border: 1px solid white;
                                 border-radius: 7px;
                                 text-align: center;
                                 margin: 5px;
                                 cursor: pointer;
-                                transition: 0.5s;                             
+                                transition: 0.5s;
 
                                 &:hover,
                                 &.value_active {
@@ -66,6 +68,16 @@
                                     color: $light_300;
                                 }
                             }
+                        }
+                    }
+
+                    .usemanual {
+                        margin-top: 1rem;
+
+                        p {
+                            font-size: 0.8rem;
+                            font-style: italic;
+                            text-align: justify;
                         }
                     }
                 }
@@ -115,8 +127,6 @@
                         .item_left {}
 
                         .item_center {
-
-
                             .count {
                                 border: 1px solid $light_300;
                                 text-align: center;
@@ -179,15 +189,25 @@
                 }
             }
 
+            .store_receive_card {
+                border-top: 1px solid $light_300;
+            }
+
             .store_footer {
                 padding: 1rem;
                 border-top: 1px solid $light_300;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
+
+
+
                 bottom: 0;
                 left: 0;
                 right: 0;
+
+                #btn_pay {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                }
             }
         }
     }

@@ -1,5 +1,4 @@
-import { UserControllerCards } from "data/controller/user/cards";
-import { CheckLogin } from "data/middleware";
+import { UserPaymentController } from "data/controller/user/payments";
 import nextConnect from "next-connect";
 
 const apiRoute = nextConnect({
@@ -13,11 +12,8 @@ const apiRoute = nextConnect({
     },
 });
 
-apiRoute.get((req, res) => {
-    return res.status(200).json({ mess: "User Buy Card" })
-});
 
-apiRoute.post(CheckLogin, UserControllerCards.BuyCard)
+apiRoute.get(UserPaymentController.Withdraws.GetAll);
 
 export default apiRoute;
 

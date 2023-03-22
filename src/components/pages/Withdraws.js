@@ -64,7 +64,7 @@ function Withdraws(props) {
           
                 {
                     AccessToken ?
-                        <div className='withdraw_content bgr_white mt-2'>
+                        <div className='withdraw_content bgr_dark mt-2'>
                             <div className='note_whithdraw'>
                                 <div className='hearder_hag'>
                                     <h1>Lưu Ý Rút Tiền</h1>

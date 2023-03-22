@@ -1,5 +1,4 @@
-import { UserControllerPayments } from "data/controller/user/payments";
-import { CheckLogin } from "data/middleware";
+import { UserPaymentController } from "data/controller/user/payments";
 import nextConnect from "next-connect";
 
 const apiRoute = nextConnect({
@@ -13,10 +12,13 @@ const apiRoute = nextConnect({
     },
 });
 
-apiRoute.put(CheckLogin, UserControllerPayments.Bank.Edit);
 
-apiRoute.delete(CheckLogin, UserControllerPayments.Bank.Delete);
+apiRoute.get((req, res) => {
+    const { id, type } = req.query;
+    return res.status(200).json({ idUser: id, type: type, Action: `create_${type}` })
+});
 
+apiRoute.post(UserPaymentController.Withdraws.Create)
 
 export default apiRoute;
 

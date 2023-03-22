@@ -26,7 +26,7 @@ const CreatePartnerID = (user) => {
     return jwt.sign({
         id: user.id,
         email: user.email,
-        privateKey: "HAG"
+        privateKey: process.env.KEY_PARTNER_ID_VERIFY
     },
         process.env.KEY_PARTNER_ID
     )

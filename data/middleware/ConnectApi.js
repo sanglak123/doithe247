@@ -1,6 +1,5 @@
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
-
 dotenv.config();
 
 export const CheckPartner = (req, res, next) => {
@@ -8,12 +7,12 @@ export const CheckPartner = (req, res, next) => {
     if (partner_id) {
         jwt.verify(partner_id, process.env.KEY_PARTNER_ID, async (err, user) => {
             if (err) {
-                return res.status(403).json({ error: "Partner_id không hợp lệ!" })
+                return res.status(403).json({ error: "Partner_id không hợp lệ1!" })
             } else {
-                if (user.privateKey === "HAG") {
+                if (user.privateKey === process.env.KEY_PARTNER_ID_VERIFY) {
                     next();
                 } else {
-                    return res.status(403).json({ error: "Partner_id không hợp lệ!" })
+                    return res.status(403).json({ error: "Partner_id không hợp lệ2!" })
                 }
             }
         })

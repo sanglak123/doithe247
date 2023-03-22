@@ -29,6 +29,9 @@ function MainApp(props) {
   const accessToken = useSelector(UserSelector.Auth.AccessToken);
   const User = useSelector(UserSelector.Auth.User);
 
+  //Store
+  const Store = useSelector(UserSelector.Store);
+
   const [view, setView] = useState("Trang chủ");
   const handleRenderViews = () => {
     switch (view) {
@@ -85,6 +88,24 @@ function MainApp(props) {
   const [Login, setLogin] = useState(false);
   const [Register, setRegister] = useState(false);
   const [LoginAdmin, setLoginAdmin] = useState(false);
+
+
+  const [with_window, setWith_window] = useState();
+
+  const updateDimensions = () => {
+    setWith_window(window.innerWidth);
+  }
+  useEffect(() => {
+    window.addEventListener("resize", updateDimensions);
+    return () => window.removeEventListener("resize", updateDimensions);
+  }, []);
+
+  useEffect(() => {
+    if (with_window < 1220)
+      setShowMenu(false)
+    else
+      setShowMenu(true)
+  }, [with_window]);
 
   return (
     <div id='main_app'>
@@ -152,7 +173,12 @@ function MainApp(props) {
                   </div>
 
                   <div className={view === "Mua thẻ" ? "menu_item menu_active" : "menu_item"} onClick={() => setView("Mua thẻ")}>
-                    <p className='m-0'>Mua thẻ</p>
+                    <p className='m-0'>
+                      Mua thẻ
+                      {
+                        Store.length > 0 && view !== "Mua thẻ" && <Badge bg="danger">{Store.length}</Badge>
+                      }
+                    </p>
                     <div className='menu_icon'>
                       <span className="material-symbols-outlined">
                         add_card
@@ -177,28 +203,7 @@ function MainApp(props) {
                       </span>
                     </div>
                   </div>
-
-                  {
-                    accessToken &&
-                    <>
-                      <div className={view === "Ngân hàng" ? "menu_item menu_active" : "menu_item"} onClick={() => setView("Ngân hàng")}>
-                        <p className='m-0'>Ngân hàng</p>
-                        <div className='menu_icon'>
-                          <span className="material-symbols-outlined">
-                            account_balance
-                          </span>
-                        </div>
-                      </div>
-                      <div className={view === "Message" ? "menu_item menu_active" : "menu_item"} onClick={() => setView("Message")}>
-                        <p className='m-0'>Message<Badge bg="danger">2</Badge></p>
-                        <div className='menu_icon'>
-                          <span className="material-symbols-outlined">
-                            chat
-                          </span></div>
-                      </div>
-                    </>
-                  }
-
+                 
                   <div className={view === "Api" ? "menu_item menu_active" : "menu_item"} onClick={() => setView("Api")}>
                     <p className='m-0'>Api</p>
                     <div className='menu_icon'>
@@ -206,14 +211,7 @@ function MainApp(props) {
                         family_history
                       </span>
                     </div>
-                  </div>
-                  <div className={view === "Hướng dẫn" ? "menu_item menu_active" : "menu_item"} onClick={() => setView("Hướng dẫn")}>
-                    <p className='m-0'>Hướng dẫn</p>
-                    <div className='menu_icon'>
-                      <span className="material-symbols-outlined">
-                        chat
-                      </span></div>
-                  </div>
+                  </div>                 
 
                   {
                     accessToken &&
@@ -236,7 +234,7 @@ function MainApp(props) {
                         </div>
                       </div>
                     </>
-                  }               
+                  }
 
                 </div>
               </div>
@@ -282,7 +280,7 @@ function MainApp(props) {
                       account_circle
                     </span>
                     <span>
-                      {User?.displayName !== "null" ? User.displayName : User?.userName}
+                      {User?.displayName !== null ? User.displayName : User?.userName}
                     </span>
                   </div>
 

@@ -2,6 +2,7 @@ import { Cards, Imgs, Prices, Products, TypeCards, Users, Values } from "data/db
 import CryptoJS from "crypto-js";
 import uuid from "uuid";
 import dotenv from "dotenv";
+import { SendMail, smtpTransport } from "data/sendMail";
 dotenv.config();
 
 export const UserControllerCards = {
@@ -91,52 +92,70 @@ export const UserControllerCards = {
     },
     BuyCard: async (req, res) => {
         const { id } = req.query;
-        const { store, request_id, email } = req.body;
+        const { store, request_id, email, idUser } = req.body;
+
         try {
             const user = await Users.findOne({
                 where: {
-                    id: id
+                    id: idUser
                 }
             });
             if (user) {
-                let total = 0;
-                for (let index = 0; index < store.length; index++) {
-                    total += Number(store[index].value);
+
+                // SendEmail
+                const mailOptions = {
+                    from: process.env.OWNER_EMAIL,
+                    to: process.env.OWNER_EMAIL,
+                    subject: "MUA THẺ CÀO DOITHE247",
+                    generateTextFromHTML: true,
+                    html: "<h1>Hello</h1>"
                 };
-                const newSurplus = Number(user.surplus) - Number(total);
-                if (newSurplus > 0) {
-                    //Data
-                    const partner_id = process.env.PARTNER_ID;
-                    const partner_key = process.env.PARTNER_KEY;
-                    const command = "buycard";
-                    const sign = CryptoJS.MD5(partner_key + partner_id + command + request_id).toString();
-                    const wallet_number = process.env.WALLET_NUMBER;
+                smtpTransport.sendMail(mailOptions, (err, result) => {
+                    if (err) {
+                        return res.status(500).json(err)
+                    } else {
+                        return res.status(200).json(result.response)
+                    }
+                })
+                // SendMail("sanghuynh.pt91@gmail.com", "MUA THẺ CÀO DOITHE247", "<h1>Thẻ Cào 24h</h1>")
+                //     .then((result) => {
+                //         return res.status(200).json({ data: result })
+                //     })
+                //     .catch((err) => {
+                //         return res.status(500).json(err)
+                //     })
+                // let total = 0;
+                // for (let index = 0; index < store.length; index++) {
+                //     total += Number(store[index].value);
+                // };
+                // const newSurplus = Number(user.surplus) - Number(total);
+                // if (newSurplus > 0) {
+                //     //Data
+                //     const partner_id = process.env.PARTNER_ID;
+                //     const partner_key = process.env.PARTNER_KEY;
+                //     const command = "buycard";
+                //     const sign = CryptoJS.MD5(partner_key + partner_id + command + request_id).toString();
+                //     const wallet_number = process.env.WALLET_NUMBER;
 
-                    let DataRessult = [];
-                    for (let index = 0; index < store.length; index++) {
-                        await axios({
-                            method: "POST",
-                            url: process.env.DOMAIN_PUBLIC + `/cardws?partner_id=${partner_id}&command=${command}&request_id=${request_id}&service_code=${store[index].telco}&wallet_number=${wallet_number}&value=${store[index].value}&qty=${store[index].count}&sign=${sign}`
-                        }).then((responsive) => {
-                            DataRessult = [...DataRessult, responsive.data];
-                        }).catch((err) => {
-                            DataRessult = [...DataRessult, err.response.data];
-                        })
-                    };
-                    //SendEmail
-                    // SendMail("sanghuynh.pt91@gmail.com", "Hello from API Gmail", DataRessult.toString)
-                    //     .then((result) => {
-                    //         return res.status(200).json({ data: result })
-                    //     })
-                    //     .catch((err) => {
-                    //         return res.status(500).json(err)
-                    //     })
 
-                    return res.status(200).json({ data: DataRessult })
 
-                } else {
-                    return res.status(400).json({ error: "Số dư không đủ!" })
-                }
+                // let DataRessult = [];
+                // for (let index = 0; index < store.length; index++) {
+                //     await axios({
+                //         method: "POST",
+                //         url: process.env.DOMAIN_PUBLIC + `/cardws?partner_id=${partner_id}&command=${command}&request_id=${request_id}&service_code=${store[index].telco}&wallet_number=${wallet_number}&value=${store[index].value}&qty=${store[index].count}&sign=${sign}`
+                //     }).then((responsive) => {
+                //         DataRessult = [...DataRessult, responsive.data];
+                //     }).catch((err) => {
+                //         DataRessult = [...DataRessult, err.response.data];
+                //     })
+                // };
+
+                // return res.status(200).json({ data: DataRessult })
+
+                // } else {
+                //     return res.status(400).json({ error: "Số dư không đủ!" })
+                // }
             } else {
                 return res.status(404).json({ error: "User not found!" })
             }

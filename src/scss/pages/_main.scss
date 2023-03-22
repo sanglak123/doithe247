@@ -49,9 +49,14 @@
                     }
 
                     .menu_main {
+
+                        width: 100%;
+
                         .menu_items {
+                            
                             .menu_item {
                                 width: 100%;
+                               
                                 padding: 1.3rem 1rem;
                                 display: flex;
                                 justify-content: space-between;
@@ -65,8 +70,8 @@
 
                                     .badge {
                                         transform: translateY(-7px);
-                                        margin-left: 0.5rem;                                     
-                                       
+                                        margin-left: 0.5rem;
+
                                     }
 
                                 }

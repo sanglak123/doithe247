@@ -61,6 +61,23 @@ const AdminAutheApi = {
             }
         })
     },
+    ChangeAvatar: async (accessToken, dispatch, photo) => {
+        const axiosJwt = CreateAxiosInstance(dispatch, accessToken, idUser);
+        await axiosJwt({
+            method: "PUT",
+            url: `/users/${idUser}/change_avatar`,
+            data: formData
+        }).then((res) => {
+            toast.success(res.data.mess);
+            dispatch(RefreshUserSuccess(res.data.User))
+        }).catch((err) => {
+            if (err.response) {
+                toast.error(err.response.data.error)
+            } else {
+                toast.error(err)
+            }
+        })
+    },
     EditProfile: async (accessToken, dispatch, idUser, displayName, fullName, phone, adress, photo, email, RefreshUserSuccess) => {
         const axiosJwt = CreateAxiosInstance(dispatch, accessToken);
         const formData = new FormData();

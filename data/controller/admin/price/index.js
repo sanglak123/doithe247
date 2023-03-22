@@ -12,124 +12,123 @@ export const AdminPricesController = {
                 method: "GET",
                 url: "https://doithe1s.vn/chargingws/v2/getfee?partner_id=6155991561"
             }).then(async (result) => {
-                result.data.map(async (item) => {
-                    const [value, createdValue] = await Values.findOrCreate({
+                for (let index = 0; index < result.data.length; index++) {
+                    const card = await Cards.findOne({
                         where: {
-                            name: item.value
+                            telco: result.data[index].telco
                         }
                     });
-                    const [card, createdCard] = await Cards.findOrCreate({
-                        where: {
-                            telco: item.telco
-                        }
-                    });
-                    if (!createdCard) {
-                        if (!createdValue) {
-                            value.name = item.value;
-                            await value.save().then(async () => {
-                                const [price, createdPrice] = await Prices.findOrCreate({
-                                    where: {
-                                        [Op.and]: [
-                                            { idCard: card.id },
-                                            { idValue: value.id }
-                                        ]
-                                    }
-                                });
-                                if (!createdPrice) {
-                                    price.feesChange = parseFloat(item.fees) + parseFloat(process.env.DISCOUNT);
-                                    await price.save();
-                                } else {
-                                    price.set({
-                                        idCard: card.id,
-                                        idValue: value.id,
-                                        feesChange: parseFloat(item.fees) + parseFloat(process.env.DISCOUNT)
-                                    });
-                                    await price.save();
-                                }
-                            })
-                        } else {
-                            value.set({
-                                name: item.value
-                            });
-                            await value.save().then(async () => {
-                                const [price, createdPrice] = await Prices.findOrCreate({
-                                    where: {
-                                        [Op.and]: [
-                                            { idCard: card.id },
-                                            { idValue: value.id }
-                                        ]
-                                    }
-                                });
-                                if (!createdPrice) {
-                                    price.feesChange = parseFloat(item.fees) + parseFloat(process.env.DISCOUNT);
-                                    await price.save();
-                                } else {
-                                    price.set({
-                                        idCard: card.id,
-                                        idValue: value.id,
-                                        feesChange: parseFloat(item.fees) + parseFloat(process.env.DISCOUNT)
-                                    });
-                                    await price.save();
-                                }
-                            })
-                        }
-                    } else {
-                        card.set({
-                            telco: item.telco
+                    if (card) {
+                        const value = await Values.findOne({
+                            where: {
+                                name: result.data[index].value
+                            }
                         });
-                        await card.save().then(async () => {
-                            if (!createdValue) {
-                                value.name = item.value;
-                                await value.save().then(async () => {
-                                    const [price, createdPrice] = await Prices.findOrCreate({
-                                        where: {
-                                            [Op.and]: [
-                                                { idCard: card.id },
-                                                { idValue: value.id }
-                                            ]
-                                        }
-                                    });
-                                    if (!createdPrice) {
-                                        price.feesChange = parseFloat(item.fees) + parseFloat(process.env.DISCOUNT);
-                                        await price.save();
-                                    } else {
-                                        price.set({
-                                            idCard: card.id,
-                                            idValue: value.id,
-                                            feesChange: parseFloat(item.fees) + parseFloat(process.env.DISCOUNT)
-                                        });
-                                        await price.save();
-                                    }
-                                })
+                        if (value) {
+                            const price = await Prices.findOne({
+                                where: {
+                                    [Op.and]: [
+                                        { idCard: card.id },
+                                        { idValue: value.id }
+                                    ]
+                                }
+                            });
+                            if (price) {
+                                price.feesChange = parseFloat(result.data[index].fees) + parseFloat(process.env.DISCOUNT);
+                                price.feesBuy = 1;
+                                await price.save();
                             } else {
-                                value.set({
-                                    name: item.value
-                                });
-                                await value.save().then(async () => {
-                                    const [price, createdPrice] = await Prices.findOrCreate({
-                                        where: {
-                                            [Op.and]: [
-                                                { idCard: card.id },
-                                                { idValue: value.id }
-                                            ]
-                                        }
-                                    });
-                                    if (!createdPrice) {
-                                        price.feesChange = parseFloat(item.fees) + parseFloat(process.env.DISCOUNT);
-                                        await price.save();
-                                    } else {
-                                        price.set({
-                                            idCard: card.id,
-                                            idValue: value.id,
-                                            feesChange: parseFloat(item.fees) + parseFloat(process.env.DISCOUNT)
-                                        });
-                                        await price.save();
-                                    }
+                                await Prices.create({
+                                    idCard: card.id,
+                                    idValue: value.id,
+                                    feesChange: parseFloat(result.data[index].fees) + parseFloat(process.env.DISCOUNT),
+                                    feesBuy: 1
                                 })
                             }
-                        })
+                        } else {
+                            const newValue = await Values.create({
+                                name: result.data[index].value
+                            });
+                            const price = await Prices.findOne({
+                                where: {
+                                    [Op.and]: [
+                                        { idCard: card.id },
+                                        { idValue: newValue.id }
+                                    ]
+                                }
+                            });
+                            if (price) {
+                                price.feesChange = parseFloat(result.data[index].fees) + parseFloat(process.env.DISCOUNT);
+                                price.feesBuy = 1;
+                                await price.save();
+                            } else {
+                                await Prices.create({
+                                    idCard: card.id,
+                                    idValue: newValue.id,
+                                    feesChange: parseFloat(result.data[index].fees) + parseFloat(process.env.DISCOUNT),
+                                    feesBuy: 1
+                                })
+                            }
+                        }
+                    } else {
+                        const newCard = await Cards.create({
+                            telco: result.data[index].telco,
+                            change: true
+                        });
+                        const value = await Values.findOne({
+                            where: {
+                                name: result.data[index].value
+                            }
+                        });
+                        if (value) {
+                            const price = await Prices.findOne({
+                                where: {
+                                    [Op.and]: [
+                                        { idCard: newCard.id },
+                                        { idValue: value.id }
+                                    ]
+                                }
+                            });
+                            if (price) {
+                                price.feesChange = parseFloat(result.data[index].fees) + parseFloat(process.env.DISCOUNT);
+                                price.feesBuy = 1;
+                                await price.save();
+                            } else {
+                                await Prices.create({
+                                    idCard: newCard.id,
+                                    idValue: value.id,
+                                    feesChange: parseFloat(result.data[index].fees) + parseFloat(process.env.DISCOUNT),
+                                    feesBuy: 1
+                                })
+                            }
+                        } else {
+                            const newValue = await Values.create({
+                                name: result.data[index].value
+                            });
+                            const price = await Prices.findOne({
+                                where: {
+                                    [Op.and]: [
+                                        { idCard: newCard.id },
+                                        { idValue: newValue.id }
+                                    ]
+                                }
+                            });
+                            if (price) {
+                                price.feesChange = parseFloat(result.data[index].fees) + parseFloat(process.env.DISCOUNT);
+                                price.feesBuy = 1;
+                                await price.save();
+                            } else {
+                                await Prices.create({
+                                    idCard: newCard.id,
+                                    idValue: newValue.id,
+                                    feesChange: parseFloat(result.data[index].fees) + parseFloat(process.env.DISCOUNT),
+                                    feesBuy: 1
+                                })
+                            }
+                        }
                     }
-                });
+                };             
+
                 const list = await Prices.findAll({
                     include: [
                         { model: Cards },
@@ -143,5 +142,8 @@ export const AdminPricesController = {
         } catch (error) {
             return res.status(500).json(err);
         }
+    },
+    Edit: async (req, res) => {
+
     }
 }

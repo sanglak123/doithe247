@@ -68,6 +68,39 @@ export const UserAuthApi = {
                 toast.error(err);
             }
         })
+    },
+    SendAuthEmail: async (dispatch, accessToken, idUser) => {
+        const axiosJwt = CreateAxiosInstance(dispatch, accessToken);
+        await axiosJwt({
+            method: "POST",
+            url: `/users/auth/${idUser}`,
+            headers: {
+                token: "Bearner " + accessToken
+            },
+        }).then((res) => {
+            toast.success(res.data.mess)
+        }).catch((err) => {
+            if (err.response) {
+                toast.error(err.response.data.error);
+            } else {
+                toast.error(err);
+            }
+        })
+    },
+    SendKeyAuthEmail: async (accessToken, dispatch, hashEmail) => {
+        const axiosJwt = CreateAxiosInstance(dispatch, accessToken);
+        await axiosJwt({
+            method: "POST",
+            url: `/auth_email/${hashEmail}`,
+        }).then((res) => {
+            toast.success(res.data.mess);
+        }).catch((err) => {
+            if (err.response) {
+                toast.error(err.response.data.error);
+            } else {
+                toast.error(err);
+            }
+        })
 
     }
 }

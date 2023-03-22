@@ -46,7 +46,7 @@ function BankOfUser(props) {
     return (
         AccessToken ?
             <div id='user_payments'>
-                <div className='user_payments_content bgr_white'>
+                <div className='user_payments_content bgr_dark'>
 
                     <div className='user_payments_items'>
                         <div className='hearder_hag'>

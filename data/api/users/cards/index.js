@@ -34,16 +34,19 @@ export const UserCardsApi = {
             }
         })
     },
-    BuyCarrd: async (idUser, store, email, accessToken) => {
-        const request_id = uuid({ idUser: idUser }).replace(/\-/g, '').toString();
-        await rootApi({
+    BuyCarrd: async (dispatch, accessToken, partner_id, idUser, store, email,) => {
+        const axiosJwt = CreateAxiosInstance(dispatch, accessToken)
+
+        const request_id = idUser + "_" + new Date().getTime();
+        await axiosJwt({
             method: "POST",
-            url: `/users/buycard/${idUser}`,
+            url: "/buycard",
             headers: {
-                token: "Bearner " + accessToken
+                token: "Bearner " + accessToken,
+                partner_id: partner_id
             },
             data: {
-                store, request_id, email
+                store, request_id, email, idUser
             }
         }).then((res) => {
             console.log(res.data);

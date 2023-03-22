@@ -80,23 +80,56 @@ body {
 
 .bgr_white {
     padding: 20px;
+    background-color: white !important;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    border-radius: 3px;
+}
+
+.bgr_black {
+    padding: 20px;
     background-color: $dark_300 !important;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     border-radius: 3px;
 }
 
-.code_sample {
-    background-color: black;
+.bgr_dark {
+    padding: 20px;
+    background-color: $dark_300 !important;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    border-radius: 3px;
+}
+
+.bgr_light {
+    padding: 20px;
+    background-color: white;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    border-radius: 3px;
+}
+
+.code_sample {  
     padding: 1.5rem;
     color: white;
     border-radius: 8px;
 }
 
 //Color text
-.text_light{
-   font-family: opensans_light;
-   font-weight: 300;
+.txt_block {
+    font-family: opensans_light;
+    font-weight: 400;
+    color: rgba(133, 133, 133, 0.555);
 }
+
+.text_light {
+    font-family: opensans_light;
+    font-weight: 300;
+}
+
+.txt_dark {
+    font-family: opensans_light;
+    font-weight: 300;
+    color: rgb(66, 66, 66);
+}
+
 .txt_white {
     font-weight: 200;
     color: $light_300 !important;

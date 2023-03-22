@@ -13,7 +13,8 @@ const apiRoute = nextConnect({
     },
 });
 
-apiRoute.get(CheckLogin, UserControllerAuthen.RefreshUser)
+apiRoute.get(CheckLogin, UserControllerAuthen.RefreshUser);
+apiRoute.post(CheckLogin, UserControllerAuthen.SendAuthEmail);
 
 export default apiRoute;
 

@@ -1,42 +1,35 @@
-const nodemailer = require('nodemailer');
+import { google } from "googleapis";
+import nodemailer from "nodemailer";
+import dotenv from "dotenv";
+import CryptoJS from "crypto-js";
+dotenv.config();
 
-const { google } = require("googleapis");
+const OAuth2 = google.auth.OAuth2;
 
-const CLIENT_ID = "506686805602-uqs0s0kehubu4p25nqj54pmee1mufgfd.apps.googleusercontent.com"
-const CLIENT_SECRET = "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"
-const REDIERECT_URI = "https://developers.google.com/oauthplayground"
-const REFRESH_TOKEN = "1//043kUardRa6HyCgYIARAAGAQSNwF-L9IrjPllNuJwAWybYfi8ungV63tk0220IJUnXFFk8FKV1hHu2MX2oNU0_wT26bQEo9jEVgA";
+const oauth2Client = new OAuth2(
+    process.env.CLIENT_ID,
+    process.env.CLIENT_SECRET, // Client Secret
+    process.env.REDIRECT_URL // Redirect URL
+);
+oauth2Client.setCredentials({
+    refresh_token: process.env.REFRESH_TOKEN_GMAIL
+});
+const accessToken = oauth2Client.getAccessToken();
 
-const authen = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIERECT_URI);
-authen.setCredentials({ refresh_token: REFRESH_TOKEN });
-
-export const SendMail = async (to, subject, text) => {
-    try {
-        const accessToken = await authen.getAccessToken();
-        const transporter = nodemailer.createTransport({
-            service: "gmail",
-            auth: {
-                type: "OAuth2",
-                user: "sanghuynh.pt91@gmail.com",
-                clientId: CLIENT_ID,
-                clientSecret: CLIENT_SECRET,
-                refreshToken: REFRESH_TOKEN,
-                accessToken: accessToken
-            }
-        });
-
-        const mailOptions = {
-            from: "sanghuynh.pt91@gmail.com",
-            to: to,
-            subject: subject,
-            Text: text,
-            html: "<h1>Hello From API GMAIL</h1>"
-        };
-
-        const result = await transporter.sendMail(mailOptions);
-        return result
-    } catch (error) {
-        return error
+export const smtpTransport = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+        type: "OAuth2",
+        user: process.env.OWNER_EMAIL,
+        clientId: process.env.CLIENT_ID,
+        clientSecret: process.env.CLIENT_SECRET,
+        refreshToken: process.env.REFRESH_TOKEN_GMAIL,
+        accessToken: accessToken
     }
-};
+});
 
+
+export const VerifyEmail = (emailhash) => {
+    var decrypted = CryptoJS.AES.decrypt(emailhash, process.env.KEY_EMAIL);
+    return decrypted.toString(CryptoJS.enc.Utf8)
+}

@@ -30,7 +30,7 @@ function ChatBox(props) {
 
     return (
         <div id='chat_box'>
-            <div className='bgr_white'>
+            <div className='bgr_dark'>
                 <div className='hearder_hag'>
                     <h1>Chat Với Admin</h1>
                 </div>

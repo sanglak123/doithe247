@@ -60,7 +60,7 @@ function CardsHot(props) {
     };
     return (
         <div id='cards_hot' className='mt-3 animate__animated  animate__fadeInRight'>
-            <div className='bgr_white'>
+            <div className='bgr_dark'>
                 <div className='hearder_hag'>
                     <h1>Sản Phẩm Hot</h1>
                 </div>

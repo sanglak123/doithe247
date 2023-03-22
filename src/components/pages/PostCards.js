@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import Note from "./layout/Note";
 import TablePrices from "./layout/TablePrices";
+import HistoryChangeCard from "./support/HistoryChangeCard";
 
 function PostCard(props) {
     const dispatch = useDispatch();
@@ -41,7 +42,7 @@ function PostCard(props) {
     }
     return (
         <>
-            <div id='change_card' className='bgr_white mt-3 animate__animated animate__fadeInDown'>
+            <div id='change_card' className='bgr_dark mt-3 animate__animated animate__fadeInDown'>
                 <div className='hearder_hag'>
                     <h1>Đổi Thẻ</h1>
                 </div>
@@ -111,6 +112,7 @@ function PostCard(props) {
                 </Row>
             </div >
             <TablePrices />
+            <HistoryChangeCard />
         </>
 
     );

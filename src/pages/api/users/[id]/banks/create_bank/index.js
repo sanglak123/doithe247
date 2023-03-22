@@ -1,4 +1,5 @@
-import { UserControllerPayments } from "data/controller/user/payments";
+
+import { UserPaymentController } from "data/controller/user/payments";
 import { CheckLogin } from "data/middleware";
 import nextConnect from "next-connect";
 
@@ -13,7 +14,7 @@ const apiRoute = nextConnect({
     },
 });
 
-apiRoute.post(CheckLogin, UserControllerPayments.Bank.Add);
+apiRoute.post(CheckLogin, UserPaymentController.Bank.Create);
 
 export default apiRoute;
 

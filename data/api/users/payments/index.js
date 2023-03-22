@@ -3,14 +3,15 @@ import { toast } from "react-toastify";
 
 export const UserPaymentsApi = {
     BankOfUser: {
-        Add: async (idBank, number, owner, branch, idUser, dispatch, AddBankOfUserSuccess, accessToken, axiosJwt) => {
+        Add: async (dispatch, accessToken, idBank, number, owner, branch, idUser, AddBankOfUserSuccess) => {
+            const axiosJwt = CreateAxiosInstance(dispatch, accessToken);
             await axiosJwt({
                 method: "POST",
-                url: "/users/banks",
+                url: `/users/${idUser}/banks/create_bank`,
                 headers: {
                     token: "Bearner " + accessToken
                 },
-                data: { idBank, number, owner, branch, idUser }
+                data: { idBank, number, owner, branch }
             }).then((res) => {
                 toast.success(res.data.mess);
                 dispatch(AddBankOfUserSuccess(res.data));
@@ -22,14 +23,15 @@ export const UserPaymentsApi = {
                 }
             })
         },
-        Edit: async (idBank, number, owner, branch, idUser, accessToken, axiosJwt, dispatch, RefreshBankOfUserSuccess) => {
+        Edit: async (dispatch, accessToken, idBank, number, owner, branch, idUser, RefreshBankOfUserSuccess) => {
+            const axiosJwt = CreateAxiosInstance(dispatch, accessToken);
             await axiosJwt({
                 method: "PUT",
-                url: `/users/banks/${idBank}`,
+                url: `/users/${idUser}/banks/${idBank}/edit_bank`,
                 headers: {
                     token: "Bearner " + accessToken
                 },
-                data: { number, owner, branch, idUser }
+                data: { number, owner, branch }
             }).then((res) => {
                 if (res.status === 200) {
                     toast.success(res.data.mess);
@@ -43,10 +45,11 @@ export const UserPaymentsApi = {
                 }
             })
         },
-        Delete: async (idBank, idUser, dispatch, RefreshBankOfUserSuccess, accessToken, axiosJwt) => {
+        Delete: async (dispatch, accessToken, idBank, idUser, RefreshBankOfUserSuccess) => {
+            const axiosJwt = CreateAxiosInstance(dispatch, accessToken);
             await axiosJwt({
                 method: "DELETE",
-                url: `/users/banks/${idBank}`,
+                url: `/users/${idUser}/banks/${idBank}/delete_bank`,
                 headers: {
                     token: "Bearner " + accessToken
                 },

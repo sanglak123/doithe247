@@ -11,7 +11,7 @@ import { UserAuthApi } from "data/api/users/auth";
 import { SignOutAdminSuccess } from "@/redux/slice/admin";
 import { LogoutUserSuccess } from "@/redux/slice/user";
 import { Badge, Button } from "react-bootstrap";
-import { formatMoney } from "@/config/formatMoney";
+import { formatMoney, formatMoney2 } from "@/config/formatMoney";
 import ModalLogin from "@/components/pages/modal/Login";
 import ModalLoginAdmin from "@/components/pages/modal/LoginAdmin";
 import DashboardSystems from "@/components/dashboard/Systems";
@@ -33,7 +33,7 @@ function DashboardAdmin(props) {
     const router = useRouter();
     const accessToken = useSelector(UserSelector.Auth.AccessToken);
     const User = useSelector(UserSelector.Auth.User);
-
+  
     const [view, setView] = useState("Systems");
     const handleRenderViews = () => {
         switch (view) {
@@ -139,7 +139,7 @@ function DashboardAdmin(props) {
                                         <div className={view === "Systems" ? "menu_item menu_active" : "menu_item"} onClick={() => setView("Systems")}>
                                             <p className='m-0'>Hệ thống</p>
                                             <div className='menu_icon'>
-                                                <span class="material-symbols-outlined">
+                                                <span className="material-symbols-outlined">
                                                     dns
                                                 </span>
                                             </div>
@@ -150,7 +150,7 @@ function DashboardAdmin(props) {
                                         <div className={view === "Khách hàng" ? "menu_item menu_active" : "menu_item"} onClick={() => setView("Khách hàng")}>
                                             <p className='m-0'>Khách hàng</p>
                                             <div className='menu_icon'>
-                                                <span class="material-symbols-outlined">
+                                                <span className="material-symbols-outlined">
                                                     group
                                                 </span>
                                             </div>
@@ -169,7 +169,7 @@ function DashboardAdmin(props) {
                                         <div className={view === "Loại thẻ" ? "menu_item menu_active" : "menu_item"} onClick={() => setView("Loại thẻ")}>
                                             <p className='m-0'>Thẻ cào</p>
                                             <div className='menu_icon'>
-                                                <span class="material-symbols-outlined">
+                                                <span className="material-symbols-outlined">
                                                     credit_card
                                                 </span>
                                             </div>
@@ -264,7 +264,7 @@ function DashboardAdmin(props) {
                                                 monetization_on
                                             </span>
                                             <span>
-                                                {formatMoney(User?.surplus)}
+                                                {formatMoney2(User?.surplus)}
                                             </span>
                                         </div>
                                     </div>

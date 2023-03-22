@@ -109,7 +109,7 @@ function Refills(props) {
         <div id='topup'>
             {
                 AccessToken ?
-                    <div className='refill_content bgr_white'>
+                    <div className='refill_content bgr_dark'>
                         <div className='refill_item'>
                             <div className='refill_hearder'>
                                 <div className='hearder_hag'>

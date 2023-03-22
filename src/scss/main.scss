@@ -8,7 +8,6 @@
 
 
 //layout
-
 @import "./layouts/tablePrice";
 @import "./layouts/note";
 @import "./layouts/button";
@@ -20,7 +19,6 @@
 @import "./components/tableChangeCard";
 
 //Dashboard
-@import "./components/dashboard/profile";
 @import "./components//dashboard/system";
 @import "./components//dashboard/prices";
 @import "./components/dashboard/cards";
@@ -34,6 +32,12 @@
 @import "./pages/dashboard";
 @import "./pages/ConnectApi";
 @import "./pages/userBuyCards";
+@import "./pages/user/page/profile";
+
+//Support
+@import "./pages/support/uploadImage";
+
+@import "./pages//user/support/historyBuyCard";
 
 
 

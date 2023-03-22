@@ -17,88 +17,95 @@ function ConnectApi(props) {
         }
     }
     return (
-        <div id='ConnectApi' className='bgr_white mt-3 animate__animated animate__fadeInDown'>
+        <div id='ConnectApi' className='mt-3 animate__animated animate__fadeInDown'>
             <div className='api_content'>
-                <div className='hearder_hag'>
-                    <h1>API DOITHE247</h1>
-                </div>
-                <div className='api_items'>
-                    <Row>
-                        <Col xs={3}>
-                            <div className='api_item' onClick={() => setType("FeesChange")}>
-                                <div className='item_content'>
-                                    <div className='api_logo'>
-                                        <span class="material-symbols-outlined">
-                                            price_change
-                                        </span>
-                                    </div>
-                                    <div className='api_title'>
-                                        <p>Giá tẩy thẻ</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </Col>
-                        <Col xs={3}>
-                            <div className='api_item' onClick={() => setType("FeesBuy")}>
-                                <div className='item_content'>
-                                    <div className='api_logo'>
-                                        <span class="material-symbols-outlined">
-                                            local_atm
-                                        </span>
-                                    </div>
-                                    <div className='api_title'>
-                                        <p>Giá mua thẻ</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </Col>
-                        <Col xs={3}>
-                            <div className='api_item' onClick={() => setType("PostCard")}>
-                                <div className='item_content'>
-                                    <div className='api_logo'>
-                                        <span class="material-symbols-outlined">
-                                            credit_score
-                                        </span>
-                                    </div>
-                                    <div className='api_title'>
-                                        <p>Gửi thẻ</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </Col>
-                        <Col xs={3}>
-                            <div className='api_item' onClick={() => setType("BuyCard")}>
-                                <div className='item_content'>
-                                    <div className='api_logo'>
-                                        <span class="material-symbols-outlined">
-                                            add_card
-                                        </span>
-                                    </div>
-                                    <div className='api_title'>
-                                        <p>Mua thẻ</p>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </Col>
-                    </Row>
-                </div>
-
-                <div className='code_api'>
-                    <div className='code_api_content'>
-                        <div className='code_api_hearder'>
-                            <div className='hearder_hag'>
-                                <h1>{type}</h1>
-                            </div>
-                        </div>
-                        <div className='code_api_render'>
-                            {
-                                handRenderApi()
-                            }
-                        </div>
+                <div className='bgr_dark'>
+                    <div className='hearder_hag'>
+                        <h1>API DOITHE247</h1>
                     </div>
+                    <div className='api_items'>
+                        <Row>
+                            <Col xs={3}>
+                                <div className='api_item bgr_black' onClick={() => setType("FeesChange")}>
+                                    <div className='item_content'>
+                                        <div className='api_logo'>
+                                            <span class="material-symbols-outlined">
+                                                price_change
+                                            </span>
+                                        </div>
+                                        <div className='api_title'>
+                                            <p>Giá tẩy thẻ</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </Col>
+                            <Col xs={3}>
+                                <div className='api_item bgr_dark' onClick={() => setType("FeesBuy")}>
+                                    <div className='item_content'>
+                                        <div className='api_logo'>
+                                            <span class="material-symbols-outlined">
+                                                local_atm
+                                            </span>
+                                        </div>
+                                        <div className='api_title'>
+                                            <p>Giá mua thẻ</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </Col>
+                            <Col xs={3}>
+                                <div className='api_item bgr_dark' onClick={() => setType("PostCard")}>
+                                    <div className='item_content'>
+                                        <div className='api_logo'>
+                                            <span class="material-symbols-outlined">
+                                                credit_score
+                                            </span>
+                                        </div>
+                                        <div className='api_title'>
+                                            <p>Gửi thẻ</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </Col>
+                            <Col xs={3}>
+                                <div className='api_item bgr_dark' onClick={() => setType("BuyCard")}>
+                                    <div className='item_content'>
+                                        <div className='api_logo'>
+                                            <span class="material-symbols-outlined">
+                                                add_card
+                                            </span>
+                                        </div>
+                                        <div className='api_title'>
+                                            <p>Mua thẻ</p>
+                                        </div>
+                                    </div>
 
+                                </div>
+                            </Col>
+                        </Row>
+                    </div>
                 </div>
+                <div className='bgr_dark mt-3'>
+
+                    <div className='code_api'>
+                        <div className='code_api_content'>
+                            <div className='code_api_hearder'>
+                                <div className='hearder_hag'>
+                                    <h1>{type}</h1>
+                                </div>
+                            </div>
+                            <div className='code_api_render'>
+                                {
+                                    handRenderApi()
+                                }
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+
             </div>
         </div>
     );
@@ -110,7 +117,7 @@ export default ConnectApi;
 const ApiFeesChange = () => {
     return (
         <div id='api_feesChange'>
-            <div className='list_api code_sample'>
+            <div className='list_api code_sample bgr_dark'>
                 <div className='list_api_item d-flex justify-content-start'>
                     <div className='method me-5 mb-3'>
                         <p>Method</p>
