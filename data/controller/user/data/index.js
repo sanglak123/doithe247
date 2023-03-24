@@ -1,6 +1,6 @@
 import { BankOfUsers, Banks, Cards, Events, Imgs, Payments, Prices, Products, ReceiveBanks, TypeCards, Users, Values, Promotions } from "data/db/models";
 
-export const UserControllerDatas = {
+export const UserDataController = {
     LoadingData: async (req, res) => {
         try {
 
@@ -116,57 +116,6 @@ export const UserControllerDatas = {
                 return res.status(404).json({ error: "User không tồn tại!" })
             }
 
-
-        } catch (error) {
-            return res.status(500).json(error);
-        }
-    },
-    GetDataByType: async (req, res) => {
-        const { type, idUser } = req.query;
-        try {
-            const user = await Users.findOne({
-                where: {
-                    id: idUser
-                },
-                include: [{ model: Imgs }]
-            });
-            if (user) {
-                switch (type) {
-                    case "Prices": {
-                        const listPrice = await Prices.findAll({
-                            include: [
-                                { model: Cards },
-                                { model: Values }
-                            ]
-                        });
-                        return res.status(200).json({ Prices: listPrice })
-                    }
-                    case "Refills": {
-                        const listRefills = await Payments.findAll({
-                            where: {
-                                [Op.and]: [
-                                    { idUser: idUser },
-                                    { command: "refill" }
-                                ]
-
-                            },
-                            include: [
-                                { model: Users },
-                                { model: BankOfUsers, include: [{ model: Banks }] },
-                                { model: ReceiveBanks, include: [{ model: Banks }] }
-                            ],
-                            order: [
-                                ["id", "desc"]
-                            ]
-                        });
-                        return res.status(200).json({ Refills: listRefills, User: user })
-                    }
-                    default:
-                        break;
-                }
-            } else {
-                return res.status(404).json({ error: "User không tồn tại!" })
-            }
 
         } catch (error) {
             return res.status(500).json(error);

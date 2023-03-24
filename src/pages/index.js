@@ -103,14 +103,12 @@ function MainApp(props) {
   useEffect(() => {
     if (with_window < 1220)
       setShowMenu(false)
-    else
-      setShowMenu(true)
   }, [with_window]);
 
   return (
     <div id='main_app'>
 
-      <div className={showMenu ? "left_sidenav" : "left_sidenav menu_short"}>
+      <div className={showMenu ? "left_sidenav animate__animated animate__backInLeft" : "left_sidenav menu_short animate__animated animate__backInLeft"}>
 
         <div className="app_menu">
 
@@ -203,7 +201,7 @@ function MainApp(props) {
                       </span>
                     </div>
                   </div>
-                 
+
                   <div className={view === "Api" ? "menu_item menu_active" : "menu_item"} onClick={() => setView("Api")}>
                     <p className='m-0'>Api</p>
                     <div className='menu_icon'>
@@ -211,7 +209,7 @@ function MainApp(props) {
                         family_history
                       </span>
                     </div>
-                  </div>                 
+                  </div>
 
                   {
                     accessToken &&

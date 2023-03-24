@@ -17,7 +17,7 @@ function ConnectApi(props) {
         }
     }
     return (
-        <div id='ConnectApi' className='mt-3 animate__animated animate__fadeInDown'>
+        <div id='ConnectApi' className='mt-3 animate__animated animate__fadeIn'>
             <div className='api_content'>
                 <div className='bgr_dark'>
                     <div className='hearder_hag'>

@@ -106,7 +106,7 @@ function Refills(props) {
         setHistoryRender(filter);
     }, [RefillHistory, pageHistory]);
     return (
-        <div id='topup'>
+        <div id='topup' className='animate__animated animate__fadeIn'>
             {
                 AccessToken ?
                     <div className='refill_content bgr_dark'>

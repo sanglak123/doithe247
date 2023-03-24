@@ -60,7 +60,7 @@ function Withdraws(props) {
     };
 
     return (
-        <div id='withdraw'>
+        <div id='withdraw' className='animate__animated animate__fadeIn'>
           
                 {
                     AccessToken ?

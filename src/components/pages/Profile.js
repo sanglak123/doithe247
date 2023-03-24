@@ -67,9 +67,9 @@ function Profile(props) {
         setOwner("");
         setBranch("");
     }
-    console.log(BankOfUsers)
+
     return (
-        <div id='profile'>
+        <div id='profile' className='animate__animated animate__fadeIn'>
 
             <div className='profile_content bgr_black'>
 

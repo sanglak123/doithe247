@@ -103,7 +103,7 @@ function BuyCards(props) {
 
     return (
         <>
-            <div id='BuyCards' className='bgr_dark'>
+            <div id='BuyCards' className='bgr_dark animate__animated animate__fadeIn'>
                 <div className='buycard_container d-flex'>
                     <div className='buycard'>
                         <div className='buycard_content'>
