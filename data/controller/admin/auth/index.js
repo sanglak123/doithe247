@@ -23,7 +23,7 @@ export const AdminAuthController = {
                     if (admin.admin) {
                         if (bcryptjs.compareSync(pass, admin.pass)) {
                             if (bcryptjs.compareSync(pass2, admin.pass2)) {
-                                if (keyAdmin === process.env.KEY_ADMIN) {
+                                if (keyAdmin === process.env.NEXT_PUBLIC_KEY_ADMIN) {
                                     const newAccessToken = CreateAccessToken(admin);
                                     const newRefreshToken = CreateRefreshToken(admin);
 
@@ -93,7 +93,7 @@ export const AdminAuthController = {
         Register: async (req, res) => {
             const { userName, displayName, fullName, adress, pass, pass2, email, phone, key } = req.body;
             try {
-                if (key === process.env.KEY_ADMIN) {
+                if (key === process.env.NEXT_PUBLIC_KEY_ADMIN) {
                     const oldAdmin = await Users.findOne({
                         where: {
                             userName: userName
@@ -263,7 +263,7 @@ export const AdminAuthController = {
                                 ]
                             }
                         });
-                        const discount = process.env.DISCOUNT;
+                        const discount = process.env.NEXT_PUBLIC_DISCOUNT;
                         if (oldPrice) {
                             oldPrice.feesChange = parseFloat(feesChangeData) + parseFloat(discount);
                             await oldPrice.save();

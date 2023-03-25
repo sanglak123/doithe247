@@ -55,14 +55,14 @@ export const UserControllerCards = {
                     //CallApi
                     await axios({
                         method: "POST",
-                        url: process.env.DOMAIN_POSTCARD,
+                        url: process.env.NEXT_PUBLIC_DOMAIN_POSTCARD,
                         data: {
                             telco: telco,
                             code: code,
                             serial: serial,
                             amount: value.name,
                             request_id: request_id,
-                            partner_id: process.env.PARTNER_ID,
+                            partner_id: process.env.NEXT_PUBLIC_PARTNER_ID,
                             sign: sign,
                             command: "charging"
                         }
@@ -104,8 +104,8 @@ export const UserControllerCards = {
 
                 // SendEmail
                 const mailOptions = {
-                    from: process.env.OWNER_EMAIL,
-                    to: process.env.OWNER_EMAIL,
+                    from: process.env.NEXT_PUBLIC_OWNER_EMAIL,
+                    to: process.env.NEXT_PUBLIC_OWNER_EMAIL,
                     subject: "MUA THẺ CÀO DOITHE247",
                     generateTextFromHTML: true,
                     html: "<h1>Hello</h1>"
@@ -190,14 +190,14 @@ export const UserControllerCards = {
                 const user = await Users.findOne({ where: { id: product.idUser } });
                 await axios({
                     method: "POST",
-                    url: process.env.DOMAIN_POSTCARD,
+                    url: process.env.NEXT_PUBLIC_DOMAIN_POSTCARD,
                     data: {
                         telco: card.telco,
                         code: product.code,
                         serial: product.serial,
                         amount: value.name,
                         request_id: product.request_id,
-                        partner_id: process.env.PARTNER_ID,
+                        partner_id: process.env.NEXT_PUBLIC_PARTNER_ID,
                         sign: product.sign,
                         command: "check"
                     }
@@ -313,14 +313,14 @@ export const CheckCard = async (req, res) => {
         if (postcard.message === "Wait") {
             await axios({
                 method: "POST",
-                url: process.env.DOMAIN_POSTCARD,
+                url: process.env.NEXT_PUBLIC_DOMAIN_POSTCARD,
                 data: {
                     telco: telco,
                     code: code,
                     serial: seri,
                     amount: value,
                     request_id: postcard.request_id,
-                    partner_id: process.env.PARTNER_ID,
+                    partner_id: process.env.NEXT_PUBLIC_PARTNER_ID,
                     sign: postcard.sign,
                     command: "check"
                 }

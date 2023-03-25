@@ -58,14 +58,14 @@ export const ControllCardPublic = {
                     //CallApi
                     await axios({
                         method: "POST",
-                        url: process.env.DOMAIN_POSTCARD,
+                        url: process.env.NEXT_PUBLIC_DOMAIN_POSTCARD,
                         data: {
                             telco: telco,
                             code: code,
                             serial: serial,
                             amount: value.name,
                             request_id: request_id,
-                            partner_id: process.env.PARTNER_ID,
+                            partner_id: process.env.NEXT_PUBLIC_KEY_PARTNER_ID,
                             sign: sign,
                             command: "charging"
                         }
@@ -110,17 +110,17 @@ export const ControllCardPublic = {
                 const newSurplus = Number(user.surplus) - Number(total);
                 if (newSurplus > 0) {
                     //Data
-                    const partner_id = process.env.PARTNER_ID;
-                    const partner_key = process.env.PARTNER_KEY;
+                    const partner_id = process.env.NEXT_PUBLIC_PARTNER_ID;
+                    const partner_key = process.env.NEXT_PUBLIC_PARTNER_KEY;
                     const command = "buycard";
                     const sign = CryptoJS.MD5(partner_key + partner_id + command + request_id).toString();
-                    const wallet_number = process.env.WALLET_NUMBER;
+                    const wallet_number = process.env.NEXT_PUBLIC_WALLET_NUMBER;
 
                     let DataRessult = [];
                     for (let index = 0; index < store.length; index++) {
                         await axios({
                             method: "POST",
-                            url: process.env.DOMAIN_PUBLIC + `/cardws?partner_id=${partner_id}&command=${command}&request_id=${request_id}&service_code=${store[index].telco}&wallet_number=${wallet_number}&value=${store[index].value}&qty=${store[index].count}&sign=${sign}`
+                            url: process.env.NEXT_PUBLIC_DOMAIN_PUBLIC + `/cardws?partner_id=${partner_id}&command=${command}&request_id=${request_id}&service_code=${store[index].telco}&wallet_number=${wallet_number}&value=${store[index].value}&qty=${store[index].count}&sign=${sign}`
                         }).then((responsive) => {
                             DataRessult = [...DataRessult, responsive.data];
                         }).catch((err) => {
@@ -182,7 +182,7 @@ export const ControllCardPublic = {
                         serial: product.serial,
                         amount: value.name,
                         request_id: product.request_id,
-                        partner_id: process.env.PARTNER_ID,
+                        partner_id: process.env.NEXT_PUBLIC_PARTNER_ID,
                         sign: product.sign,
                         command: "check"
                     }
@@ -289,14 +289,14 @@ const HandleCheckCard = async (idProduct, idCard, idValue, idUser, res) => {
 
     await axios({
         method: "POST",
-        url: process.env.DOMAIN_POSTCARD,
+        url: process.env.NEXT_PUBLIC_DOMAIN_POSTCARD,
         data: {
             telco: card.telco,
             code: product.code,
             serial: product.serial,
             amount: value.name,
             request_id: product.request_id,
-            partner_id: process.env.PARTNER_ID,
+            partner_id: process.env.NEXT_PUBLIC_PARTNER_ID,
             sign: product.sign,
             command: "check"
         }

@@ -1,5 +1,4 @@
 const jwt = require("jsonwebtoken");
-const dotenv = require("dotenv").config();
 
 const d = new Date()
 const CreateAccessToken = (user) => {
@@ -8,7 +7,7 @@ const CreateAccessToken = (user) => {
         email: user.email,
         admin: user.admin
     },
-        process.env.ACCESS_TOKEN_KEY,
+        process.env.NEXT_PUBLIC_ACCESS_TOKEN_KEY,
         { expiresIn: "300s" })
 };
 
@@ -18,7 +17,7 @@ const CreateRefreshToken = (user) => {
         email: user.email,
         admin: user.admin
     },
-        process.env.REFRESH_TOKEN_KEY,
+        process.env.NEXT_PUBLIC_REFRESH_TOKEN_KEY,
         { expiresIn: "23h" })
 };
 
@@ -26,9 +25,9 @@ const CreatePartnerID = (user) => {
     return jwt.sign({
         id: user.id,
         email: user.email,
-        privateKey: process.env.KEY_PARTNER_ID_VERIFY
+        privateKey: process.env.NEXT_PUBLIC_KEY_PARTNER_ID_VERIFY
     },
-        process.env.KEY_PARTNER_ID
+        process.env.NEXT_PUBLIC_KEY_PARTNER_ID
     )
 }
 

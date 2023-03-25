@@ -157,9 +157,9 @@ export const UserControllerAuthen = {
             });
             if (user) {
                 // SendEmail           
-                const hashEmail = CryptoJS.AES.encrypt(user.email, process.env.KEY_EMAIL);
+                const hashEmail = CryptoJS.AES.encrypt(user.email, process.env.NEXT_PUBLIC_KEY_EMAIL);
                 const mailOptions = {
-                    from: process.env.OWNER_EMAIL,
+                    from: process.env.NEXT_PUBLIC_OWNER_EMAIL,
                     to: user.email.split("$$")[0],
                     subject: "XÁC THỰC EMAIL DOITHE247",
                     generateTextFromHTML: true,
@@ -270,7 +270,7 @@ export const UserControllerAuthen = {
     AccessAuthEmail: async (req, res) => {
         const { email } = req.query;
         try {
-            var decrypted = CryptoJS.AES.decrypt(email, process.env.KEY_EMAIL);
+            var decrypted = CryptoJS.AES.decrypt(email, process.env.NEXT_PUBLIC_KEY_EMAIL);
             const rightEmail = decrypted.toString(CryptoJS.enc.Utf8);
             const user = await Users.findOne({
                 where: {

@@ -4,7 +4,8 @@ import jwt from "jwt-decode";
 import { toast } from "react-toastify";
 
 
-export const baseURL = "http://localhost:3000/api";
+export const baseURL = "https://doithe247.vercel.app/api";
+// export const baseURL = "http://localhost:3000/api";
 
 const handleRefreshToken = async (dispatch) => {
     try {

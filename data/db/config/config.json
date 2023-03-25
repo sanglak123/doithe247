@@ -1,23 +1,23 @@
 {
   "development": {
-    "username": "admin",
-    "password": "admin123",
-    "database": "charging",
-    "host": "localhost",
+    "username": "hsc01435_user6",
+    "password": "rd55k4%N4",
+    "database": "hsc01435_test",
+    "host": "112.78.2.2",
     "dialect": "mysql"
   },
   "test": {
-    "username": "admin",
-    "password": "admin123",
-    "database": "charging",
-    "host": "localhost",
+    "username": "hsc01435_user6",
+    "password": "rd55k4%N4",
+    "database": "hsc01435_test",
+    "host": "112.78.2.2",
     "dialect": "mysql"
   },
   "production": {
-    "username": "admin",
-    "password": "admin123",
-    "database": "charging",
-    "host": "localhost",
+    "username": "hsc01435_user6",
+    "password": "rd55k4%N4",
+    "database": "hsc01435_test",
+    "host": "112.78.2.2",
     "dialect": "mysql"
   }
 }

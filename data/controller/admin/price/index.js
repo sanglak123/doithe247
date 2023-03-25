@@ -1,9 +1,6 @@
 import axios from "axios"
 import { Cards, Prices, Values } from "data/db/models";
 import { Op } from "sequelize";
-import dotenv from "dotenv";
-
-dotenv.config();
 
 export const AdminPricesController = {
     Update: async (req, res) => {
@@ -34,14 +31,14 @@ export const AdminPricesController = {
                                 }
                             });
                             if (price) {
-                                price.feesChange = parseFloat(result.data[index].fees) + parseFloat(process.env.DISCOUNT);
+                                price.feesChange = parseFloat(result.data[index].fees) + parseFloat(process.env.NEXT_PUBLIC_DISCOUNT);
                                 price.feesBuy = 1;
                                 await price.save();
                             } else {
                                 await Prices.create({
                                     idCard: card.id,
                                     idValue: value.id,
-                                    feesChange: parseFloat(result.data[index].fees) + parseFloat(process.env.DISCOUNT),
+                                    feesChange: parseFloat(result.data[index].fees) + parseFloat(process.env.NEXT_PUBLIC_DISCOUNT),
                                     feesBuy: 1
                                 })
                             }
@@ -58,14 +55,14 @@ export const AdminPricesController = {
                                 }
                             });
                             if (price) {
-                                price.feesChange = parseFloat(result.data[index].fees) + parseFloat(process.env.DISCOUNT);
+                                price.feesChange = parseFloat(result.data[index].fees) + parseFloat(process.env.NEXT_PUBLIC_DISCOUNT);
                                 price.feesBuy = 1;
                                 await price.save();
                             } else {
                                 await Prices.create({
                                     idCard: card.id,
                                     idValue: newValue.id,
-                                    feesChange: parseFloat(result.data[index].fees) + parseFloat(process.env.DISCOUNT),
+                                    feesChange: parseFloat(result.data[index].fees) + parseFloat(process.env.NEXT_PUBLIC_DISCOUNT),
                                     feesBuy: 1
                                 })
                             }
@@ -90,14 +87,14 @@ export const AdminPricesController = {
                                 }
                             });
                             if (price) {
-                                price.feesChange = parseFloat(result.data[index].fees) + parseFloat(process.env.DISCOUNT);
+                                price.feesChange = parseFloat(result.data[index].fees) + parseFloat(process.env.NEXT_PUBLIC_DISCOUNT);
                                 price.feesBuy = 1;
                                 await price.save();
                             } else {
                                 await Prices.create({
                                     idCard: newCard.id,
                                     idValue: value.id,
-                                    feesChange: parseFloat(result.data[index].fees) + parseFloat(process.env.DISCOUNT),
+                                    feesChange: parseFloat(result.data[index].fees) + parseFloat(process.env.NEXT_PUBLIC_DISCOUNT),
                                     feesBuy: 1
                                 })
                             }
@@ -114,14 +111,14 @@ export const AdminPricesController = {
                                 }
                             });
                             if (price) {
-                                price.feesChange = parseFloat(result.data[index].fees) + parseFloat(process.env.DISCOUNT);
+                                price.feesChange = parseFloat(result.data[index].fees) + parseFloat(process.env.NEXT_PUBLIC_DISCOUNT);
                                 price.feesBuy = 1;
                                 await price.save();
                             } else {
                                 await Prices.create({
                                     idCard: newCard.id,
                                     idValue: newValue.id,
-                                    feesChange: parseFloat(result.data[index].fees) + parseFloat(process.env.DISCOUNT),
+                                    feesChange: parseFloat(result.data[index].fees) + parseFloat(process.env.NEXT_PUBLIC_DISCOUNT),
                                     feesBuy: 1
                                 })
                             }

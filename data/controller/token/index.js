@@ -1,9 +1,6 @@
 import { RefreshTokens } from "data/db/models";
 import { CreateAccessToken, CreateRefreshToken } from "data/token";
-import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
-
-dotenv.config();
 
 export const TokenController = {
     RefreshToken: async (req, res) => {
@@ -20,7 +17,7 @@ export const TokenController = {
                 });
                 if (oldRefreshToken) {
 
-                    jwt.verify(oldRefreshToken.refreshToken, process.env.REFRESH_TOKEN_KEY, async (err, user) => {                       
+                    jwt.verify(oldRefreshToken.refreshToken, process.env.NEXT_PUBLIC_REFRESH_TOKEN_KEY, async (err, user) => {                       
                         if (err) {
                             return res.status(500).json(err)
                         } else {
