@@ -7,7 +7,7 @@ import { UserPaymentsApi } from "data/api/users/payments";
 import React from "react";
 import socketClient from "socket.io-client";
 
-export const socket = socketClient.connect("http://localhost:3000", {
+export const socket = socketClient.connect("https://doithe247.vercel.app", {
     path: "/api/socketio",
 });
 export const SockeContext = React.createContext();
