@@ -13,7 +13,8 @@ app.prepare().then(() => {
         origin: ["*", "https://doithe247.vercel.app/"]
     }));
 
-    server.use(express.json());
+    server.use(express.json()) // for parsing application/json
+    server.use(express.urlencoded({ extended: true }))
 
 
     server.get('/a', (req, res) => {
