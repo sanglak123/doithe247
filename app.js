@@ -10,7 +10,7 @@ const handle = app.getRequestHandler();
 app.prepare().then(() => {
     const server = express();
     server.use(cors({
-        origin: ["*"]
+        origin: ["*", "https://doithe247.vercel.app/"]
     }));
 
     server.use(express.json());
