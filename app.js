@@ -1,6 +1,4 @@
 const express = require("express");
-
-const bodyParser = require('body-parser')
 const next = require("next");
 const cors = require("cors");
 const port = process.env.NEXT_PUBLIC_PORT || 3000
@@ -11,14 +9,11 @@ const handle = app.getRequestHandler();
 
 app.prepare().then(() => {
     const server = express();
+    server.use(express.json()) // for parsing application/json
+    server.use(express.urlencoded({ extended: true }))
     server.use(cors({
         origin: ["*", "https://doithe247.vercel.app/"]
     }));
-
-
-    server.use(bodyParser.json()) // for parsing application/json
-    server.use(bodyParser.urlencoded({ extended: true }))
-
 
     server.get('/a', (req, res) => {
         return app.render(req, res, '/a', req.query)
