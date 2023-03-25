@@ -4,7 +4,7 @@ import PaginationHag from '@/layout/pagination';
 import { AdminSelector } from '@/redux/selector/AdminSelector';
 import { UserSelector } from '@/redux/selector/UserSelector';
 import { RefreshListRefillSuccess, RefreshListWithdrawSuccess } from '@/redux/slice/admin';
-import { AdminPaymentApi, PaymentAdminApi } from 'data/api/admin/payments';
+import { AdminPaymentApi } from 'data/api/admin/payments';
 import { CreateAxiosInstance } from 'data/api/axiosClient/createAxiosInstance';
 import React, { useContext, useEffect, useState } from 'react';
 import { Button, ButtonGroup, Table } from 'react-bootstrap';
@@ -41,7 +41,7 @@ function AdminListWithdraws(props) {
     const [userName, setUserName] = useState("All");
 
     const handleCanclePayment = async (payment) => {
-        await PaymentAdminApi.HandlePayment(accessToken, axiosJwt, dispatch, RefreshListRefillSuccess, payment?.id, "Error")
+        await AdminPaymentApi.HandlePayment(accessToken, axiosJwt, dispatch, RefreshListRefillSuccess, payment?.id, "Error")
     };
 
     const handleDeletePayments = async (payment) => {

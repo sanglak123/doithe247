@@ -226,6 +226,9 @@ export const AdminAuthController = {
             } catch (error) {
                 return res.status(500).json(error);
             }
+        },
+        Logout: async (req, res) => {
+
         }
     },
     Prices: {

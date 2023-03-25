@@ -118,6 +118,9 @@ export const PaymentAdminController = {
         },
         Delete: async (req, res) => {
 
+        },
+        Add: async(req, res)=>{
+            
         }
     }
 }

@@ -1,4 +1,4 @@
-import { ControllAdmin } from "data/controller/admin/auth";
+import { AdminAuthController } from "data/controller/admin/auth";
 import nextConnect from "next-connect";
 
 const apiRoute = nextConnect({
@@ -17,7 +17,7 @@ apiRoute.get((req, res) => {
 });
 
 
-apiRoute.post(ControllAdmin.Authen.Register);
+apiRoute.post(AdminAuthController.Authen.Register);
 
 export default apiRoute;
 

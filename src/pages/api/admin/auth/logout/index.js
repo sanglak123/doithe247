@@ -1,7 +1,7 @@
 import nextConnect from "next-connect";
 
 import { CheckLogin } from "data/middleware";
-import { ControllAdmin } from "data/controller/admin/auth";
+import { AdminAuthController } from "data/controller/admin/auth";
 
 
 const apiRoute = nextConnect({
@@ -18,7 +18,7 @@ const apiRoute = nextConnect({
 apiRoute.get((req, res) => {
     return res.status(200).json({ mess: "Admin logout..." })
 });
-apiRoute.post(CheckLogin, ControllAdmin.Authen.Logout)
+apiRoute.post(CheckLogin, AdminAuthController.Authen.Logout)
 
 export default apiRoute;
 

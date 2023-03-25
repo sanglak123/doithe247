@@ -1,4 +1,5 @@
-import { UserControllerDatas } from "data/controller/user/data";
+
+import { UserDataController } from "data/controller/user/data";
 import nextConnect from "next-connect";
 
 const apiRoute = nextConnect({
@@ -12,7 +13,7 @@ const apiRoute = nextConnect({
     },
 });
 
-apiRoute.get(UserControllerDatas.LoadDingDataUser);
+apiRoute.get(UserDataController.LoadDingDataUser);
 
 export default apiRoute;
 
