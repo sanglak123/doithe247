@@ -9,8 +9,11 @@ const handle = app.getRequestHandler();
 
 app.prepare().then(() => {
     const server = express();
-    server.use(express.json()) // for parsing application/json
+
     server.use(express.urlencoded({ extended: true }))
+
+    server.use(express.json()) // for parsing application/json
+
     server.use(cors({
         origin: ["*", "https://doithe247.vercel.app/"]
     }));
