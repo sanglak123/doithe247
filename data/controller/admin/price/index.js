@@ -127,7 +127,7 @@ export const AdminPricesController = {
                             }
                         }
                     }
-                };             
+                };
 
                 const list = await Prices.findAll({
                     include: [
@@ -144,6 +144,9 @@ export const AdminPricesController = {
         }
     },
     Edit: async (req, res) => {
+
+    },
+    Add: async (req, res) => {
 
     }
 }

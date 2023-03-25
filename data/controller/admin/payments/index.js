@@ -111,6 +111,14 @@ export const PaymentAdminController = {
                 return res.status(500).json(error);
             }
         }
+    },
+    Banks: {
+        Edit: async (req, res) => {
+
+        },
+        Delete: async (req, res) => {
+
+        }
     }
 }
 
