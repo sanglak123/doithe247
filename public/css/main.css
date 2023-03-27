@@ -73,6 +73,30 @@ body::-webkit-scrollbar-thumb {
   background-color: rgb(25, 28, 39);
 }
 
+.avatar .avatar_img {
+  max-width: 150px;
+  min-height: 150px;
+  border-radius: 100%;
+  overflow: hidden;
+  background-color: white;
+  position: relative;
+  margin: 0 auto;
+  border: 5px solid rgb(1, 41, 15);
+}
+@media only screen and (max-width: 850px) {
+  .avatar .avatar_img {
+    max-width: 100px;
+    min-height: 100px;
+  }
+}
+.avatar .avatar_img img {
+  width: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
 .logo {
   text-align: center;
   transform: scale(0.95);
@@ -476,6 +500,12 @@ body::-webkit-scrollbar-thumb {
   top: 10px;
   right: 10px;
 }
+#List_Cards .cars_items .item {
+  width: 95%;
+  margin: 0 auto;
+  height: 200px;
+  border: 1px solid black;
+}
 
 #banks .banks_content {
   position: relative;
@@ -554,25 +584,6 @@ body::-webkit-scrollbar-thumb {
 }
 #main_app .left_sidenav .app_menu .menu_header .navbar_logo {
   padding: 1rem;
-}
-#main_app .left_sidenav .app_menu .menu_body .menu_content .menu_avarta {
-  padding: 1.5rem;
-  border-bottom: 1px solid rgba(69, 78, 112, 0.6901960784);
-  transition: 0.5s;
-}
-#main_app .left_sidenav .app_menu .menu_body .menu_content .menu_avarta .avatar {
-  width: 120px;
-  height: 120px;
-  border-radius: 100%;
-  border: 1px solid rgba(69, 78, 112, 0.6901960784);
-  margin: 0 auto;
-  position: relative;
-}
-#main_app .left_sidenav .app_menu .menu_body .menu_content .menu_avarta .avatar img {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
 }
 #main_app .left_sidenav .app_menu .menu_body .menu_content .menu_main {
   width: 100%;
@@ -1106,29 +1117,6 @@ body::-webkit-scrollbar-thumb {
   margin: 0 auto;
   border-left: 1px solid rgba(128, 128, 128, 0.336);
   position: relative;
-}
-#profile .profile_content .profile_items .profile_left .avatar .avatar_img {
-  max-width: 150px;
-  min-height: 150px;
-  border-radius: 100%;
-  overflow: hidden;
-  background-color: white;
-  position: relative;
-  margin: 0 auto;
-  border: 5px solid rgb(1, 41, 15);
-}
-@media only screen and (max-width: 850px) {
-  #profile .profile_content .profile_items .profile_left .avatar .avatar_img {
-    max-width: 100px;
-    min-height: 100px;
-  }
-}
-#profile .profile_content .profile_items .profile_left .avatar .avatar_img img {
-  width: 100%;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
 }
 #profile .profile_content .profile_items .profile_left .profile_left_btn {
   display: flex;

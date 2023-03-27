@@ -1,5 +1,5 @@
 import { toast } from "react-toastify"
-import { rootApi } from "../configApi"
+import { rootApi } from "../axiosClient/rootApi"
 
 export const DataPublicApi = {
     Cards: {

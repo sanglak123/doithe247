@@ -1,15 +1,19 @@
 import PaginationHag from '@/layout/pagination';
 import { DataSelector } from '@/redux/selector/DataSelector';
+import { UserSelector } from '@/redux/selector/UserSelector';
 import { ChangeTypeCardSuccess, EditCardSuccess, UpdateCardSuccess } from '@/redux/slice/dataPublic';
 import { AdminApiCards } from 'data/api/admin/cards';
 import { DataPublicApi } from 'data/api/datapublic';
 import React, { useEffect, useState } from 'react';
-import { Button, ButtonGroup, Form, InputGroup, Table } from 'react-bootstrap';
+import { Button, ButtonGroup, Card, Col, Form, InputGroup, Row, Table } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
+import UploadImage from '../pages/support/UploadImage';
 
 function AdminCards({ accessToken }) {
     const dispatch = useDispatch();
 
+    //Admin
+    const User = useSelector(UserSelector.Auth.User);
 
     //Data
     const Cards = useSelector(DataSelector.Cards);
@@ -24,14 +28,14 @@ function AdminCards({ accessToken }) {
         const lits = Cards?.slice(offset, (offset + limit));
         setListCard(lits);
     }, [Cards, pageCard]);
+    console.log(ListCard)
 
-     const [edit, setEdit] = useState("");
+    const [edit, setEdit] = useState("");
     const [telco, setTelco] = useState("");
     const [photo, setPhoto] = useState("");
-    const [change, setChange] = useState(false);
 
     const handleEditCard = async (card) => {
-        await AdminApiCards.Edit(card.id, telco, photo, change, dispatch, accessToken);
+        await AdminApiCards.Edit(card.id, telco, photo, card.change, dispatch, accessToken);
         await DataPublicApi.Cards.GetAll(dispatch, UpdateCardSuccess);
         setEdit("")
     };
@@ -42,6 +46,14 @@ function AdminCards({ accessToken }) {
     const handleDeleteCard = async (card) => {
         await ApiAdmins.Cards.Delete(card.id)
     };
+    //Edit_Icon
+    const [edit_icon, setEdit_Icon] = useState("");
+    const handleEditIcon = async (card) => {
+        await AdminApiCards.Edit_Icon(accessToken, dispatch, User?.id, card?.id, photo);
+        await DataPublicApi.Cards.GetAll(dispatch, UpdateCardSuccess);
+        setPhoto("");
+        setEdit_Icon("");
+    }
 
     return (
         <div id='List_Cards'>
@@ -49,107 +61,39 @@ function AdminCards({ accessToken }) {
                 <div className='hearder_hag'>
                     <h1>Cards List</h1>
                 </div>
-                <div className='table_card'>
-                    <Table bordered size="sm">
-                        <thead>
-                            <tr className='txt_center txt_white'>
-                                <th>#</th>
-                                <th>Telco</th>
-                                <th>Logo</th>
-                                <th>Type</th>
-                                <th>Change</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {
-                                ListCard?.map((item, index) => {
-                                    return (
-                                        <tr className='txt_center txt_white' key={index}>
-                                            <td>{index + 1}</td>
-                                            {
-                                                edit === `${item.telco}_${item.id}` ?
-                                                    <>
-                                                        <td className='txt_light'>
-                                                            <InputGroup className="mb-3">
-                                                                <Form.Control
-                                                                    placeholder="Telco"
-                                                                    aria-label="Telco"
-                                                                    aria-describedby="basic-telco"
-                                                                    autoFocus
-                                                                    value={telco}
-                                                                    onChange={(e) => setTelco(e.target.value)}
-                                                                />
-                                                            </InputGroup>
-                                                        </td>
-                                                        <td>  <InputGroup className="mb-3">
-                                                            <Form.Control
-                                                                type='file'
-                                                                onChange={(e) => setPhoto(e.target.files[0])}
-                                                            />
-                                                        </InputGroup>
-                                                        </td>
-                                                        <td>{item.TypeCard?.name}</td>
-                                                        <td>
-                                                            <Form.Check
-                                                                type={"switch"}
-                                                                checked={change}
-                                                                onChange={() => setChange(!change)}
-                                                            />
-                                                        </td>
-                                                        <td>
-                                                            <ButtonGroup>
-                                                                <Button onClick={() => handleEditCard(item)} variant='success'>Save</Button>
-                                                                <Button onClick={() => {
-                                                                    setEdit("");
-                                                                    setTelco("");
-                                                                    setPhoto("");
-                                                                }} variant='danger'>Cancle</Button>
-                                                            </ButtonGroup>
-                                                        </td>
-                                                    </>
-                                                    :
-                                                    <>
-                                                        <td>{item.telco}</td>
-                                                        <td>
-                                                            <div className='logo' style={{ maxWidth: "100px", margin: "0 auto" }}>
-                                                                <img src={item.Img?.path} alt={item.telco} className="img-fluid" />
-                                                            </div>
-                                                        </td>
-                                                        <td>{item.TypeCard?.name}</td>
-                                                        <td>
-                                                            <Form.Check
-                                                                type={"switch"}
-                                                                checked={item.change}
-                                                                onChange={() => handleChangeTypeCard(item)}
-                                                            />
-                                                        </td>
+                <div className='cars_items'>
+                    <Row>
+                        {
+                            ListCard?.map((item, index) => {
+                                return (
+                                    <Col>
+                                        <div key={index} className='cars_items'>
+                                            <div className='item'>
+                                                <div className='item_icon'>
+                                                    <img src={item.Img?.path} className="img-fluid" />
+                                                    <div className='item_title d-flex'>
+                                                        <div className='title_left'>
+                                                            <h6>{item.telco}</h6>
+                                                        </div>
+                                                        <div className='title_right'>
+                                                            
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <Button className='btn_change_icon'>
+                                                    <span class="material-symbols-outlined">
+                                                        settings
+                                                    </span>
+                                                </Button>
+                                            </div>
 
-                                                        <td>
-                                                            <ButtonGroup>
-                                                                <Button onClick={() => {
-                                                                    setEdit(`${item.telco}_${item.id}`);
-                                                                    setTelco(item.telco);
-                                                                    setChange(item.change)
-                                                                }} variant='success'>Edit</Button>
-                                                                <Button onClick={() => handleDeleteCard(item)} variant='danger'>Delete</Button>
-                                                            </ButtonGroup>
-                                                        </td>
-                                                    </>
-                                            }
 
-                                        </tr>
-                                    )
-                                })
-                            }
-                        </tbody>
-                    </Table>
-                    <PaginationHag
-                        limit={limit}
-                        page={pageCard}
-                        setPage={setPageCard}
-                        length={Cards.length}
-                    />
+                                        </div>
+                                    </Col>
+                                )
+                            })
+                        }
+                    </Row>
                 </div>
             </div>
             <Button variant='outline-danger' className='btn_add_card txt_bold'>+</Button>

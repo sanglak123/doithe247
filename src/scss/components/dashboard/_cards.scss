@@ -1,8 +1,18 @@
-#List_Cards{
+#List_Cards {
     position: relative;
-    .btn_add_card{
+
+    .btn_add_card {
         position: absolute;
         top: 10px;
         right: 10px;
+    }
+
+    .cars_items {
+        .item {
+            width: 95%;
+            margin: 0 auto;
+            height: 200px;
+            border: 1px solid black;
+        }
     }
 }

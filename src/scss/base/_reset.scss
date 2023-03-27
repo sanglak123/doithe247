@@ -26,6 +26,34 @@ body {
 
 }
 
+.avatar {
+
+    .avatar_img {
+        max-width: 150px;
+        min-height: 150px;
+        border-radius: 100%;
+        overflow: hidden;
+        background-color: white;
+        position: relative;
+        margin: 0 auto;
+        border: 5px solid $green_100;
+
+        @media only screen and (max-width: 850px) {
+            max-width: 100px;
+            min-height: 100px;
+        }
+
+        img {
+            width: 100%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    }
+
+}
+
 .logo {
     text-align: center;
     transform: scale(0.95);
@@ -106,7 +134,7 @@ body {
     border-radius: 3px;
 }
 
-.code_sample {  
+.code_sample {
     padding: 1.5rem;
     color: white;
     border-radius: 8px;

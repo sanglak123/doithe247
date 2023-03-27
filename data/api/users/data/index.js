@@ -1,6 +1,6 @@
 import { CreateAxiosInstance } from "data/api/axiosClient/createAxiosInstance";
 import { toast } from "react-toastify";
-import { rootApi } from "../../configApi";
+import { rootApi } from "../../axiosClient/rootApi";
 
 export const UserDataApi = {
     LoadingData: async (dispatch, LoadingDataPublicSuccess) => {
@@ -21,7 +21,7 @@ export const UserDataApi = {
         const axiosJwt = CreateAxiosInstance(dispatch, accessToken)
         await axiosJwt({
             method: "GET",
-            url: `/users/${idUser}`,
+            url: `/users/${idUser}/load_data_user`,
             headers: {
                 token: "Bearner " + accessToken
             },

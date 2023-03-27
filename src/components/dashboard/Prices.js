@@ -3,7 +3,7 @@ import { DataSelector } from '@/redux/selector/DataSelector';
 import { UserSelector } from '@/redux/selector/UserSelector';
 import { UpdatePriceSuccess } from '@/redux/slice/dataPublic';
 import { AdminPriceApi } from 'data/api/admin/prices';
-import { rootApi } from 'data/api/configApi';
+import { rootApi } from 'data/api/axiosClient/rootApi';
 import React, { useState } from 'react';
 import { Button, Col, Form, InputGroup, Row } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';

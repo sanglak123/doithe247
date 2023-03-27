@@ -2,10 +2,8 @@ import { LogoutUserSuccess, RefreshTokenSuccess } from "@/redux/slice/user";
 import axios from "axios";
 import jwt from "jwt-decode";
 import { toast } from "react-toastify";
+import { baseURL } from "./rootApi";
 
-
-export const baseURL = "https://doithe247.vercel.app/api";
-// export const baseURL = "http://localhost:3000/api";
 
 const handleRefreshToken = async (dispatch) => {
     try {

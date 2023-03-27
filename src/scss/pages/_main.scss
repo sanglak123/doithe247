@@ -26,27 +26,7 @@
 
             .menu_body {
                 .menu_content {
-                    .menu_avarta {
-                        padding: 1.5rem;
-                        border-bottom: 1px solid $dark_500;
-                        transition: 0.5s;
-
-                        .avatar {
-                            width: 120px;
-                            height: 120px;
-                            border-radius: 100%;
-                            border: 1px solid $dark_500;
-                            margin: 0 auto;
-                            position: relative;
-
-                            img {
-                                position: absolute;
-                                top: 50%;
-                                left: 50%;
-                                transform: translate(-50%, -50%);
-                            }
-                        }
-                    }
+                   
 
                     .menu_main {
 

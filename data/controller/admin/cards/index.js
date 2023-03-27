@@ -1,4 +1,4 @@
-import { Cards, Imgs, Prices, Products, TypeCards } from "data/db/models";
+import { Cards, Imgs, Prices, Products, TypeCards, Users } from "data/db/models";
 const fs = require("fs");
 const path = require("path")
 
@@ -136,5 +136,73 @@ export const AdminControllerCards = {
         } catch (error) {
 
         }
-    }   
+    },
+    Edit_Icon: async (req, res) => {
+        const { id, idCard } = req.query;
+        try {
+            const admin = await Users.findOne({
+                where: {
+                    id: id
+                }
+            });
+            if (admin) {
+                const card = await Cards.findOne({
+                    where: {
+                        id: idCard
+                    }
+                });
+                if (card) {
+                    if (req.file) {
+                        const baseURL = req.protocol + '://' + req.get('host');
+                        const pathImage = baseURL + '/img/logo/' + req.file.filename;
+
+                        const [img, create] = await Imgs.findOrCreate({
+                            where: {
+                                id: card.img
+                            }
+                        });
+                        if (!create) {
+                            img.fileName = req.file.filename;
+                            img.path = pathImage;
+                            await img.save();
+                            return res.status(200).json({ mess: "Cập nhật thành công!" })
+                        } else {
+                            img.set({
+                                fileName: req.file.filename,
+                                path: pathImage
+                            });
+                            await img.save();
+                            card.img = img.id;
+                            await card.save();
+                            return res.status(201).json({ mess: "Thêm mới thành công!" })
+                        }
+                    } else {
+                        return res.status(404).json({ error: "Tệp đính kèm không khả dụng!" });
+                    }
+                } else {
+                    //Xóa img load
+                    const unLoad = path.join(__dirname, "../../../../../../../public/img/logo/");
+                    fs.unlink(unLoad + req.file.filename, async (err) => {
+                        if (err) {
+                            return res.status(500).json(err);
+                        } else {
+                            return res.status(404).json({ error: "Loại thẻ không tồn tại!" });
+                        }
+                    });
+                }
+            } else {
+                //Xóa img load
+                const unLoad = path.join(__dirname, "../../../../../../../public/img/logo/");
+                fs.unlink(unLoad + req.file.filename, async (err) => {
+                    if (err) {
+                        return res.status(500).json(err);
+                    } else {
+                        return res.status(404).json({ error: "Admin không tồn tại!" });
+                    }
+                });              
+            }
+        } catch (error) {
+            return res.status(500).json(error);
+        }
+    }
 }

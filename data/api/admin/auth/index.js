@@ -1,5 +1,5 @@
 import { CreateAxiosInstance } from "data/api/axiosClient/createAxiosInstance";
-import { rootApi } from "data/api/configApi";
+import { rootApi } from "data/api/axiosClient/rootApi";
 import { toast } from "react-toastify"
 
 const AdminAutheApi = {

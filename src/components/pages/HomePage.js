@@ -33,13 +33,11 @@ function HomePage(props) {
         }
 
     }, [accessToken])
-    const Cards = useSelector(DataSelector.Cards);
-
 
     return (
         <div id='home_page'>
             <CardsHot />
-            <PostCard />         
+            <PostCard />
         </div>
     );
 }

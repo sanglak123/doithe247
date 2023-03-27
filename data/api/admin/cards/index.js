@@ -1,5 +1,5 @@
 import { CreateAxiosInstance } from "data/api/axiosClient/createAxiosInstance";
-import { rootApi } from "data/api/configApi"
+import { rootApi } from "data/api/axiosClient/rootApi"
 import { toast } from "react-toastify";
 
 export const AdminApiCards = {
@@ -74,5 +74,26 @@ export const AdminApiCards = {
                 toast.error(err);
             }
         })
+    },
+    Edit_Icon: async (accessToken, dispatch, idAdmin, idCard, photo) => {
+        const axiosJwt = CreateAxiosInstance(dispatch, accessToken);
+        const formData = new FormData();
+        formData.append("photo", photo)
+        await axiosJwt({
+            method: "PUT",
+            url: `/admin/${idAdmin}/cards/${idCard}/edit_icon`,
+            data: formData,
+            headers: {
+                token: "Bearner " + accessToken
+            }
+        }).then((res) => {
+            toast.success(res.data.mess);
+        }).catch((err) => {
+            if (err.response) {
+                toast.error(err.response.data.error);
+            } else {
+                toast.error(err);
+            }
+        });
     }
 }

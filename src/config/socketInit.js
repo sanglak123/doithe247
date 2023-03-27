@@ -2,13 +2,14 @@ import { RefreshListRefillSuccess, RefreshListWithdrawSuccess } from "@/redux/sl
 import { UpdateRefillSuccess, UpdateWithdrawSuccess } from "@/redux/slice/user";
 
 import { AdminPaymentApi } from "data/api/admin/payments";
+import { baseURL } from "data/api/axiosClient/rootApi";
 import { UserAuthApi } from "data/api/users/auth";
 import { UserPaymentsApi } from "data/api/users/payments";
 import React from "react";
 import socketClient from "socket.io-client";
 
-export const socket = socketClient.connect("https://doithe247.vercel.app", {
-    path: "/api/socketio",
+export const socket = socketClient.connect(baseURL, {
+    path: "api/socketio",
 });
 export const SockeContext = React.createContext();
 

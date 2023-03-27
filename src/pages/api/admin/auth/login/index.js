@@ -18,7 +18,7 @@ export default apiRoute;
 
 export const config = {
     api: {
-        bodyParser: true,
+        bodyParser: false,
     },
 };
 

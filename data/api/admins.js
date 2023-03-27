@@ -1,6 +1,6 @@
 import { toast } from "react-toastify"
 import { CreateAxiosInstance } from "./axiosClient/createAxiosInstance";
-import { rootApi } from "./configApi"
+import { rootApi } from "./axiosClient/rootApi"
 
 export const ApiAdmins = {
     Cards: {

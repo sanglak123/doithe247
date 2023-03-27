@@ -1,7 +1,7 @@
 import { handleEvents, SockeContext, SocketContext, useSocket } from '@/config/socketInit';
 import { UserSelector } from '@/redux/selector/UserSelector';
 import { CreateAxiosInstance } from 'data/api/axiosClient/createAxiosInstance';
-import { rootApi } from 'data/api/configApi';
+import { rootApi } from 'data/api/axiosClient/rootApi';
 import React, { useContext, useEffect, useState } from 'react';
 import { Button, Container, Form, InputGroup } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';

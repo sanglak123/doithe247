@@ -140,7 +140,10 @@ function MainApp(props) {
                 accessToken &&
                 <div className='menu_avarta'>
                   <div className='avatar'>
-                    <img src={User?.Img?.path} className="img-fluid" alt={User?.userName} />
+                    <div className='avatar_img'>
+                      <img src={User?.Img?.path} className="img-fluid" alt={User?.userName} />
+                    </div>
+
                   </div>
                 </div>
               }
