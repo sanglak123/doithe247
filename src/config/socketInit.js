@@ -9,7 +9,7 @@ import React from "react";
 import socketClient from "socket.io-client";
 
 export const socket = socketClient.connect(baseURL, {
-    path: "/socketio",
+    path: "/api/socketio",
 });
 export const SockeContext = React.createContext();
 
