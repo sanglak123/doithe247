@@ -19,10 +19,7 @@ const handleRefreshToken = async (dispatch) => {
 }
 export const CreateAxiosInstance = (dispatch, accessToken) => {
     const instance = axios.create({
-        baseURL: baseURL,
-        headers:{
-            
-        }
+        baseURL: baseURL          
     });
 
     instance.interceptors.request.use(
