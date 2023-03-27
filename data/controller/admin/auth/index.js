@@ -10,7 +10,8 @@ import { Op } from "sequelize";
 export const AdminAuthController = {
     Authen: {
         Login: async (req, res) => {
-            const { userName, pass, pass2, keyAdmin } = req.body;
+            const {body} = req;
+            const { userName, pass, pass2, keyAdmin } = body;
             try {
                 const admin = await Users.findOne({
                     where: {
