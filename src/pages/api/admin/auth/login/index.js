@@ -25,11 +25,11 @@
 import { AdminAuthController } from "data/controller/admin/auth";
 import nc from "next-connect";
 
-const handler = nc()
-    .put(AdminAuthController.Authen.Login)
-    .patch(async (req, res) => {
-        throw new Error("Throws me around! Error can be caught and handled.");
-    });
-
-export default handler;
+export default async function handle(req, res) {
+    if (req.method === "GET") {
+        return res.status(200).json({ mess: "Admin login" })
+    } else if (req.method === "POST") {
+        await AdminAuthController.Authen.Login(req, res)
+    }
+}
 
