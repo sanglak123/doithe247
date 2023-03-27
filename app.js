@@ -1,6 +1,7 @@
 const express = require("express");
 const next = require("next");
 const cors = require("cors");
+const bodyParser = require("body-parser");
 const port = process.env.NEXT_PUBLIC_PORT || 3000
 const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev })
@@ -9,9 +10,8 @@ const handle = app.getRequestHandler();
 app.prepare().then(() => {
     const server = express();
 
-    server.use(express.urlencoded({ extended: true }))
-
-    server.use(express.json()) // for parsing application/json
+    server.use(bodyParser.json()) // for parsing application/json
+    server.use(bodyParser.urlencoded({ extended: true }))
 
     server.use(cors({
         origin: ["*", "https://doithe247.vercel.app/"]
