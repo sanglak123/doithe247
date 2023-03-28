@@ -3,7 +3,10 @@ import path from "path"
 import fs from "fs"
 import axios from "axios"
 import {Op} from "sequelize"
-import {
+import db from "../../../db/models"
+
+const DB = db
+const {
     Users,
     BankOfUsers,
     Banks,
@@ -14,7 +17,7 @@ import {
     RefreshTokens,
     TypeCards,
     Values,
-} from "../../../db/models"
+} = DB
 import {serialize} from "cookie"
 import {CreateAccessToken, CreateRefreshToken} from "../../../token"
 
