@@ -1,23 +1,19 @@
-import { LoginSuccess } from '@/redux/slice/user';
-import { UserAuthApi } from 'data/api/users/auth';
-import React, { useState } from 'react';
-import { Button, Form, Modal } from 'react-bootstrap';
-import { useDispatch } from 'react-redux';
+import React, {useState} from "react"
+import {Button, Form, Modal} from "react-bootstrap"
+import {UserAuthApi} from "../../../../data/api/users/auth"
 
-function ModalRegister({ show, setShow }) {
-    const dispatch = useDispatch();
+function ModalRegister({show, setShow}) {
+    const onhide = () => setShow(false)
 
-    const onhide = () => setShow(false);
-
-    const [userName, setUserName] = useState("");
-    const [pass, setPass] = useState("");
-    const [pass2, setPass2] = useState("");
-    const [email, setEmail] = useState("");
-    const [phone, setPhone] = useState("");
+    const [userName, setUserName] = useState("")
+    const [pass, setPass] = useState("")
+    const [pass2, setPass2] = useState("")
+    const [email, setEmail] = useState("")
+    const [phone, setPhone] = useState("")
 
     const handleRegister = async () => {
-        await UserAuthApi.Register(userName, pass, pass2, phone, email);
-        onhide();
+        await UserAuthApi.Register(userName, pass, pass2, phone, email)
+        onhide()
     }
     return (
         <Modal
@@ -38,15 +34,13 @@ function ModalRegister({ show, setShow }) {
                         placeholder="Tên đăng nhập"
                         autoFocus
                         value={userName}
-                        onChange={(e) => setUserName(e.target.value)}
+                        onChange={e => setUserName(e.target.value)}
                     />
-                    {
-                        userName === "" &&
+                    {userName === "" && (
                         <Form.Text className="text-danger">
                             Tên đăng nhập không được để trống.
                         </Form.Text>
-                    }
-
+                    )}
                 </Form.Group>
 
                 <Form.Group className="mb-3">
@@ -55,14 +49,13 @@ function ModalRegister({ show, setShow }) {
                         type="password"
                         placeholder="Mật khẩu"
                         value={pass}
-                        onChange={(e) => setPass(e.target.value)}
+                        onChange={e => setPass(e.target.value)}
                     />
-                    {
-                        pass === "" &&
+                    {pass === "" && (
                         <Form.Text className="text-danger">
                             Mật khẩu không được để trống.
                         </Form.Text>
-                    }
+                    )}
                 </Form.Group>
 
                 <Form.Group className="mb-3">
@@ -71,14 +64,13 @@ function ModalRegister({ show, setShow }) {
                         type="password"
                         placeholder="Mật khẩu cấp 2"
                         value={pass2}
-                        onChange={(e) => setPass2(e.target.value)}
+                        onChange={e => setPass2(e.target.value)}
                     />
-                    {
-                        pass === "" &&
+                    {pass === "" && (
                         <Form.Text className="text-danger">
                             Mật khẩu cấp 2 không được để trống.
                         </Form.Text>
-                    }
+                    )}
                 </Form.Group>
 
                 <Form.Group className="mb-3">
@@ -86,14 +78,13 @@ function ModalRegister({ show, setShow }) {
                     <Form.Control
                         placeholder="Địa chỉ email"
                         value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        onChange={e => setEmail(e.target.value)}
                     />
-                    {
-                        email === "" &&
+                    {email === "" && (
                         <Form.Text className="text-danger">
                             Địa chỉ email không được để trống.
                         </Form.Text>
-                    }
+                    )}
                 </Form.Group>
 
                 <Form.Group className="mb-3">
@@ -101,23 +92,34 @@ function ModalRegister({ show, setShow }) {
                     <Form.Control
                         placeholder="Số điện thoại"
                         value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
+                        onChange={e => setPhone(e.target.value)}
                     />
-                    {
-                        phone === "" &&
+                    {phone === "" && (
                         <Form.Text className="text-danger">
                             Số điện thoại không được để trống.
                         </Form.Text>
-                    }
+                    )}
                 </Form.Group>
-
             </Modal.Body>
             <Modal.Footer>
-                <Button variant='danger' onClick={onhide}>Hủy</Button>
-                <Button disabled={userName === "" || pass === "" || email === "" || phone === ""} variant='primary' onClick={handleRegister}>Đăng ký</Button>
+                <Button variant="danger" onClick={onhide}>
+                    Hủy
+                </Button>
+                <Button
+                    disabled={
+                        userName === "" ||
+                        pass === "" ||
+                        email === "" ||
+                        phone === ""
+                    }
+                    variant="primary"
+                    onClick={handleRegister}
+                >
+                    Đăng ký
+                </Button>
             </Modal.Footer>
         </Modal>
-    );
+    )
 }
 
-export default ModalRegister;
+export default ModalRegister

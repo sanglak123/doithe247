@@ -1,5 +1,5 @@
-import { CreateAxiosInstance } from "data/api/axiosClient/createAxiosInstance";
-import { toast } from "react-toastify";
+import {toast} from "react-hot-toast"
+import {CreateAxiosInstance} from "../../axiosClient/createAxiosInstance"
 
 export const AdminPriceApi = {
     Update: async (dispatch, UpdatePriceSuccess, accessToken) => {
@@ -9,26 +9,41 @@ export const AdminPriceApi = {
             method: "PUT",
             url: "/admin/prices/update",
             headers: {
-                token: "Bearner " + accessToken
-            }
-        }).then((res) => {
-            toast.update(idToast, { render: res.data.mess, type: "success", isLoading: false });
-            dispatch(UpdatePriceSuccess(res.data.Prices));
-            setTimeout(() => {
-                toast.dismiss(idToast)
-            }, 2000);
-        }).catch((err) => {
-            if (err.response) {
-                toast.update(idToast, { render: err.response.data.error, type: "error", isLoading: false });
-                setTimeout(() => {
-                    toast.dismiss(idToast)
-                }, 2000);
-            } else {
-                toast.update(idToast, { render: err, type: "error", isLoading: false });
-                setTimeout(() => {
-                    toast.dismiss(idToast)
-                }, 2000);
-            }
+                token: "Bearner " + accessToken,
+            },
         })
+            .then(res => {
+                toast.update(idToast, {
+                    render: res.data.mess,
+                    type: "success",
+                    isLoading: false,
+                })
+                dispatch(UpdatePriceSuccess(res.data.Prices))
+                setTimeout(() => {
+                    toast.dismiss(idToast)
+                }, 2000)
+            })
+            .catch(err => {
+                if (err.response) {
+                    toast.update(idToast, {
+                        render: err.response.data.error,
+                        type: "error",
+                        isLoading: false,
+                    })
+                    setTimeout(() => {
+                        toast.dismiss(idToast)
+                    }, 2000)
+                } else {
+                    toast.update(idToast, {
+                        render: err,
+                        type: "error",
+                        isLoading: false,
+                    })
+                    setTimeout(() => {
+                        toast.dismiss(idToast)
+                    }, 2000)
+                }
+            })
     },
+    Add: async () => {},
 }

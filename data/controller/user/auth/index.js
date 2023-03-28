@@ -1,163 +1,178 @@
-import { smtpTransport } from "data/sendMail";
-import CryptoJS from "crypto-js";
-import fs from "fs";
-import path from "path";
+import CryptoJS from "crypto-js"
+import fs from "fs"
+import path from "path"
+import {serialize} from "v8"
+import {Users, Imgs, RefreshTokens} from "../../../db/models"
+import {smtpTransport} from "../../../sendMail"
+import {CreateAccessToken, CreateRefreshToken} from "../../../token"
 
-const { RefreshTokens, Users, BankOfUsers, Banks, Imgs } = require("data/db/models")
 const bcryptjs = require("bcryptjs")
-const dotenv = require("dotenv").config();
-const { CreateAccessToken, CreateRefreshToken, CreatePartnerID } = require("data/token")
 
 export const UserControllerAuthen = {
     Login: async (req, res) => {
-        const { userName, pass } = req.body;
-
+        const {userName, pass} = req.body
         try {
             const user = await Users.findOne({
                 where: {
-                    userName: userName
+                    userName: userName,
                 },
-                include: [{ model: Imgs }]
-            });
+                include: [{model: Imgs}],
+            })
             if (user) {
-
                 if (bcryptjs.compareSync(pass, user.pass)) {
+                    const newAccessToken = CreateAccessToken(user)
+                    const newRefreshToken = CreateRefreshToken(user)
 
-                    const newAccessToken = CreateAccessToken(user);
-                    const newRefreshToken = CreateRefreshToken(user);
-
-                    const [refreshtoken, created] = await RefreshTokens.findOrCreate({
-                        where: {
-                            idUser: user.id
-                        }
-                    });
+                    const [refreshtoken, created] =
+                        await RefreshTokens.findOrCreate({
+                            where: {
+                                idUser: user.id,
+                            },
+                        })
                     if (!created) {
-                        refreshtoken.refreshToken = newRefreshToken;
-                        await refreshtoken.save();
-                        res.cookie("refreshToken", newRefreshToken, {
-                            httpOnly: true,
-                            secure: true,
-                            path: "/",
-                            sameSite: "strict",
-                            maxAge: 60 * 1000 * 60 * 24
-                        });
-                        user.pass = null;
-                        user.pass2 = null;
-                        const str = user.wallet_number.split(" ")[1];
-                        user.wallet_number = str;
+                        refreshtoken.refreshToken = newRefreshToken
+                        await refreshtoken.save()
+                        res.setHeader(
+                            "Set-Cookie",
+                            serialize("refreshToken", newRefreshToken, {
+                                httpOnly: true,
+                                secure: true,
+                                path: "/",
+                                sameSite: "strict",
+                                maxAge: 60 * 1000 * 60 * 24,
+                            })
+                        )
+
+                        user.pass = null
+                        user.pass2 = null
+                        const str = user.wallet_number.split(" ")[1]
+                        user.wallet_number = str
                         return res.status(200).json({
                             User: user,
                             accessToken: newAccessToken,
                             Online: true,
-                            mess: "Login success!"
-                        });
+                            mess: "Login success!",
+                        })
                     } else {
                         refreshtoken.set({
                             idUser: user.id,
-                            refreshToken: newRefreshToken
-                        });
-                        await refreshtoken.save();
-                        user.pass = null;
-                        user.pass2 = null;
+                            refreshToken: newRefreshToken,
+                        })
+                        await refreshtoken.save()
+                        user.pass = null
+                        user.pass2 = null
+                        res.setHeader(
+                            "Set-Cookie",
+                            serialize("refreshToken", newRefreshToken, {
+                                httpOnly: true,
+                                secure: true,
+                                path: "/",
+                                sameSite: "strict",
+                                maxAge: 60 * 1000 * 60 * 24,
+                            })
+                        )
                         return res.status(200).json({
                             User: user,
                             accessToken: newAccessToken,
                             Online: true,
-                            mess: "Login success!"
-                        });
+                            mess: "Login success!",
+                        })
                     }
                 } else {
-                    return res.status(404).json({ error: "Pass wrong!" })
+                    return res.status(404).json({error: "Pass wrong!"})
                 }
-
             } else {
-                return res.status(404).json({ error: "User not found!" })
+                return res.status(404).json({error: "User not found!"})
             }
         } catch (error) {
-            return res.status(500).json(error);
+            return res.status(500).json(error)
         }
     },
     Register: async (req, res) => {
-        const { userName, pass, pass2, phone, email } = req.body;
+        const {userName, pass, pass2, phone, email} = req.body
         try {
             if (userName !== "" || pass !== "") {
                 const [user, created] = await Users.findOrCreate({
                     where: {
-                        userName: userName
-                    }
-                });
+                        userName: userName,
+                    },
+                })
                 if (!created) {
-                    return res.status(400).json({ error: "Username đã tồn tại!" })
+                    return res.status(400).json({error: "Username đã tồn tại!"})
                 } else {
-                    const salt = bcryptjs.genSaltSync(10);
-                    const salt2 = bcryptjs.genSaltSync(11);
-                    const newPass = bcryptjs.hashSync(pass, salt);
-                    const newPass2 = bcryptjs.hashSync(pass2, salt2);
-                    const wallet_number = "Hga " + new Date().getTime();
+                    const salt = bcryptjs.genSaltSync(10)
+                    const salt2 = bcryptjs.genSaltSync(11)
+                    const newPass = bcryptjs.hashSync(pass, salt)
+                    const newPass2 = bcryptjs.hashSync(pass2, salt2)
+                    const wallet_number = "Hga " + new Date().getTime()
 
                     user.set({
                         phone: phone + "$$block",
                         email: email + "$$block",
                         pass: newPass,
                         pass2: newPass2,
-                        wallet_number: wallet_number
-                    });
-                    await user.save();
-                    const partner_key = CreatePartnerID(user);
-                    user.partner_key = partner_key;
-                    await user.save();
-                    user.pass = null;
-                    user.pass2 = null;
-                    user.wallet_number = str;
-                    return res.status(201).json({ mess: "Register success", user: user })
+                        wallet_number: wallet_number,
+                    })
+                    await user.save()
+                    const partner_key = CreatePartnerID(user)
+                    user.partner_key = partner_key
+                    await user.save()
+                    user.pass = null
+                    user.pass2 = null
+                    user.wallet_number = str
+                    return res
+                        .status(201)
+                        .json({mess: "Register success", user: user})
                 }
             } else {
-                return res.status(400).json({ error: "No data" })
+                return res.status(400).json({error: "No data"})
             }
-
         } catch (error) {
-            return res.status(500).json(error);
+            return res.status(500).json(error)
         }
     },
     Logout: async (req, res) => {
         try {
-            res.clearCookie("refreshToken");
-            return res.end();
+            res.clearCookie("refreshToken")
+            return res.end()
         } catch (error) {
-            return res.status(500).json(error);
+            return res.status(500).json(error)
         }
     },
     RefreshUser: async (req, res) => {
-        const { id } = req.query;
+        const {id} = req.query
         try {
             const user = await Users.findOne({
                 where: {
-                    id: id
+                    id: id,
                 },
-                include: [{ model: Imgs }]
-            });
+                include: [{model: Imgs}],
+            })
             if (user) {
-                user.pass = null;
-                user.pass2 = null;
-                return res.status(200).json({ User: user });
+                user.pass = null
+                user.pass2 = null
+                return res.status(200).json({User: user})
             } else {
-                return res.status(404).json({ error: "User không tồn tại!" });
+                return res.status(404).json({error: "User không tồn tại!"})
             }
         } catch (error) {
-            return res.status(500).json(error);
+            return res.status(500).json(error)
         }
     },
     SendAuthEmail: async (req, res) => {
-        const { id } = req.query;
+        const {id} = req.query
         try {
             const user = await Users.findOne({
                 where: {
-                    id: id
-                }
-            });
+                    id: id,
+                },
+            })
             if (user) {
-                // SendEmail           
-                const hashEmail = CryptoJS.AES.encrypt(user.email, process.env.NEXT_PUBLIC_KEY_EMAIL);
+                // SendEmail
+                const hashEmail = CryptoJS.AES.encrypt(
+                    user.email,
+                    process.env.NEXT_PUBLIC_KEY_EMAIL
+                )
                 const mailOptions = {
                     from: process.env.NEXT_PUBLIC_OWNER_EMAIL,
                     to: user.email.split("$$")[0],
@@ -251,103 +266,124 @@ export const UserControllerAuthen = {
                     </body>
                     
                     </html>
-                        `
-                };
+                        `,
+                }
                 smtpTransport.sendMail(mailOptions, (err, result) => {
                     if (err) {
-                        return res.status(400).json({ error: `Địa chỉ email ${email} không hợp lệ !`, email: user.email.split("$$")[0] })
+                        return res.status(400).json({
+                            error: `Địa chỉ email ${email} không hợp lệ !`,
+                            email: user.email.split("$$")[0],
+                        })
                     } else {
-                        return res.status(200).json({ mess: "Email xác thực đã được gửi đi. Vui lòng kiểm tra hòm thư.", data: result });
+                        return res.status(200).json({
+                            mess: "Email xác thực đã được gửi đi. Vui lòng kiểm tra hòm thư.",
+                            data: result,
+                        })
                     }
                 })
             } else {
-                return res.status(404).json({ error: "User không tồn tại!" });
+                return res.status(404).json({error: "User không tồn tại!"})
             }
         } catch (error) {
-            return res.status(500).json(error);
+            return res.status(500).json(error)
         }
     },
     AccessAuthEmail: async (req, res) => {
-        const { email } = req.query;
+        const {email} = req.query
         try {
-            var decrypted = CryptoJS.AES.decrypt(email, process.env.NEXT_PUBLIC_KEY_EMAIL);
-            const rightEmail = decrypted.toString(CryptoJS.enc.Utf8);
+            var decrypted = CryptoJS.AES.decrypt(
+                email,
+                process.env.NEXT_PUBLIC_KEY_EMAIL
+            )
+            const rightEmail = decrypted.toString(CryptoJS.enc.Utf8)
             const user = await Users.findOne({
                 where: {
-                    email: rightEmail
-                }
-            });
+                    email: rightEmail,
+                },
+            })
             if (user) {
-                const auth = rightEmail.split("$$");
+                const auth = rightEmail.split("$$")
                 if (auth === "block") {
-                    user.email = rightEmail.split("$$")[0] + "$$active";
+                    user.email = rightEmail.split("$$")[0] + "$$active"
                     await user.save().then(() => {
-                        return res.status(200).json({ mess: "Xác thực thành công!", user: user });
+                        return res
+                            .status(200)
+                            .json({mess: "Xác thực thành công!", user: user})
                     })
                 } else {
-                    return res.status(400).json({ error: "Email đã được xác thực." })
+                    return res
+                        .status(400)
+                        .json({error: "Email đã được xác thực."})
                 }
             } else {
-                return res.status(404).json({ error: "Địa chỉ email không tồn tại trên hệ thống!" })
+                return res
+                    .status(404)
+                    .json({error: "Địa chỉ email không tồn tại trên hệ thống!"})
             }
         } catch (error) {
-            return res.status(500).json(error);
+            return res.status(500).json(error)
         }
     },
     //Profile
     ChangeAvatar: async (req, res) => {
-        const { id } = req.query;
+        const {id} = req.query
         try {
             if (req.file) {
-                const baseURL = req.protocol + '://' + req.get('host');
-                const pathImage = baseURL + '/img/avatar/' + req.file.filename;
+                const baseURL = req.protocol + "://" + req.get("host")
+                const pathImage = baseURL + "/img/avatar/" + req.file.filename
                 const user = await Users.findOne({
                     where: {
-                        id: id
-                    }
-                });
+                        id: id,
+                    },
+                })
                 if (user) {
                     const oldImg = await Imgs.findOne({
                         where: {
-                            id: user.avatar
-                        }
-                    });
+                            id: user.avatar,
+                        },
+                    })
                     if (oldImg) {
-                        const unLoad = path.join(__dirname, "../../../../../../../public/img/avatar/");
-                        fs.unlink(unLoad + oldImg.fileName, async (err) => {
+                        const unLoad = path.join(
+                            __dirname,
+                            "../../../../../../../public/img/avatar/"
+                        )
+                        fs.unlink(unLoad + oldImg.fileName, async err => {
                             if (err) {
-                                return res.status(500).json(err);
+                                return res.status(500).json(err)
                             } else {
-                                oldImg.fileName = req.file.filename;
-                                oldImg.path = pathImage;
-                                await oldImg.save();
-                                return res.status(201).json({ mess: "Cập nhật thành công!" })
+                                oldImg.fileName = req.file.filename
+                                oldImg.path = pathImage
+                                await oldImg.save()
+                                return res
+                                    .status(201)
+                                    .json({mess: "Cập nhật thành công!"})
                             }
                         })
                     } else {
                         const newImg = await Imgs.create({
                             fileName: req.file.filename,
-                            path: pathImage
-                        });
-                        user.avatar = newImg.id;
-                        await user.save();
-                        return res.status(201).json({ mess: "Cập nhật thành công!" })
+                            path: pathImage,
+                        })
+                        user.avatar = newImg.id
+                        await user.save()
+                        return res
+                            .status(201)
+                            .json({mess: "Cập nhật thành công!"})
                     }
                 } else {
-                    return res.status(404).json({ error: "User không tồn tại!" })
+                    return res.status(404).json({error: "User không tồn tại!"})
                 }
             } else {
-                return res.status(400).json({ error: "Không tìm thấy file đính kèm!" });
+                return res
+                    .status(400)
+                    .json({error: "Không tìm thấy file đính kèm!"})
             }
         } catch (error) {
-            return res.status(500).json(error);
+            return res.status(500).json(error)
         }
     },
     ChangeInfomation: async (req, res) => {
         try {
-
-        } catch (error) {
-
-        }
-    }
+        } catch (error) {}
+    },
 }

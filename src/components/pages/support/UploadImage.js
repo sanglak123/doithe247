@@ -1,45 +1,43 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from "react"
 
-function UploadImage({ setPhoto, photo, handle }) {
-    const upload = document.querySelector('.upload')
-    const uploadButtonText = document.querySelector('.upload-button-text')
-    const uploadFilename = document.querySelector('.upload-filename')
-    const fileInput = document.getElementById('file')
+function UploadImage({setPhoto, photo, handle}) {
+    const upload = document.querySelector(".upload")
+    const uploadButtonText = document.querySelector(".upload-button-text")
+    const uploadFilename = document.querySelector(".upload-filename")
+    const fileInput = document.getElementById("file")
 
-    const [file, setFile] = useState("");
+    const [file, setFile] = useState("")
 
-    const handleUploadFile = (e) => {
+    const handleUploadFile = e => {
         if (e.target.files && e.target.files[0]) {
-            setFile(URL.createObjectURL(e.target.files[0]));
-            setPhoto(e.target.files[0]);
+            setFile(URL.createObjectURL(e.target.files[0]))
+            setPhoto(e.target.files[0])
         }
     }
     useEffect(() => {
         if (file !== "") {
-            uploadFilename.innerHTML = photo.name;
-            uploadFilename.classList.remove('inactive');
-            uploadButtonText.innerText = 'Upload'
+            uploadFilename.innerHTML = photo.name
+            uploadFilename.classList.remove("inactive")
+            uploadButtonText.innerText = "Upload"
 
-            fileInput?.remove();
+            fileInput?.remove()
             uploadButtonText.addEventListener("click", async () => {
-                upload.classList.add("uploading");
+                upload.classList.add("uploading")
                 setTimeout(() => {
-                    handle();
-                    upload.classList.remove("uploading");                   
+                    handle()
+                    upload.classList.remove("uploading")
                 }, 5000)
             })
         }
-    }, [file]);
+    }, [file])
 
     return (
         <div className="wrapper">
-
-            {
-                file !== "" &&
-                <div className='preview'>
-                    <img src={file} alt="Preview" className='img-fluid' />
+            {file !== "" && (
+                <div className="preview">
+                    <img src={file} alt="Preview" className="img-fluid" />
                 </div>
-            }
+            )}
 
             <div className="upload-wrapper w-100">
                 <div className="upload drop-area">
@@ -59,18 +57,26 @@ function UploadImage({ setPhoto, photo, handle }) {
                                 p-id="3251"
                             ></path>
                         </svg>
-                        <span className="upload-filename inactive drop-text">No file selected</span>
+                        <span className="upload-filename inactive drop-text">
+                            No file selected
+                        </span>
                     </div>
                     <button className="upload-button">
-                        <input type="file" id="file" onChange={(e) => handleUploadFile(e)} />
-                        <label htmlFor="file" className="upload-button-text">Choose file</label>
+                        <input
+                            type="file"
+                            id="file"
+                            onChange={e => handleUploadFile(e)}
+                        />
+                        <label htmlFor="file" className="upload-button-text">
+                            Choose file
+                        </label>
                     </button>
                     <div className="upload-hint">Uploading...</div>
                     <div className="upload-progress"></div>
                 </div>
             </div>
         </div>
-    );
+    )
 }
 
-export default UploadImage;
+export default UploadImage

@@ -1,21 +1,19 @@
 export const UserSelector = {
-
     Auth: {
-        User: (state) => state.UserSlice.User,
-        AccessToken: (state) => state.UserSlice.accessToken,
-        Online: (state) => state.UserSlice.Online,
+        User: state => state.UserSlice.User,
+        AccessToken: state => state.UserSlice.accessToken,
+        Online: state => state.UserSlice.Online,
     },
-    Store: (state) => state.UserSlice.Store,
+    Store: state => state.UserSlice.Store,
     Payments: {
-        BankOfUsers: (state) => state.UserSlice.BankOfUsers,
-        Products: (state) => state.UserSlice.Products,
+        BankOfUsers: state => state.UserSlice.BankOfUsers,
+        Products: state => state.UserSlice.Products,
 
+        RefillPending: state => state.UserSlice.RefillPending,
+        RefillHistory: state => state.UserSlice.RefillHistory,
 
-        RefillPending: (state) => state.UserSlice.RefillPending,
-        RefillHistory: (state) => state.UserSlice.RefillHistory,
-
-        WithdrawPending: (state) => state.UserSlice.WithdrawPending,
-        WithdrawHistory: (state) => state.UserSlice.WithdrawHistory,
+        WithdrawPending: state => state.UserSlice.WithdrawPending,
+        WithdrawHistory: state => state.UserSlice.WithdrawHistory,
     },
-    Promotions: (state) => state.UserSlice.Promotions
+    Promotions: state => state.UserSlice.Promotions,
 }

@@ -1,45 +1,38 @@
+import "bootstrap/dist/css/bootstrap.min.css"
+import {ToastContainer} from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
 
-import 'bootstrap/dist/css/bootstrap.min.css';
+import "animate.css"
 
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import {Provider} from "react-redux"
 
-import 'animate.css';
+import {PersistGate} from "redux-persist/integration/react"
 
-import { persistor, Store } from '@/redux/store';
+import {persistor, Store} from "../redux/store"
+import {SockeContext, socket} from "../config/socketInit"
 
-import { Provider } from 'react-redux';
+function MyApp({Component, pageProps}) {
+    return (
+        <Provider store={Store}>
+            <PersistGate loading={null} persistor={persistor}>
+                <SockeContext.Provider value={socket}>
+                    <Component {...pageProps} />
+                </SockeContext.Provider>
 
-import { PersistGate } from 'redux-persist/integration/react';
-
-import { SockeContext, socket } from '@/config/socketInit';
-
-
-function MyApp({ Component, pageProps }) {
-
-  return (
-    <Provider store={Store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <SockeContext.Provider value={socket}>
-          <Component {...pageProps} />
-        </SockeContext.Provider>
-
-
-        <ToastContainer
-          position="top-right"
-          autoClose={3000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-        />
-      </PersistGate>
-
-    </Provider>
-  )
+                <ToastContainer
+                    position="top-right"
+                    autoClose={3000}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                />
+            </PersistGate>
+        </Provider>
+    )
 }
 
-export default MyApp;
+export default MyApp

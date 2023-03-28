@@ -1,29 +1,38 @@
+import React, {useState} from "react"
+import {Modal} from "react-bootstrap"
+import {useDispatch, useSelector} from "react-redux"
+import {UserAuthApi} from "../../../../data/api/users/auth"
+import {UserProfileApi} from "../../../../data/api/users/profile"
+import {UserSelector} from "../../../redux/selector/UserSelector"
+import {RefreshUserSuccess} from "../../../redux/slice/user"
+import UploadImage from "../support/UploadImage"
 
-import { UserSelector } from '@/redux/selector/UserSelector';
-import { RefreshUserSuccess } from '@/redux/slice/user';
-import { UserAuthApi } from 'data/api/users/auth';
-import { UserProfileApi } from 'data/api/users/profile';
-import React, { useState } from 'react';
-import { Button, Modal } from 'react-bootstrap';
-import { useDispatch, useSelector } from 'react-redux';
-import UploadImage from '../support/UploadImage';
-
-function ModalChangeImage({ show, setShow, title }) {
+function ModalChangeImage({show, setShow, title}) {
     //User
-    const accessToken = useSelector(UserSelector.Auth.AccessToken);
-    const User = useSelector(UserSelector.Auth.User);
-    const dispatch = useDispatch();
+    const accessToken = useSelector(UserSelector.Auth.AccessToken)
+    const User = useSelector(UserSelector.Auth.User)
+    const dispatch = useDispatch()
 
-    const [photo, setPhoto] = useState("");
+    const [photo, setPhoto] = useState("")
 
     const onhide = () => {
         setShow(false)
-    };
+    }
     const handleChangeAvatar = async () => {
-        await UserProfileApi.ChangeAvatar(accessToken, dispatch, User?.id, photo);
-        onhide();
-        await UserAuthApi.RefreshUser(dispatch, accessToken, User?.id, RefreshUserSuccess);
-    };
+        await UserProfileApi.ChangeAvatar(
+            accessToken,
+            dispatch,
+            User?.id,
+            photo
+        )
+        onhide()
+        await UserAuthApi.RefreshUser(
+            dispatch,
+            accessToken,
+            User?.id,
+            RefreshUserSuccess
+        )
+    }
 
     return (
         <Modal
@@ -47,7 +56,7 @@ function ModalChangeImage({ show, setShow, title }) {
                 />
             </Modal.Body>
         </Modal>
-    );
+    )
 }
 
-export default ModalChangeImage;
+export default ModalChangeImage
