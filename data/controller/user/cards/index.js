@@ -1,56 +1,66 @@
-import { Cards, Imgs, Prices, Products, TypeCards, Users, Values } from "data/db/models";
-import CryptoJS from "crypto-js";
-import uuid from "uuid";
-import dotenv from "dotenv";
-import { SendMail, smtpTransport } from "data/sendMail";
-dotenv.config();
+import CryptoJS from "crypto-js"
+import uuid from "uuid"
+import {
+    Cards,
+    Imgs,
+    Prices,
+    Products,
+    TypeCards,
+    Users,
+    Values,
+} from "../../../db/models"
+import {smtpTransport} from "../../../sendMail"
 
 export const UserControllerCards = {
     PostCard: async (req, res) => {
-        const { id } = req.query;
-        const { telco, idValue, code, serial } = req.body;
+        const {id} = req.query
+        const {telco, idValue, code, serial} = req.body
 
         try {
             const user = await Users.findOne({
                 where: {
-                    id: id
-                }
-            });
+                    id: id,
+                },
+            })
             if (user) {
                 const oldProduct = await Products.findOne({
                     where: {
                         [Op.and]: [
-                            { serial: serial },
-                            { code: code },
-                            { command: "change" }
-                        ]
-                    }
-                });
+                            {serial: serial},
+                            {code: code},
+                            {command: "change"},
+                        ],
+                    },
+                })
                 if (oldProduct) {
-                    return res.status(400).json({ error: "Card đã tồn tại trên hệ thống!" })
+                    return res
+                        .status(400)
+                        .json({error: "Card đã tồn tại trên hệ thống!"})
                 } else {
                     const card = await Cards.findOne({
                         where: {
-                            telco: telco
-                        }
-                    });
+                            telco: telco,
+                        },
+                    })
 
                     const value = await Values.findOne({
                         where: {
-                            id: idValue
-                        }
+                            id: idValue,
+                        },
                     })
                     const price = await Prices.findOne({
                         where: {
-                            [Op.and]: [
-                                { idCard: card.id },
-                                { idValue: idValue }
-                            ]
-                        }
-                    });
+                            [Op.and]: [{idCard: card.id}, {idValue: idValue}],
+                        },
+                    })
 
-                    const request_id = uuid.v4({ serial: serial }).replace(/\-/g, '').toString();
-                    const sign = CryptoJS.MD5(process.env.PARTNER_KEY + code + serial).toString();
+                    const request_id = uuid
+                        .v4({serial: serial})
+                        .replace(/\-/g, "")
+                        .toString()
+                    const sign = CryptoJS.MD5(
+                        process.env.PARTNER_KEY + code + serial
+                    ).toString()
 
                     //CallApi
                     await axios({
@@ -64,52 +74,56 @@ export const UserControllerCards = {
                             request_id: request_id,
                             partner_id: process.env.NEXT_PUBLIC_PARTNER_ID,
                             sign: sign,
-                            command: "charging"
-                        }
-                    }).then(async (responsive) => {
-                        const newProduct = await Products.create({
-                            idUser: user.id,
-                            command: "change",
-                            idPrice: price.id,
-                            feesChange: price.feesChange,
-                            code: code,
-                            serial: serial,
-                            sign: sign,
-                            request_id: request_id,
-                            status: "Pending"
-                        });
-                        return res.status(200).json({ Product: newProduct, mess: "Thẻ đang chờ xử lý!" })
-                    }).catch((err) => {
-                        return res.status(500).json(err);
+                            command: "charging",
+                        },
                     })
+                        .then(async responsive => {
+                            const newProduct = await Products.create({
+                                idUser: user.id,
+                                command: "change",
+                                idPrice: price.id,
+                                feesChange: price.feesChange,
+                                code: code,
+                                serial: serial,
+                                sign: sign,
+                                request_id: request_id,
+                                status: "Pending",
+                            })
+                            return res.status(200).json({
+                                Product: newProduct,
+                                mess: "Thẻ đang chờ xử lý!",
+                            })
+                        })
+                        .catch(err => {
+                            return res.status(500).json(err)
+                        })
                 }
             } else {
-                return res.status(404).json({ error: "User not found!" })
+                return res.status(404).json({error: "User not found!"})
             }
         } catch (error) {
-            return res.status(500).json(error);
+            return res.status(500).json(error)
         }
     },
     BuyCard: async (req, res) => {
-        const { id } = req.query;
-        const { store, request_id, email, idUser } = req.body;
+        const {id} = req.query
+        const {store, request_id, email, idUser} = req.body
 
         try {
             const user = await Users.findOne({
                 where: {
-                    id: idUser
-                }
-            });
+                    id: idUser,
+                },
+            })
             if (user) {
-
                 // SendEmail
                 const mailOptions = {
                     from: process.env.NEXT_PUBLIC_OWNER_EMAIL,
                     to: process.env.NEXT_PUBLIC_OWNER_EMAIL,
                     subject: "MUA THẺ CÀO DOITHE247",
                     generateTextFromHTML: true,
-                    html: "<h1>Hello</h1>"
-                };
+                    html: "<h1>Hello</h1>",
+                }
                 smtpTransport.sendMail(mailOptions, (err, result) => {
                     if (err) {
                         return res.status(500).json(err)
@@ -137,8 +151,6 @@ export const UserControllerCards = {
                 //     const sign = CryptoJS.MD5(partner_key + partner_id + command + request_id).toString();
                 //     const wallet_number = process.env.WALLET_NUMBER;
 
-
-
                 // let DataRessult = [];
                 // for (let index = 0; index < store.length; index++) {
                 //     await axios({
@@ -157,37 +169,37 @@ export const UserControllerCards = {
                 //     return res.status(400).json({ error: "Số dư không đủ!" })
                 // }
             } else {
-                return res.status(404).json({ error: "User not found!" })
+                return res.status(404).json({error: "User not found!"})
             }
         } catch (error) {
-            return res.status(500).json(error);
+            return res.status(500).json(error)
         }
     },
     CheckCard: async (req, res) => {
-        const { id } = req.query;
+        const {id} = req.query
         try {
             const product = await Products.findOne({
                 where: {
-                    id: id
-                }
-            });
+                    id: id,
+                },
+            })
             if (product) {
                 const price = await Prices.findOne({
                     where: {
-                        id: product.idPrice
-                    }
-                });
+                        id: product.idPrice,
+                    },
+                })
                 const card = await Cards.findOne({
                     where: {
-                        id: price.idCard
-                    }
+                        id: price.idCard,
+                    },
                 })
                 const value = await Values.findOne({
                     where: {
-                        id: price.idValue
-                    }
+                        id: price.idValue,
+                    },
                 })
-                const user = await Users.findOne({ where: { id: product.idUser } });
+                const user = await Users.findOne({where: {id: product.idUser}})
                 await axios({
                     method: "POST",
                     url: process.env.NEXT_PUBLIC_DOMAIN_POSTCARD,
@@ -199,116 +211,152 @@ export const UserControllerCards = {
                         request_id: product.request_id,
                         partner_id: process.env.NEXT_PUBLIC_PARTNER_ID,
                         sign: product.sign,
-                        command: "check"
-                    }
-                }).then(async (responsive) => {
-                    const status = responsive.data.status
-                    switch (status) {
-                        case 1: {
-                            product.receiveValue = Number(value.name) - (Number(value.name) * Number(product.feesChange)) / 100;
-                            product.status = "Success"
-                            await product.save();
-                            //user
-                            user.surplus = Number(user.surplus) + Number(product.receiveValue);
-                            await user.save();
-                            const productResult = await Products.findOne({
-                                where: {
-                                    id: product.id
-                                },
-                                include: [{ model: Prices, include: [{ model: Cards }, { model: Values }] }]
-                            })
-                            return res.status(200).json({ mess: "Thẻ thành công đúng mệnh giá!", Product: productResult, });
-                        }
-                        case 2: {
-                            product.receiveValue = (Number(value.name) - (Number(value.name) * Number(product.feesChange)) / 100) / 2;
-                            product.status = "Penanty"
-                            await product.save();
-                            //user
-                            user.surplus = Number(user.surplus) + Number(product.receiveValue);
-                            await user.save();
-                            const productResult = await Products.findOne({
-                                where: {
-                                    id: product.id
-                                }
-                            })
-                            return res.status(200).json({ mess: "Thẻ thành công sai mệnh giá!", Product: productResult })
-                        }
-                        case 3: {
-                            product.status = "Error";
-                            product.receiveValue = "0";
-                            await product.save();
-                            const productResult = await Products.findOne({
-                                where: {
-                                    id: product.id
-                                }
-                            })
-                            return res.status(400).json({ error: "Thẻ lỗi!", Product: productResult });
-                        }
-                        case 4: {
-                            await product.destroy();
-                            return res.status(500).json({ error: "Hệ thống bảo trì!" })
-                        }
-                        case 99: {
-                            return HandleCheckCard(product.id, card.id, value.id, user.id, res)
-                        }
-                        case 100: {
-                            product.status = "Error";
-                            product.receiveValue = "0";
-                            await product.save();
-                            const productResult = await Products.findOne({
-                                where: {
-                                    id: product.id
-                                }
-                            })
-                            return res.status(400).json({ error: responsive.data.message, Product: productResult });
-                        }
-                        default: {
-                            product.status = "Error";
-                            await product.save();
-                            return res.status(400).json({ error: "Thẻ lỗi!" });
-                        }
-                    }
-                }).catch((err) => {
-                    return res.status(500).json(err);
+                        command: "check",
+                    },
                 })
+                    .then(async responsive => {
+                        const status = responsive.data.status
+                        switch (status) {
+                            case 1: {
+                                product.receiveValue =
+                                    Number(value.name) -
+                                    (Number(value.name) *
+                                        Number(product.feesChange)) /
+                                        100
+                                product.status = "Success"
+                                await product.save()
+                                //user
+                                user.surplus =
+                                    Number(user.surplus) +
+                                    Number(product.receiveValue)
+                                await user.save()
+                                const productResult = await Products.findOne({
+                                    where: {
+                                        id: product.id,
+                                    },
+                                    include: [
+                                        {
+                                            model: Prices,
+                                            include: [
+                                                {model: Cards},
+                                                {model: Values},
+                                            ],
+                                        },
+                                    ],
+                                })
+                                return res.status(200).json({
+                                    mess: "Thẻ thành công đúng mệnh giá!",
+                                    Product: productResult,
+                                })
+                            }
+                            case 2: {
+                                product.receiveValue =
+                                    (Number(value.name) -
+                                        (Number(value.name) *
+                                            Number(product.feesChange)) /
+                                            100) /
+                                    2
+                                product.status = "Penanty"
+                                await product.save()
+                                //user
+                                user.surplus =
+                                    Number(user.surplus) +
+                                    Number(product.receiveValue)
+                                await user.save()
+                                const productResult = await Products.findOne({
+                                    where: {
+                                        id: product.id,
+                                    },
+                                })
+                                return res.status(200).json({
+                                    mess: "Thẻ thành công sai mệnh giá!",
+                                    Product: productResult,
+                                })
+                            }
+                            case 3: {
+                                product.status = "Error"
+                                product.receiveValue = "0"
+                                await product.save()
+                                const productResult = await Products.findOne({
+                                    where: {
+                                        id: product.id,
+                                    },
+                                })
+                                return res.status(400).json({
+                                    error: "Thẻ lỗi!",
+                                    Product: productResult,
+                                })
+                            }
+                            case 4: {
+                                await product.destroy()
+                                return res
+                                    .status(500)
+                                    .json({error: "Hệ thống bảo trì!"})
+                            }
+                            case 99: {
+                                return HandleCheckCard(
+                                    product.id,
+                                    card.id,
+                                    value.id,
+                                    user.id,
+                                    res
+                                )
+                            }
+                            case 100: {
+                                product.status = "Error"
+                                product.receiveValue = "0"
+                                await product.save()
+                                const productResult = await Products.findOne({
+                                    where: {
+                                        id: product.id,
+                                    },
+                                })
+                                return res.status(400).json({
+                                    error: responsive.data.message,
+                                    Product: productResult,
+                                })
+                            }
+                            default: {
+                                product.status = "Error"
+                                await product.save()
+                                return res.status(400).json({error: "Thẻ lỗi!"})
+                            }
+                        }
+                    })
+                    .catch(err => {
+                        return res.status(500).json(err)
+                    })
             }
         } catch (error) {
-            return res.status(500).json(error);
+            return res.status(500).json(error)
         }
     },
     GetAll: async (req, res) => {
         try {
             const list = await Cards.findAll({
-                include: [
-                    { model: Imgs },
-                    { model: TypeCards }
-                ]
-            });
-            return res.status(200).json({ Cards: list });
+                include: [{model: Imgs}, {model: TypeCards}],
+            })
+            return res.status(200).json({Cards: list})
         } catch (error) {
-            return res.status(500).json(error);
+            return res.status(500).json(error)
         }
-    }
+    },
 }
 
 export const CheckCard = async (req, res) => {
-    const { telco, code, seri, value, idUser } = req.body;
+    const {telco, code, seri, value, idUser} = req.body
     try {
         const client = await Users.findOne({
             where: {
-                id: idUser
-            }
-        });
+                id: idUser,
+            },
+        })
 
         const postcard = await PostCards.findOne({
             where: {
-                [Op.and]: [
-                    { idUser: client.id },
-                    { code: code },
-                    { seri: seri }
-                ]
-            }
-        });
+                [Op.and]: [{idUser: client.id}, {code: code}, {seri: seri}],
+            },
+        })
 
         if (postcard.message === "Wait") {
             await axios({
@@ -322,57 +370,73 @@ export const CheckCard = async (req, res) => {
                     request_id: postcard.request_id,
                     partner_id: process.env.NEXT_PUBLIC_PARTNER_ID,
                     sign: postcard.sign,
-                    command: "check"
-                }
-            }).then(async (responsive) => {
-
-                switch (responsive.data.status) {
-                    case 1: {
-                        client.surplus = Number(client.surplus) + Number(postcard.amount);
-                        await client.save();
-                        postcard.message = "Success";
-                        postcard.status = 1;
-                        await postcard.save();
-                        return res.status(200).json({ status: 1, mess: "Đổi thẻ thành công!", PostCard: postcard })
-                    }
-                    case 2: {
-                        client.surplus = client.surplus + (amount / 2);
-                        await client.save();
-                        postcard.message = "Penanty";
-                        postcard.status = 2;
-                        postcard.amount = postcard.amount / 2;
-                        await postcard.save();
-                        return res.status(200).json({ status: 2, mess: "Đổi thẻ thành công - Sai mệnh giá", PostCard: postcard })
-                    }
-                    case 3: {
-                        postcard.message = "Error";
-                        postcard.status = 3;
-                        postcard.amount = 0;
-                        await postcard.save();
-                        return res.status(200).json({ status: 3, mess: "Thẻ lỗi" })
-                    }
-                    case 4: {
-                        postcard.destroy();
-                        return res.status(200).json({ status: 4, mess: "Hệ thống bảo trì" })
-                    }
-                    case 99: {
-                        return res.status(200).json({ status: 99 })
-                    }
-                    default: {
-                        postcard.message = "Error";
-                        postcard.status = 3;
-                        postcard.amount = 0;
-                        await postcard.save();
-                        return res.status(400).json({ error: "Thẻ lỗi" })
-                    }
-                }
-            }).catch((err) => {
-                return res.status(500).json(err)
+                    command: "check",
+                },
             })
+                .then(async responsive => {
+                    switch (responsive.data.status) {
+                        case 1: {
+                            client.surplus =
+                                Number(client.surplus) + Number(postcard.amount)
+                            await client.save()
+                            postcard.message = "Success"
+                            postcard.status = 1
+                            await postcard.save()
+                            return res.status(200).json({
+                                status: 1,
+                                mess: "Đổi thẻ thành công!",
+                                PostCard: postcard,
+                            })
+                        }
+                        case 2: {
+                            client.surplus = client.surplus + amount / 2
+                            await client.save()
+                            postcard.message = "Penanty"
+                            postcard.status = 2
+                            postcard.amount = postcard.amount / 2
+                            await postcard.save()
+                            return res.status(200).json({
+                                status: 2,
+                                mess: "Đổi thẻ thành công - Sai mệnh giá",
+                                PostCard: postcard,
+                            })
+                        }
+                        case 3: {
+                            postcard.message = "Error"
+                            postcard.status = 3
+                            postcard.amount = 0
+                            await postcard.save()
+                            return res
+                                .status(200)
+                                .json({status: 3, mess: "Thẻ lỗi"})
+                        }
+                        case 4: {
+                            postcard.destroy()
+                            return res
+                                .status(200)
+                                .json({status: 4, mess: "Hệ thống bảo trì"})
+                        }
+                        case 99: {
+                            return res.status(200).json({status: 99})
+                        }
+                        default: {
+                            postcard.message = "Error"
+                            postcard.status = 3
+                            postcard.amount = 0
+                            await postcard.save()
+                            return res.status(400).json({error: "Thẻ lỗi"})
+                        }
+                    }
+                })
+                .catch(err => {
+                    return res.status(500).json(err)
+                })
         } else {
-            return res.status(404).json({ error: "Card không tồn tại trên hệ thống!" })
+            return res
+                .status(404)
+                .json({error: "Card không tồn tại trên hệ thống!"})
         }
     } catch (error) {
-        return res.status(500).json(error);
+        return res.status(500).json(error)
     }
 }
