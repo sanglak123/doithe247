@@ -1,7 +1,7 @@
 import CryptoJS from "crypto-js"
 import fs from "fs"
 import path from "path"
-import {serialize} from "v8"
+import {serialize} from "cookie"
 import {Users, Imgs, RefreshTokens} from "../../../db/models"
 import {smtpTransport} from "../../../sendMail"
 import {CreateAccessToken, CreateRefreshToken} from "../../../token"
