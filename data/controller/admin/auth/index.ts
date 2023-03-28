@@ -4,6 +4,7 @@ import fs from "fs"
 import axios from "axios"
 import {Op} from "sequelize"
 import db from "../../../db/models"
+const DB: any = db
 const {
     Users,
     BankOfUsers,
@@ -19,13 +20,14 @@ const {
     Payments,
     Promotions,
     ReceiveBanks,
-} = db
+} = DB
 import {serialize} from "cookie"
 import {CreateAccessToken, CreateRefreshToken} from "../../../token"
+import {NextApiRequest, NextApiResponse} from "next"
 
 export const AdminAuthController = {
     Authen: {
-        Login: async (req, res) => {
+        Login: async (req: NextApiRequest, res: NextApiResponse) => {
             const {userName, pass, pass2, keyAdmin} = req.body
             try {
                 const admin = await Users.findOne({
@@ -126,7 +128,7 @@ export const AdminAuthController = {
                 return res.status(500).json(error)
             }
         },
-        Register: async (req, res) => {
+        Register: async (req: NextApiRequest, res: NextApiResponse) => {
             const {
                 userName,
                 displayName,
@@ -176,7 +178,7 @@ export const AdminAuthController = {
                 return res.status(500).json(error)
             }
         },
-        EditProfile: async (req, res) => {
+        EditProfile: async (req: any, res: any) => {
             const {id} = req.query
             const {displayName, fullName, phone, adress, email} = req.body
 
@@ -291,10 +293,10 @@ export const AdminAuthController = {
                 return res.status(500).json(error)
             }
         },
-        Logout: async (req, res) => {},
+        Logout: async (req: any, res: any) => {},
     },
     Prices: {
-        Update: async (req, res) => {
+        Update: async (req: NextApiRequest, res: NextApiResponse) => {
             try {
                 await axios({
                     method: "GET",
@@ -356,7 +358,7 @@ export const AdminAuthController = {
                 return res.status(500).json(error)
             }
         },
-        EditFeesBuy: async (req, res) => {
+        EditFeesBuy: async (req: NextApiRequest, res: NextApiResponse) => {
             const {id} = req.query
             const {feesBuy} = req.body
             try {
@@ -376,7 +378,7 @@ export const AdminAuthController = {
                 return res.status(500).json(error)
             }
         },
-        Add: async (req, res) => {
+        Add: async (req: NextApiRequest, res: NextApiResponse) => {
             const {idCard, idValue, feesChange, feesBuy} = req.body
             try {
                 const oldPrice = await Prices.findOne({
@@ -403,13 +405,13 @@ export const AdminAuthController = {
         },
     },
     Cards: {
-        Add: async (req, res) => {
+        Add: async (req: NextApiRequest, res: NextApiResponse) => {
             try {
             } catch (error) {
                 return res.status(500).json(error)
             }
         },
-        Delete: async (req, res) => {
+        Delete: async (req: NextApiRequest, res: NextApiResponse) => {
             const {id} = req.query
             try {
                 const card = await Cards.findOne({
@@ -449,7 +451,7 @@ export const AdminAuthController = {
                 return res.status(500).json(error)
             }
         },
-        Edit: async (req, res) => {
+        Edit: async (req: any, res: any) => {
             const {id} = req.query
             const {telco, change} = req.body
             try {
@@ -529,7 +531,7 @@ export const AdminAuthController = {
         },
     },
     Data: {
-        GetAll: async (req, res) => {
+        GetAll: async (req: NextApiRequest, res: NextApiResponse) => {
             try {
                 const listUsers = await Users.findAll({
                     where: {
@@ -573,7 +575,7 @@ export const AdminAuthController = {
         },
     },
     Banks: {
-        Add: async (req, res) => {
+        Add: async (req: NextApiRequest, res: NextApiResponse) => {
             const {name, sign} = req.body
             try {
                 const oldBank = await Banks.findOne({
@@ -594,7 +596,7 @@ export const AdminAuthController = {
                 return res.status(500).json(error)
             }
         },
-        Edit: async (req, res) => {
+        Edit: async (req: NextApiRequest, res: NextApiResponse) => {
             const {id} = req.query
             const {name, sign} = req.body
             try {
@@ -615,7 +617,7 @@ export const AdminAuthController = {
                 return res.status(500).json(error)
             }
         },
-        Delete: async (req, res) => {
+        Delete: async (req: NextApiRequest, res: NextApiResponse) => {
             const {id} = req.query
             try {
                 const bank = await Banks.findOne({
