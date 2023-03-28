@@ -1,24 +1,24 @@
-import { UserPaymentController } from "data/controller/user/payments";
-import { CheckLogin } from "data/middleware";
-import nextConnect from "next-connect";
+import nextConnect from "next-connect"
+import {UserPaymentController} from "../../../../../../../data/controller/user/payments"
+import {CheckLogin} from "../../../../../../../data/middleware"
 
 const apiRoute = nextConnect({
     onError(error, req, res) {
-        res
-            .status(501)
-            .json({ error: `Sorry something Happened! ${error.message}` });
+        res.status(501).json({
+            error: `Sorry something Happened! ${error.message}`,
+        })
     },
     onNoMatch(req, res) {
-        res.status(405).json({ error: `Method '${req.method}' Not Allowed` });
+        res.status(405).json({error: `Method '${req.method}' Not Allowed`})
     },
-});
+})
 
-apiRoute.get(CheckLogin, UserPaymentController.Refills.Get_All);
+apiRoute.get(CheckLogin, UserPaymentController.Refills.Get_All)
 
-export default apiRoute;
+export default apiRoute
 
 export const config = {
     api: {
-        bodyParser: false,
+        bodyParser: true,
     },
-};
+}
