@@ -1,7 +1,4 @@
-import dotenv from "dotenv"
 import jwt from "jsonwebtoken"
-
-dotenv.config()
 
 export const CheckAdmin = (req, res, next) => {
     const {token} = req.headers
