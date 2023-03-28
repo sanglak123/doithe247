@@ -4,8 +4,6 @@ import fs from "fs"
 import axios from "axios"
 import {Op} from "sequelize"
 import db from "../../../db/models"
-
-const DB = db
 const {
     Users,
     BankOfUsers,
@@ -17,7 +15,11 @@ const {
     RefreshTokens,
     TypeCards,
     Values,
-} = DB
+    Events,
+    Payments,
+    Promotions,
+    ReceiveBanks,
+} = db
 import {serialize} from "cookie"
 import {CreateAccessToken, CreateRefreshToken} from "../../../token"
 

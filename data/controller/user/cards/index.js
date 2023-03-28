@@ -1,16 +1,24 @@
 import CryptoJS from "crypto-js"
 import uuid from "uuid"
-import {
+import db from "../../../db/models"
+import {smtpTransport} from "../../../sendMail"
+
+const {
+    Users,
+    BankOfUsers,
+    Banks,
     Cards,
     Imgs,
     Prices,
     Products,
+    RefreshTokens,
     TypeCards,
-    Users,
     Values,
-} from "../../../db/models"
-import {smtpTransport} from "../../../sendMail"
-
+    Events,
+    Payments,
+    Promotions,
+    ReceiveBanks,
+} = db
 export const UserControllerCards = {
     PostCard: async (req, res) => {
         const {id} = req.query

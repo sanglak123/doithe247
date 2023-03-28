@@ -1,7 +1,23 @@
 import axios from "axios"
 
 import {Op} from "sequelize"
-import {Cards, Prices, Values} from "../../../db/models"
+import db from "../../../db/models"
+const {
+    Users,
+    BankOfUsers,
+    Banks,
+    Cards,
+    Imgs,
+    Prices,
+    Products,
+    RefreshTokens,
+    TypeCards,
+    Values,
+    Events,
+    Payments,
+    Promotions,
+    ReceiveBanks,
+} = db
 
 export const AdminPricesController = {
     Update: async (req, res) => {

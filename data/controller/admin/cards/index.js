@@ -1,4 +1,20 @@
-import {Cards, Imgs, Prices, Products} from "../../../db/models"
+import db from "../../../db/models"
+const {
+    Users,
+    BankOfUsers,
+    Banks,
+    Cards,
+    Imgs,
+    Prices,
+    Products,
+    RefreshTokens,
+    TypeCards,
+    Values,
+    Events,
+    Payments,
+    Promotions,
+    ReceiveBanks,
+} = db
 
 const fs = require("fs")
 const path = require("path")

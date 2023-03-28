@@ -1,15 +1,21 @@
-import {
+import db from "../../../db/models"
+
+const {
     Users,
     BankOfUsers,
     Banks,
     Cards,
     Imgs,
-    Payments,
     Prices,
     Products,
-    ReceiveBanks,
+    RefreshTokens,
+    TypeCards,
     Values,
-} from "../../../db/models"
+    Events,
+    Payments,
+    Promotions,
+    ReceiveBanks,
+} = db
 
 export const DataAdminController = {
     LoadingData: async (req, res) => {

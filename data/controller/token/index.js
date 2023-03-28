@@ -1,7 +1,23 @@
 import jwt from "jsonwebtoken"
-import {RefreshTokens} from "../../db/models"
+import db from "../../db/models"
 import {CreateAccessToken, CreateRefreshToken} from "../../token"
 
+const {
+    Users,
+    BankOfUsers,
+    Banks,
+    Cards,
+    Imgs,
+    Prices,
+    Products,
+    RefreshTokens,
+    TypeCards,
+    Values,
+    Events,
+    Payments,
+    Promotions,
+    ReceiveBanks,
+} = db
 export const TokenController = {
     RefreshToken: async (req, res) => {
         const {refreshToken} = req.cookies

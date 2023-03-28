@@ -3,9 +3,23 @@ import axios from "axios"
 import CryptoJS from "crypto-js"
 import {v4 as uuid} from "uuid"
 
-dotenv.config()
-
-const {Values, Users, Products, Cards, Prices} = require("../../db/models")
+import db from "../../db/models"
+const {
+    Users,
+    BankOfUsers,
+    Banks,
+    Cards,
+    Imgs,
+    Prices,
+    Products,
+    RefreshTokens,
+    TypeCards,
+    Values,
+    Events,
+    Payments,
+    Promotions,
+    ReceiveBanks,
+} = db
 
 export const ControllCardPublic = {
     PostCard: async (req, res) => {

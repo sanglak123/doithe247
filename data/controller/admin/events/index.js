@@ -1,5 +1,21 @@
 import {Op} from "sequelize"
-import {Events} from "../../../db/models"
+import db from "../../../db/models"
+const {
+    Users,
+    BankOfUsers,
+    Banks,
+    Cards,
+    Imgs,
+    Prices,
+    Products,
+    RefreshTokens,
+    TypeCards,
+    Values,
+    Events,
+    Payments,
+    Promotions,
+    ReceiveBanks,
+} = db
 
 export const EventsAdminController = {
     Create: async (req, res) => {

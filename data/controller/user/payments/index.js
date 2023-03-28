@@ -1,12 +1,21 @@
 import {Op} from "sequelize"
-import {
+import db from "../../../db/models"
+const {
+    Users,
     BankOfUsers,
     Banks,
+    Cards,
     Imgs,
+    Prices,
+    Products,
+    RefreshTokens,
+    TypeCards,
+    Values,
+    Events,
     Payments,
+    Promotions,
     ReceiveBanks,
-    Users,
-} from "../../../db/models"
+} = db
 
 export const UserPaymentController = {
     Refills: {

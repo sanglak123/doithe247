@@ -1,11 +1,20 @@
-import {
+import db from "../../../db/models"
+const {
     Users,
     BankOfUsers,
     Banks,
+    Cards,
     Imgs,
+    Prices,
+    Products,
+    RefreshTokens,
+    TypeCards,
+    Values,
+    Events,
     Payments,
+    Promotions,
     ReceiveBanks,
-} from "../../../db/models"
+} = db
 
 export const PaymentAdminController = {
     HandlePayment: async (req, res) => {

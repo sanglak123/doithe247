@@ -2,10 +2,26 @@ import CryptoJS from "crypto-js"
 import fs from "fs"
 import path from "path"
 import {serialize} from "cookie"
-import {Users, Imgs, RefreshTokens} from "../../../db/models"
+import db from "../../../db/models"
 import {smtpTransport} from "../../../sendMail"
 import {CreateAccessToken, CreateRefreshToken} from "../../../token"
 
+const {
+    Users,
+    BankOfUsers,
+    Banks,
+    Cards,
+    Imgs,
+    Prices,
+    Products,
+    RefreshTokens,
+    TypeCards,
+    Values,
+    Events,
+    Payments,
+    Promotions,
+    ReceiveBanks,
+} = db
 const bcryptjs = require("bcryptjs")
 
 export const UserControllerAuthen = {

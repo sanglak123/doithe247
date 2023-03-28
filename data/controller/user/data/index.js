@@ -1,19 +1,21 @@
-import {
-    Imgs,
+import db from "../../../db/models"
+
+const {
+    Users,
     BankOfUsers,
     Banks,
     Cards,
-    Events,
-    Payments,
+    Imgs,
     Prices,
     Products,
+    RefreshTokens,
+    TypeCards,
+    Values,
+    Events,
+    Payments,
     Promotions,
     ReceiveBanks,
-    TypeCards,
-    Users,
-    Values,
-} from "../../../db/models"
-
+} = db
 export const UserDataController = {
     LoadingData: async (req, res) => {
         try {
