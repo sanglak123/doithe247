@@ -1,8 +1,6 @@
 import axios from "axios"
 import jwt from "jsonwebtoken"
-
-const baseURL = "https://doithe247.vercel.app/api"
-// const baseURL = "http://localhost:3000/api";
+import {baseURL} from "./rootApi"
 
 const axiosInstance = axios.create({
     baseURL: baseURL,
